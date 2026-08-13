@@ -13,71 +13,62 @@
   "lang": "en-US",
   "icons": [
     {
-      "src": "icons/icon-512.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "png",
+      "purpose": "any maskable"
     }
   ],
   "screenshots": [
     {
-      "src": "screenshots/screenshot1.png",
+      "src": "screenshot1.png",
       "sizes": "720x1600",
-      "type": "image/png",
-      "platform": "android"
+      "type": "png"
     },
     {
-      "src": "screenshots/screenshot2.png",
+      "src": "screenshot2.png",
       "sizes": "720x1600",
-      "type": "image/png",
-      "platform": "android"
+      "type": "png"
     },
     {
-      "src": "screenshots/screenshot3.png",
+      "src": "screenshot3.png",
       "sizes": "720x1600",
-      "type": "image/png",
-      "platform": "android"
+      "type": "png"
     },
     {
-      "src": "screenshots/screenshot4.png",
+      "src": "screenshot4.png",
       "sizes": "720x1600",
-      "type": "image/png",
-      "platform": "android"
+      "type": "png"
     },
     {
-      "src": "screenshots/screenshot5.png",
+      "src": "screenshot5.png",
       "sizes": "720x1600",
-      "type": "image/png",
-      "platform": "android"
+      "type": "png"
     },
     {
-      "src": "screenshots/screenshot6.png",
+      "src": "screenshot6.png",
       "sizes": "720x1600",
-      "type": "image/png",
-      "platform": "android"
+      "type": "png"
     },
     {
-      "src": "screenshots/screenshot7.png",
+      "src": "screenshot7.png",
       "sizes": "720x1600",
-      "type": "image/png",
-      "platform": "android"
+      "type": "png"
     },
     {
-      "src": "screenshots/screenshot8.png",
+      "src": "screenshot8.png",
       "sizes": "720x1600",
-      "type": "image/png",
-      "platform": "android"
+      "type": "png"
     },
     {
-      "src": "screenshots/screenshot9.png",
+      "src": "screenshot9.png",
       "sizes": "720x1600",
-      "type": "image/png",
-      "platform": "android"
+      "type": "png"
     },
     {
-      "src": "screenshots/screenshot10.png",
+      "src": "screenshot10.png",
       "sizes": "720x1600",
-      "type": "image/png",
-      "platform": "android"
+      "type": "png"
     }
   ]
 }
