@@ -3620,10 +3620,13 @@ function announceGameOver() {
     // === PLAY SOUND ===
     if (resultType === 'win') {
         playSound(goal);
+        playSound(inland);
     } else if (resultType === 'loss') {
         playSound(miss);
+        playSound(inland);
     } else {
         playSound(loud);
+        playSound(inland);
     }
     
     // === RETURN RESULT ===
