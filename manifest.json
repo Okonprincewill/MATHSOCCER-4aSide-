@@ -1,65 +1,83 @@
 {
-  "name": "My Mathsoccer Game",
+  "name": "Mathsoccer",
   "short_name": "Mathsoccer",
   "description": "A mathematical football game",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#1a3b1a",
-  "theme_color": "#2e7d32",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#2E7D32",
+  "id": "com.okonprincewill.mathsoccer",
+  "dir": "ltr",
+  "lang": "en-US",
   "icons": [
     {
-      "src": "/icon-512.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-512.png",
+      "src": "icons/icon-512.png",
       "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/screenshot1.png",
+      "sizes": "720x1600",
       "type": "image/png",
-      "purpose": "any"
+      "platform": "android"
     },
     {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
+      "src": "screenshots/screenshot2.png",
+      "sizes": "720x1600",
       "type": "image/png",
-      "purpose": "maskable"
+      "platform": "android"
+    },
+    {
+      "src": "screenshots/screenshot3.png",
+      "sizes": "720x1600",
+      "type": "image/png",
+      "platform": "android"
+    },
+    {
+      "src": "screenshots/screenshot4.png",
+      "sizes": "720x1600",
+      "type": "image/png",
+      "platform": "android"
+    },
+    {
+      "src": "screenshots/screenshot5.png",
+      "sizes": "720x1600",
+      "type": "image/png",
+      "platform": "android"
+    },
+    {
+      "src": "screenshots/screenshot6.png",
+      "sizes": "720x1600",
+      "type": "image/png",
+      "platform": "android"
+    },
+    {
+      "src": "screenshots/screenshot7.png",
+      "sizes": "720x1600",
+      "type": "image/png",
+      "platform": "android"
+    },
+    {
+      "src": "screenshots/screenshot8.png",
+      "sizes": "720x1600",
+      "type": "image/png",
+      "platform": "android"
+    },
+    {
+      "src": "screenshots/screenshot9.png",
+      "sizes": "720x1600",
+      "type": "image/png",
+      "platform": "android"
+    },
+    {
+      "src": "screenshots/screenshot10.png",
+      "sizes": "720x1600",
+      "type": "image/png",
+      "platform": "android"
     }
   ]
 }
