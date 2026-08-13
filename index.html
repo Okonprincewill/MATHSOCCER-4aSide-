@@ -3559,49 +3559,74 @@ function announceGameOver() {
     let playerScorersList = scorer.filter(g => g.col === playerColor).map(g => g.id).join(', ');
     let aiScorersList = scorer.filter(g => g.col === aiColor).map(g => g.id).join(', ');
     
+    let playerScorerText = playerScorersList ? `${playerColor} scorers: ${playerScorersList}` : `No ${playerColor} scorers`;
+    let aiScorerText = aiScorersList ? `${aiColor} scorers: ${aiScorersList}` : `No ${aiColor} scorers`;
+    
     // Determine result
     let resultType = '';
     let humanWon = false;
     let resultMessage = '';
     
+    // 1. CHECK GOALS
     if (playerGoals > aiGoals) {
         resultType = 'win';
         humanWon = true;
-        resultMessage = `You WON! ${playerGoals} to ${aiGoals}.`;
-    } else if (aiGoals > playerGoals) {
+        resultMessage = `This game is over after ${movesCompleted} moves. Final score is ${playerGoals} to ${aiGoals}. ${playerScorerText}. ${aiScorerText}. You WON! Congratulations! 🎉`;
+    } 
+    else if (aiGoals > playerGoals) {
         resultType = 'loss';
         humanWon = false;
-        resultMessage = `You LOST. ${playerGoals} to ${aiGoals}.`;
-    } else {
-        // Goals draw — check points
+        resultMessage = `This game is over after ${movesCompleted} moves. Final score is ${playerGoals} to ${aiGoals}. ${playerScorerText}. ${aiScorerText}. You LOST. Better luck next time! 😞`;
+    }
+    
+    // 2. GOALS DRAW - CHECK POINTS
+    else if (playerGoals === aiGoals) {
         if (playerPoints > aiPoints) {
             resultType = 'win';
             humanWon = true;
-            resultMessage = `Goals draw ${playerGoals}-${aiGoals}, but you WON on points ${playerPoints}-${aiPoints}.`;
-        } else if (aiPoints > playerPoints) {
+            resultMessage = `This game is over after ${movesCompleted} moves. It's a goal draw at ${playerGoals} to ${aiGoals}, but you WON on points ${playerPoints} to ${aiPoints}! ${playerScorerText}. ${aiScorerText}. 🎉`;
+        }
+        else if (aiPoints > playerPoints) {
             resultType = 'loss';
             humanWon = false;
-            resultMessage = `Goals draw ${playerGoals}-${aiGoals}, but you LOST on points ${playerPoints}-${aiPoints}.`;
-        } else {
-            // Points draw — check circles
+            resultMessage = `This game is over after ${movesCompleted} moves. It's a goal draw at ${playerGoals} to ${aiGoals}, but you LOST on points ${playerPoints} to ${aiPoints}. ${playerScorerText}. ${aiScorerText}. 😞`;
+        }
+        
+        // 3. GOALS AND POINTS DRAW - CHECK CIRCLES
+        else if (playerPoints === aiPoints) {
             if (playerCircles > aiCircles) {
                 resultType = 'win';
                 humanWon = true;
-                resultMessage = `Goals draw ${playerGoals}-${aiGoals}, points draw ${playerPoints}-${aiPoints}, but you WON on circles ${playerCircles}-${aiCircles}.`;
-            } else if (aiCircles > playerCircles) {
+                resultMessage = `This game is over after ${movesCompleted} moves. It's a goal draw at ${playerGoals} to ${aiGoals} and points draw at ${playerPoints} to ${aiPoints}, but you WON on circles ${playerCircles} to ${aiCircles}! ${playerScorerText}. ${aiScorerText}. 🎉`;
+            }
+            else if (aiCircles > playerCircles) {
                 resultType = 'loss';
                 humanWon = false;
-                resultMessage = `Goals draw ${playerGoals}-${aiGoals}, points draw ${playerPoints}-${aiPoints}, but you LOST on circles ${playerCircles}-${aiCircles}.`;
-            } else {
+                resultMessage = `This game is over after ${movesCompleted} moves. It's a goal draw at ${playerGoals} to ${aiGoals} and points draw at ${playerPoints} to ${aiPoints}, but you LOST on circles ${playerCircles} to ${aiCircles}. ${playerScorerText}. ${aiScorerText}. 😞`;
+            }
+            
+            // 4. EVERYTHING DRAW - TOTAL DRAW
+            else {
                 resultType = 'draw';
                 humanWon = false;
-                resultMessage = `Complete draw! Goals ${playerGoals}-${aiGoals}, Points ${playerPoints}-${aiPoints}, Circles ${playerCircles}-${aiCircles}.`;
+                resultMessage = `This game is over after ${movesCompleted} moves. It's a total draw! Goals: ${playerGoals} to ${aiGoals}. Points: ${playerPoints} to ${aiPoints}. Circles: ${playerCircles} to ${aiCircles}. ${playerScorerText}. ${aiScorerText}. No winner, no vanquished. 🤝`;
             }
         }
     }
     
+    // === SPEAK ANNOUNCEMENT ===
     speakText(resultMessage);
     
+    // === PLAY SOUND ===
+    if (resultType === 'win') {
+        playSound(goal);
+    } else if (resultType === 'loss') {
+        playSound(miss);
+    } else {
+        playSound(loud);
+    }
+    
+    // === RETURN RESULT ===
     return {
         message: resultMessage,
         type: resultType,
@@ -3876,7 +3901,7 @@ function renderHistoryPage() {
         const rowStartX = startX;
         ctx.font = '12px fantasy, papyrus';
         let rowY = startY + 10;
-        const rowHeight = 18;
+        const rowHeight = 21;
         
         pageMoves.forEach((move, idx) => {
             const actualMoveNum = startIdx + idx + 1;
