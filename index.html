@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
    
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Mathsoccer</title>
     
     <style>
@@ -632,11 +636,17 @@ const TERMS_CONTENT = [
     "   • Use for commercial purposes.              ",
     "                          ",
     "5. INTELLECTUAL PROPERTY  ",
-    "   MathSoccer is a game created by  ",
-"   Princewill Okon. ",
-    "   All code, artwork, and game mechanics are ",
-    "   the exclusive property of Princewill Okon. ",
-    "   All rights reserved.   ",
+   // ============================================================
+//  COPYRIGHT & OWNERSHIP
+// ============================================================
+
+"   MathSoccer is a game created by ",
+"   Princewill Okon. First publicly presented ",
+"   to the Nigerian Minister of Science and ",
+"   Technology in 2017. ",
+"   All code, artwork, and game mechanics are ",
+"   the exclusive property of Princewill Okon. ",
+"   All rights reserved. ",
     "   Do not reproduce any part without   ",
     "   written permission.            ",
     "                          ",
@@ -1358,8 +1368,13 @@ if (!window.requestAnimationFrame) {
     };
 }
 
-    // Initial resize
-   //resizeCanvas();
+    
+function playSound(sound) {
+    if (!soundEnabled) return;
+    sound.currentTime = 0;
+    sound.play().catch(e => console.log("Audio play failed"));
+}
+
 
 function loadTagsVisibility() {
     const savedBtn = localStorage.getItem('button_tags_visible');
@@ -1739,6 +1754,28 @@ button.y + button.h - 10;   // Below opponent button
 }
 
 // ============================================================
+//  LEGAL PAGE FUNCTIONS
+// ============================================================
+
+function updateEffectiveDate() {
+    const now = new Date();
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                    'July', 'August', 'September', 'October', 'November', 'December'];
+    const dateString = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+    
+    document.querySelectorAll('.effective-date').forEach(el => {
+        el.textContent = dateString;
+    });
+}
+
+// Run on page load
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateEffectiveDate);
+} else {
+    updateEffectiveDate();
+}
+
+// ============================================================
 //  DRAW ANSWER TAG — Transparent, bottom of cell, hugging edge
 // ============================================================
 
@@ -2000,6 +2037,9 @@ g=6;
     ctx.font = 'bold 18px fantasy, papyrus';
     ctx.textAlign = 'center';
     ctx.fillText('TERMS OF SERVICE', 170, 30);
+
+    // Add the effective date
+    const dateHTML = `<p><strong>Effective Date:</strong> ${getCurrentDate()}</p>`;
     
     // Pagination
     const totalPages = Math.ceil(TERMS_CONTENT.length / TERMS_PER_PAGE);
@@ -2066,6 +2106,13 @@ g=6;
     ctx.font = 'bold 12px fantasy, papyrus';
     ctx.fillText('▶', 280, 558);
 }
+    
+function getCurrentDate() {
+    const now = new Date();
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                    'July', 'August', 'September', 'October', 'November', 'December'];
+    return `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+}
 
 function renderPrivacyPolicy() {
 g=5;
@@ -2079,6 +2126,9 @@ g=5;
     ctx.font = 'bold 18px fantasy, papyrus';
     ctx.textAlign = 'center';
     ctx.fillText('PRIVACY POLICY', 170, 30);
+
+    // Add the effective date
+    const dateHTML = `<p><strong>Effective Date:</strong> ${getCurrentDate()}</p>`;
     
     // Pagination
     const totalPages = Math.ceil(PRIVACY_CONTENT.length / PRIVACY_PER_PAGE);
@@ -4212,13 +4262,6 @@ if (!CanvasRenderingContext2D.prototype.roundRect) {
         this.quadraticCurveTo(x, y, x + r, y);
         return this;
     };
-}
-
-
-function playSound(sound) {
-    if (!soundEnabled) return;
-    sound.currentTime = 0;
-    sound.play().catch(e => console.log("Audio play failed"));
 }
 
 // ===========================================
@@ -14202,12 +14245,27 @@ window.addEventListener('load', function(event){
 initcanvas();
 });
 
+// ============================================================
+//  REGISTER SERVICE WORKER
+// ============================================================
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('pwabuilder-sw.js')
+            .then(function(registration) {
+                console.log('✅ Service Worker registered successfully');
+            })
+            .catch(function(error) {
+                console.log('❌ Service Worker registration failed:', error);
+            });
+    });
+}
+
 </script>
   
 </head>
   
 <body>
-  
     <div id="gameContainer">
         <!-- ✅ Make sure the ID is "gameCanvas" -->
         <canvas id="gameCanvas"></canvas>
@@ -14220,7 +14278,9 @@ initcanvas();
     </div>
 <div style="max-width: 600px; margin: auto; padding: 20px; font-family: Arial, sans-serif;">
     <h1>MATHSOCCER - PRIVACY POLICY</h1>
-    <p>Effective Date: [Current Date]</p>
+<p><strong>Effective Date:</strong> <span class="effective-date">Loading...</span></p>
+
+<!-- Rest of your privacy policy -->
     
     <h2>1. Information We Collect</h2>
     <h3>1.1 Account Information</h3>
@@ -14260,12 +14320,14 @@ initcanvas();
     <p>We will notify you of material changes via email or in-app notice.</p>
     
     <h2>11. Contact</h2>
-    <p>Email: privacy@mathsoccer.com</p>
+    <p>Email: creditprincewill@gmail.com</p>
 </div>
 
 <div style="max-width: 600px; margin: auto; padding: 20px; font-family: Arial, sans-serif;">
     <h1>MATHSOCCER - TERMS OF SERVICE</h1>
-    <p>Effective Date: [Current Date]</p>
+<p><strong>Effective Date:</strong> <span class="effective-date">Loading...</span></p>
+
+<!-- Rest of your terms of service -->
     
     <h2>1. Acceptance of Terms</h2>
     <p>By downloading, accessing, or using Mathsoccer, you agree to be bound by these Terms of Service.</p>
@@ -14301,7 +14363,7 @@ initcanvas();
     <p>We may update these terms. Continued use means acceptance of changes.</p>
     
     <h2>12. Contact</h2>
-    <p>Email: support@mathsoccer.com</p>
+    <p>Email: creditprincewill@gmail.com</p>
 </div>
 </body>
   
