@@ -9121,7 +9121,7 @@ function getFellowMultiAttackers(button) {
             const b1Central = centralCells.some(c => canReach(button, c));
             const b2Central = centralCells.some(c => canReach(otherBtn, c));
             
-            if ((b1White && b2White) || (b1Yellow && b2Yellow) || (b1Central && b2Central)) {
+            if ((b1White && b2White) || (b1Yellow && b2Yellow) || (b1Central && b2Central) || (b1White && b2Central) || (b1Yellow && b2White) || (b1Central && b2Yellow))  {
                 fellows.push(otherBtn);
             }
         }
@@ -9139,9 +9139,16 @@ function getAttackedYellow(button) {
 }
 
 function hasSafeBackupForYellow(button, yellowTarget) {
+    // Get the list of fellow multi-attackers for this button
+    const fellowMultiAttackers = getFellowMultiAttackers(button);
+    
     for (let otherBtn of buttons) {
         if (otherBtn === button) continue;
         if (otherBtn.col !== ownColor) continue;
+        
+        // ✅ Skip if otherBtn is a fellow multi-attacker
+        if (fellowMultiAttackers.includes(otherBtn)) continue;
+        
         if (isCriticalDefender(otherBtn)) continue;
         if (canReach(otherBtn, yellowTarget)) {
             return true;
