@@ -5269,40 +5269,7 @@ function blueGoalsDisplay() {
     return blueGoal;
 }
 
-// ===========================================
-// RECORD GAME STATS (Call when game ends)
-// ===========================================
-// ============================================================
-//  RECORD GAME STATS — Called from showGameOver()
-// ============================================================
 
-function recordGameStats() {
-    const humanColor = (side === 0) ? 'red' : 'blue';
-    let result = 'draw';
-    
-    if (redGoal > blueGoal) {
-        result = (humanColor === 'red') ? 'win' : 'loss';
-    } else if (blueGoal > redGoal) {
-        result = (humanColor === 'blue') ? 'win' : 'loss';
-    } else {
-        if (redPoints > bluePoints) {
-            result = (humanColor === 'red') ? 'win' : 'loss';
-        } else if (bluePoints > redPoints) {
-            result = (humanColor === 'blue') ? 'win' : 'loss';
-        } else {
-            result = 'draw';
-        }
-    }
-    
-    const totalPointsEarned = (humanColor === 'red') ? redPoints : bluePoints;
-    const goalsScored = (humanColor === 'red') ? redGoal : blueGoal;
-    const goalsConceded = (humanColor === 'red') ? blueGoal : redGoal;
-    const pointsScored = (humanColor === 'red') ? redPoints : bluePoints;
-    const pointsConceded = (humanColor === 'red') ? bluePoints : redPoints;
-    const movesCompleted = n - 1;
-    
-    recordGameCompletion(result, movesCompleted, totalPointsEarned, goalsScored, goalsConceded, pointsScored, pointsConceded);
-}
 // ===========================================
 // LIFETIME STATS FUNCTIONS
 // ===========================================
@@ -5385,7 +5352,38 @@ function saveLifetimeStats() {
 //  RECORD GAME COMPLETION — Called when game ends
 // ============================================================
 
+function recordGameStats() {
+    const humanColor = (side === 0) ? 'red' : 'blue';
+    let result = 'draw';
+    
+    if (redGoal > blueGoal) {
+        result = (humanColor === 'red') ? 'win' : 'loss';
+    } else if (blueGoal > redGoal) {
+        result = (humanColor === 'blue') ? 'win' : 'loss';
+    } else {
+        if (redPoints > bluePoints) {
+            result = (humanColor === 'red') ? 'win' : 'loss';
+        } else if (bluePoints > redPoints) {
+            result = (humanColor === 'blue') ? 'win' : 'loss';
+        } else {
+            result = 'draw';
+        }
+    }
+    
+    const totalPointsEarned = (humanColor === 'red') ? redPoints : bluePoints;
+    const goalsScored = (humanColor === 'red') ? redGoal : blueGoal;
+    const goalsConceded = (humanColor === 'red') ? blueGoal : redGoal;
+    const pointsScored = (humanColor === 'red') ? redPoints : bluePoints;
+    const pointsConceded = (humanColor === 'red') ? bluePoints : redPoints;
+    const movesCompleted = n - 1;
+    
+    recordGameCompletion(result, movesCompleted, totalPointsEarned, goalsScored, goalsConceded, pointsScored, pointsConceded);
+}
+
 function recordGameCompletion(result, movesCompleted, totalPointsEarned, goalsScored, goalsConceded, pointsScored, pointsConceded) {
+    console.log('=== recordGameCompletion DEBUG ===');
+    console.log('Difficulty being saved:', l);
+    
     if (!lifetimeStats || typeof lifetimeStats !== 'object') {
         lifetimeStats = initLifetimeStats();
     }
@@ -5400,9 +5398,10 @@ function recordGameCompletion(result, movesCompleted, totalPointsEarned, goalsSc
         goalsScored: goalsScored || 0,
         goalsConceded: goalsConceded || 0,
         points: totalPointsEarned || 0,
-        pointsScored: pointsScored || 0,       // ← ADD THIS
-        pointsConceded: pointsConceded || 0,   // ← ADD THIS
-        difficulty: l
+        pointsScored: pointsScored || 0,       // ← Player's points
+        pointsConceded: pointsConceded || 0,   // ← Opponent's points
+        difficulty: l,
+        playerColor: (side === 0) ? 'Red' : 'Blue'  // ← ADD THIS
     };
     
     lifetimeStats.games.push(gameRecord);
