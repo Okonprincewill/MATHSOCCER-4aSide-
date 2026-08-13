@@ -4477,13 +4477,13 @@ function renderOpponentLogsPage() {
     ctx.font = 'bold 16px fantasy, papyrus';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
-    ctx.fillText('SAFE NUMBERS:', 20, yPos);
+    ctx.fillText('SAFE NUMBERS:', 10, yPos);
     yPos += 18;
     
     ctx.fillStyle = '#CFC';
     ctx.font = '14px fantasy, papyrus';
     const linkedText = latestLog.linkedNumbers.join(', ');
-    ctx.fillText(linkedText || 'None', 25, yPos);
+    ctx.fillText(linkedText || 'None', 15, yPos);
     yPos += lineHeight + 8;
     
     // ===========================================
@@ -4492,19 +4492,19 @@ function renderOpponentLogsPage() {
     if (latestLog.exemptedNumbers.length > 0) {
         ctx.fillStyle = '#FF6B6B';
         ctx.font = 'bold 16px fantasy, papyrus';
-        ctx.fillText('EXEMPTED NUMBERS:', 20, yPos);
+        ctx.fillText('EXEMPTED NUMBERS:', 10, yPos);
         yPos += 18;
         
         for (let entry of latestLog.exemptedNumbers) {
             ctx.fillStyle = '#FF6B6B';
             ctx.font = 'bold 14px fantasy, papyrus';
-            ctx.fillText(`• ${entry.id}`, 25, yPos);
+            ctx.fillText(`• ${entry.id}`, 15, yPos);
             yPos += 16;
             
             ctx.fillStyle = '#AAA';
             ctx.font = '13px fantasy, papyrus';
             for (let reason of entry.reasons) {
-                ctx.fillText(`  - ${reason}`, 35, yPos);
+                ctx.fillText(`  - ${reason}`, 20, yPos);
                 yPos += 14;
             }
         }
@@ -4517,19 +4517,19 @@ function renderOpponentLogsPage() {
     if (latestLog.exemptedButtons.length > 0) {
         ctx.fillStyle = '#74B9FF';
         ctx.font = 'bold 16px fantasy, papyrus';
-        ctx.fillText('EXEMPTED BUTTONS:', 20, yPos);
+        ctx.fillText('EXEMPTED BUTTONS:', 10, yPos);
         yPos += 18;
         
         for (let entry of latestLog.exemptedButtons) {
             ctx.fillStyle = '#74B9FF';
             ctx.font = 'bold 14px fantasy, papyrus';
-            ctx.fillText(`• ${entry.id}`, 25, yPos);
+            ctx.fillText(`• ${entry.id}`, 15, yPos);
             yPos += 16;
             
             ctx.fillStyle = '#AAA';
             ctx.font = '13px fantasy, papyrus';
             for (let reason of entry.reasons) {
-                ctx.fillText(`  - ${reason}`, 35, yPos);
+                ctx.fillText(`  - ${reason}`, 20, yPos);
                 yPos += 14;
             }
         }
@@ -4542,12 +4542,12 @@ function renderOpponentLogsPage() {
     if (latestLog.choiceButton && latestLog.choiceNumber) {
         ctx.fillStyle = '#55EFC4';
         ctx.font = 'bold 14px fantasy, papyrus';
-        ctx.fillText('CHOICE:', 20, yPos);
+        ctx.fillText('CHOICE:', 10, yPos);
         yPos += 18;
         
         ctx.fillStyle = '#55EFC4';
         ctx.font = 'bold 16px fantasy, papyrus';
-        ctx.fillText(`Button: ${latestLog.choiceButton}  →  Number: ${latestLog.choiceNumber}`, 25, yPos);
+        ctx.fillText(`Button: ${latestLog.choiceButton}  →  Number: ${latestLog.choiceNumber}`, 15, yPos);
         yPos += 20;
     }
     
@@ -4574,7 +4574,7 @@ function drawLogNavButtonsRight(totalPages) {
     const btnHeight = 30;
     const startX = 280;
     const spacing = 45;
-    let startY = 300;  // ← Centered vertically
+    let startY = 60;  // ← Centered vertically
     
     // Previous button
     ctx.save();
@@ -13434,7 +13434,7 @@ if (g === 14 && viewingOpponentLogs) {
     const btnWidth = 60;
     const btnHeight = 30;
     const spacing = 45;
-    let btnY = 300;  // ← Centered vertically
+    let btnY = 60;  // ← Centered vertically
     
     // PREV
     if (touchX >= btnX && touchX <= btnX + btnWidth && 
