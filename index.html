@@ -612,7 +612,7 @@ var calc = {"id":"calculation","x": startX - 41, "y": startY + 496, "w":120, "h"
 // ===========================================
 const TERMS_CONTENT = [
     "                          ",
-    "Last updated: 2026        ",
+    "{{EFFECTIVE_DATE}}",  // ←  
     "                          ",
     "1. ACCEPTANCE OF TERMS    ",
     "   By using MathSoccer, you agree to these terms.     ",
@@ -672,7 +672,7 @@ const TERMS_CONTENT = [
 
 const PRIVACY_CONTENT = [
     "                          ",
-    "Last updated: 2026        ",
+    "{{EFFECTIVE_DATE}}",  // ←
     "                          ",
     "1. DATA WE COLLECT        ",
     "   MathSoccer is designed for offline play.      ",
@@ -2025,12 +2025,24 @@ g=10;
     ctx.fillText('BACK', 170, btnY + 14);
 }
 
+// ============================================================
+//  GET CURRENT DATE STRING
+// ============================================================
+
+function getCurrentDateString() {
+    const now = new Date();
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                    'July', 'August', 'September', 'October', 'November', 'December'];
+    return `Last updated: ${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+}
+
 function renderTermsOfService() {
-g=6;
+    g = 6;
     ctx.clearRect(0, 0, cW, cH);
     drawGlossyBackground();
     
     viewingTerms = true;
+    const currentDate = getCurrentDateString();
     
     // Title
     ctx.fillStyle = '#CFC';
@@ -2038,17 +2050,24 @@ g=6;
     ctx.textAlign = 'center';
     ctx.fillText('TERMS OF SERVICE', 170, 30);
 
-    // Add the effective date
-    const dateHTML = `<p><strong>Effective Date:</strong> ${getCurrentDate()}</p>`;
+    // ✅ REPLACE PLACEHOLDER WITH ACTUAL DATE
+    const displayContent = [];
+    for (let line of TERMS_CONTENT) {
+        if (line === '{{EFFECTIVE_DATE}}') {
+            displayContent.push(currentDate);
+        } else {
+            displayContent.push(line);
+        }
+    }
     
     // Pagination
-    const totalPages = Math.ceil(TERMS_CONTENT.length / TERMS_PER_PAGE);
+    const totalPages = Math.ceil(displayContent.length / TERMS_PER_PAGE);
     if (termsPage >= totalPages) termsPage = totalPages - 1;
     if (termsPage < 0) termsPage = 0;
     
     const start = termsPage * TERMS_PER_PAGE;
-    const end = Math.min(start + TERMS_PER_PAGE, TERMS_CONTENT.length);
-    const visibleTerms = TERMS_CONTENT.slice(start, end);
+    const end = Math.min(start + TERMS_PER_PAGE, displayContent.length);
+    const visibleTerms = displayContent.slice(start, end);
     
     // Draw content
     let yPos = 70;
@@ -2107,19 +2126,15 @@ g=6;
     ctx.fillText('▶', 280, 558);
 }
     
-function getCurrentDate() {
-    const now = new Date();
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 
-                    'July', 'August', 'September', 'October', 'November', 'December'];
-    return `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
-}
+
 
 function renderPrivacyPolicy() {
-g=5;
+    g = 5;
     ctx.clearRect(0, 0, cW, cH);
     drawGlossyBackground();
     
     viewingPrivacy = true;
+    const currentDate = getCurrentDateString();
     
     // Title
     ctx.fillStyle = '#CFC';
@@ -2127,17 +2142,24 @@ g=5;
     ctx.textAlign = 'center';
     ctx.fillText('PRIVACY POLICY', 170, 30);
 
-    // Add the effective date
-    const dateHTML = `<p><strong>Effective Date:</strong> ${getCurrentDate()}</p>`;
+    // ✅ REPLACE PLACEHOLDER WITH ACTUAL DATE
+    const displayContent = [];
+    for (let line of PRIVACY_CONTENT) {
+        if (line === '{{EFFECTIVE_DATE}}') {
+            displayContent.push(currentDate);
+        } else {
+            displayContent.push(line);
+        }
+    }
     
     // Pagination
-    const totalPages = Math.ceil(PRIVACY_CONTENT.length / PRIVACY_PER_PAGE);
+    const totalPages = Math.ceil(displayContent.length / PRIVACY_PER_PAGE);
     if (privacyPage >= totalPages) privacyPage = totalPages - 1;
     if (privacyPage < 0) privacyPage = 0;
     
     const start = privacyPage * PRIVACY_PER_PAGE;
-    const end = Math.min(start + PRIVACY_PER_PAGE, PRIVACY_CONTENT.length);
-    const visiblePrivacy = PRIVACY_CONTENT.slice(start, end);
+    const end = Math.min(start + PRIVACY_PER_PAGE, displayContent.length);
+    const visiblePrivacy = displayContent.slice(start, end);
     
     // Draw content
     let yPos = 70;
