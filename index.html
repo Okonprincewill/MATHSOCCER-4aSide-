@@ -8970,7 +8970,7 @@ console.log(`Exempted ${secondButton.id} supporting goal block- #8a`);
 
 function exposeCollinearThreat(cell) {
     // cell = threatened cell
-
+    if (cell === compAns) return;
     const cellDir = categorizeButtonsByDirection(cell);
     const allDirs = ['right', 'left', 'up', 'down', 'up-left', 'up-right', 'down-left', 'down-right'];
     
@@ -9235,6 +9235,38 @@ logExemptedButton(btn.id, "single multi-attacker with safe backup attacking "+ye
             }
         }
     }
+}
+
+if (advAns === 1 && l<1) {
+    const strategicNumbers = [answer[32], answer[33], answer[34]];
+
+    strategicNumbers.forEach((targetCell) => {
+        if (!targetCell || targetCell.occupancy === 'yes') return;
+        
+        // Get all buttons that can reach this cell
+        const buttonsThatCanReach = [];
+        const directions = ['right', 'left', 'up', 'down', 'up-left', 'down-left', 'up-right', 'down-right'];
+        
+        directions.forEach(dir => {
+            const dirResult = categorizeButtonsByDirection(targetCell);
+            if (dirResult && dirResult[dir] && dirResult[dir][0]) {
+                const btn = dirResult[dir][0];
+                if (btn && btn.col === ownColor) {
+                    buttonsThatCanReach.push(btn);
+                }
+            }
+        });
+        
+        // ✅ Skip if more than 1 button can reach this cell
+        if (buttonsThatCanReach.length !== 1) return;
+        
+        // Only one button can reach — exempt it
+        const closestButton = buttonsThatCanReach[0];
+        exemptButtons.add(closestButton);
+        
+        // ✅ Log the exemption reason
+        logExemptedButton(closestButton.id, `maintaining attack on number ${targetCell.id}`);
+    });
 }
 
 
