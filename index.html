@@ -4710,6 +4710,8 @@ function quitGame() {
     touchEnabled = true;
         gameOverSoundPlayed = false;
     gameOverActive = false;
+    clearOpponentLogs();
+        opponentLogsPage = 0;
     
     // Reset game state flags
     g = 0;
@@ -4882,7 +4884,8 @@ r = 1;
     stats[3].value = "0";  // Blue goals
     stats[4].value = "0";  // Red points
     stats[5].value = "0";  // Blue points
-    
+   clearOpponentLogs();
+        opponentLogsPage = 0; 
     // Clear selections
     selectedButton = null;
     selectedButtonLinks = [];
