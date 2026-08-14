@@ -12426,8 +12426,8 @@ function generateMove1DisplayData() {
     const turnNumber = m;
     
     // Set global display variables - NO statDraw here!
-    va = "Watch AI display the calculation"; 
-    vb = `of all Mathsoccer moves. It's ${capitalizeFirst(currentTeam)} turn ${turnNumber}.`;
+    va = "Watch Mathsoccer calculations in display"; 
+    vb = `and always read this textbox. It's ${capitalizeFirst(currentTeam)} turn ${turnNumber}.`;
      
     // Get valid links
     if (typeof valAns === 'function') valAns();
@@ -12440,7 +12440,7 @@ function generateMove1DisplayData() {
     vf = formatLink('Y', nextLinks.Y);
     vg = formatLink('Z', nextLinks.Z);
     vh = currentTeam;
-    speakText("Watch displayed Mathsoccer calculations and always read the textbox.");
+    speakText("Watch Mathsoccer calculations in display and always read the textbox.");
   const difficultyNames = ['genius', 'advanced', 'intermediate', 'beginner'];
 const currentDifficulty = difficultyNames[l] || 'genius';
 speakText(`wait for ${currentDifficulty} to pass first`);
