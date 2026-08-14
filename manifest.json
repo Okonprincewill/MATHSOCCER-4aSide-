@@ -1,14 +1,14 @@
 {
   "name": "Mathsoccer",
   "short_name": "Mathsoccer",
-  "description": "A mathematical football game where you use tokens and numbers to score goals",
-  "start_url": "/MATHSOCCER-4aSide/",
-  "scope": "/MATHSOCCER-4aSide/",
+  "description": "A mathematical football game where you use numbers to score goals",
+  "start_url": "/MATHSOCCER-4aSide-/",
+  "scope": "/MATHSOCCER-4aSide-/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#000000",
   "theme_color": "#2E7D32",
-  "id": "/MATHSOCCER-4aSide/",
+  "id": "/MATHSOCCER-4aSide-/",
   "dir": "ltr",
   "lang": "en-US",
   "icons": [
