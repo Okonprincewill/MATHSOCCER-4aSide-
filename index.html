@@ -3614,20 +3614,9 @@ function announceGameOver() {
         }
     }
     
+    playSound(inland);
     // === SPEAK ANNOUNCEMENT ===
-    speakText(resultMessage);
-    
-    // === PLAY SOUND ===
-    if (resultType === 'win') {
-    playSound(inland);
-        playSound(goal);       
-    } else if (resultType === 'loss') {
-    playSound(inland);
-        playSound(miss);        
-    } else {
-    playSound(inland);
-        playSound(loud);        
-    }
+    speakText(resultMessage);       
     
     // === RETURN RESULT ===
     return {
