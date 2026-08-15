@@ -12376,8 +12376,8 @@ function calculatePoints(isComputer) {
     
     // === MID HALF (3 points) ===
     else if (
-        (!isComputer && targetAnswer.x === answer[0].x && categorizeButtonsByDirection(targetAnswer)["up"].length === 0 && targetAnswer.id !== answer[0].id) ||
-        (isComputer && targetAnswer.x === answer[36].x && categorizeButtonsByDirection(targetAnswer)["down"].length === 0 && targetAnswer.id !== answer[36].id)
+        (!isComputer && targetAnswer.x === answer[0].x && categorizeButtonsByDirection(targetAnswer)["up"].length === 0 && targetAnswer.id !== answer[0].id && targetAnswer.id !== answer[3].id) ||
+        (isComputer && targetAnswer.x === answer[36].x && categorizeButtonsByDirection(targetAnswer)["down"].length === 0 && targetAnswer.id !== answer[36].id && targetAnswer.id !== answer[33].id)
     ) {
         points = 3;
     }
