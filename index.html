@@ -1021,10 +1021,10 @@ function getScreenType() {
 const explode = new Audio('explode.mp3');
 explode.volume = 1.0;
 
-const touch = new Audio('Mathsoccer touch.mp3');
+const touch = new Audio('Mathsoccer_touch.mp3');
 touch.volume = 1.0;
 
-const goal = new Audio('cheer goal.mp3');
+const goal = new Audio('cheer_goal.mp3');
 goal.volume = 1.0; // Full volume for goal celebration
 
 const ball = new Audio('ball.mp3');
@@ -1033,10 +1033,10 @@ ball.volume = 1.0;
 const kick = new Audio('kick.mp3');
 kick.volume = 1.0;    
 
-const loud = new Audio('crowd louds.mp3');
+const loud = new Audio('crowd_louds.mp3');
 loud.volume = 1.0;
     
-const welcome = new Audio('Mathsoccer cool.mp3');
+const welcome = new Audio('Mathsoccer_cool.mp3');
 welcome.volume = 1.0;
     
    const inland = new Audio('maths.mp3');
@@ -14331,14 +14331,19 @@ initcanvas();
 // ============================================================
 
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        navigator.serviceWorker.register('pwabuilder-sw.js')
-            .then(function(registration) {
-                console.log('✅ Service Worker registered successfully');
-            })
-            .catch(function(error) {
-                console.log('❌ Service Worker registration failed:', error);
-            });
+    window.addEventListener('load', function () {
+        navigator.serviceWorker.register(
+            '/MATHSOCCER-4aSide-/pwabuilder-sw.js',
+            {
+                scope: '/MATHSOCCER-4aSide-/'
+            }
+        )
+        .then(function (registration) {
+            console.log('✅ Service Worker registered successfully');
+        })
+        .catch(function (error) {
+            console.log('❌ Service Worker registration failed:', error);
+        });
     });
 }
 
