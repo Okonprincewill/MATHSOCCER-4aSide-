@@ -14490,6 +14490,34 @@ if ('serviceWorker' in navigator) {
 </head>
   
 <body>
+<button id="installButton" style="display:none;">
+  ⚽ Install Mathsoccer
+</button>
+
+<script>
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
+    deferredPrompt = event;
+
+    document.getElementById('installButton').style.display = 'block';
+});
+
+document.getElementById('installButton').addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+
+    deferredPrompt.prompt();
+
+    const result = await deferredPrompt.userChoice;
+
+    if (result.outcome === 'accepted') {
+        console.log('Mathsoccer installed');
+    }
+
+    deferredPrompt = null;
+});
+</script>
     <div id="gameContainer">
         <!-- ✅ Make sure the ID is "gameCanvas" -->
         <canvas id="gameCanvas"></canvas>
