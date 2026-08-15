@@ -4943,7 +4943,6 @@ n++;
 // SAVE GAME STATE
 // ===========================================
 function saveGameState() {
-    // Create a deep copy of the current game state
     const state = {
         board: answer.map(cell => ({
             id: cell.id,
@@ -4957,6 +4956,7 @@ function saveGameState() {
             y: btn.y,
             col: btn.col
         })),
+        // ✅ Store game variables
         redGoal: redGoal,
         blueGoal: blueGoal,
         redPoints: redPoints,
@@ -4968,10 +4968,16 @@ function saveGameState() {
         g: g,
         side: side,
         scorer: scorer.map(s => ({ ...s })),
-        lastMoveData: lastMoveData ? { ...lastMoveData } : null
+        lastMoveData: lastMoveData ? { ...lastMoveData } : null,
+        // ✅ NEW: Store stats array values
+        statsValues: stats.map(s => ({
+            value: s.value,
+            col: s.col
+        })),
+        // ✅ NEW: Store calc value
+        calcValue: calc.value
     };
     
-    // If we're not at the end of history, truncate
     if (currentHistoryIndex < moveHistory.length - 1) {
         moveHistory = moveHistory.slice(0, currentHistoryIndex + 1);
     }
@@ -4979,7 +4985,6 @@ function saveGameState() {
     moveHistory.push(state);
     currentHistoryIndex = moveHistory.length - 1;
     
-    // Limit history size
     if (moveHistory.length > MAX_HISTORY) {
         moveHistory.shift();
         currentHistoryIndex--;
@@ -4995,9 +5000,15 @@ function undoMove() {
         return false;
     }
     
-    // Move back one step
+    // ✅ Store current state before undoing (for redo to work properly)
+    // saveGameState(); // Only if you want to save the current state before undo
+    
     currentHistoryIndex--;
     restoreState(currentHistoryIndex);
+    renderStats();
+    drawToggles();
+    generateNextTurnDisplay();
+    statDraw(va, vb, vc, vd, ve, vf, vg, vh);
     speakText(`Undo to move ${moveHistory[currentHistoryIndex].n}`);
     return true;
 }
@@ -5011,9 +5022,12 @@ function redoMove() {
         return false;
     }
     
-    // Move forward one step
     currentHistoryIndex++;
     restoreState(currentHistoryIndex);
+    renderStats();
+    drawToggles();
+    generateNextTurnDisplay();
+    statDraw(va, vb, vc, vd, ve, vf, vg, vh);
     speakText(`Redo to move ${moveHistory[currentHistoryIndex].n}`);
     return true;
 }
@@ -5054,24 +5068,35 @@ function restoreState(index) {
     scorer = state.scorer.map(s => ({ ...s }));
     lastMoveData = state.lastMoveData ? { ...state.lastMoveData } : null;
     
-    // Reset selections
-    selectedButton = null;
-    selectedButtonLinks = [];
+    // ✅ NEW: Restore stats array values
+    if (state.statsValues) {
+        state.statsValues.forEach((s, i) => {
+            if (i < stats.length) {
+                stats[i].value = s.value;
+                if (s.col !== undefined) {
+                    stats[i].col = s.col;
+                }
+            }
+        });
+    }
+    
+    // ✅ NEW: Restore calc value
+    if (state.calcValue !== undefined) {
+        calc.value = state.calcValue;
+    }
     
     // Redraw board
     ctx.clearRect(0, 0, cW, cH);
     renderAnswer();
- //   frameGoalMouths();
     renderButtons();
     renderStats();
+    generateNextTurnDisplay();
     statDraw(va, vb, vc, vd, ve, vf, vg, vh);
-  //  drawToggles();
 }
 
 
 function saveGame() {
     try {
-        // Create save data object
         const saveData = {
             version: "1.0",
             timestamp: Date.now(),
@@ -5096,7 +5121,7 @@ function saveGame() {
             answerOccupancy: answer.map(cell => cell.occupancy),
             // Button positions
             buttonPositions: buttons.map(btn => ({ x: btn.x, y: btn.y })),
-            // Button colors (which team each button belongs to)
+            // Button colors
             buttonColors: buttons.map(btn => btn.col),
             // Scorer array
             scorerData: scorer.map(g => ({ id: g.id, col: g.col, x: g.x, y: g.y, moveN: g.moveN })),
@@ -5108,13 +5133,18 @@ function saveGame() {
                 points: lastMoveData.points,
                 moveTeam: lastMoveData.moveTeam,
                 nextTeam: lastMoveData.nextTeam
-            } : null
+            } : null,
+            // ✅ NEW: Stats values (from preAnim updates)
+            statsValues: stats.map(s => ({
+                value: s.value,
+                col: s.col
+            })),
+            // ✅ NEW: Calc value
+            calcValue: calc.value
         };
         
-        // Save to localStorage
         localStorage.setItem('mathsoccer_save', JSON.stringify(saveData));
         
-        // Show confirmation message
         const currentTeam = (r % 2 !== 0) ? 'red' : 'blue';
         va = "Game Saved!";
         vb = `Progress saved at move ${m}.`;
@@ -5126,7 +5156,7 @@ function saveGame() {
         vh = currentTeam;
         statDraw(va, vb, vc, vd, ve, vf, vg, vh);
         speakText("Game saved successfully");
-                console.log("Game saved:", saveData);
+        console.log("Game saved:", saveData);
         return true;
         
     } catch (e) {
@@ -5138,7 +5168,6 @@ function saveGame() {
 
 function loadGame() {
     try {
-        // Check if save exists
         const savedData = localStorage.getItem('mathsoccer_save');
         if (!savedData) {
             speakText("No saved game found");
@@ -5206,6 +5235,23 @@ function loadGame() {
         // Restore last move data
         lastMoveData = save.lastMoveData;
         
+        // ✅ NEW: Restore stats array values
+        if (save.statsValues) {
+            save.statsValues.forEach((s, i) => {
+                if (i < stats.length) {
+                    stats[i].value = s.value;
+                    if (s.col !== undefined) {
+                        stats[i].col = s.col;
+                    }
+                }
+            });
+        }
+        
+        // ✅ NEW: Restore calc value
+        if (save.calcValue !== undefined) {
+            calc.value = save.calcValue;
+        }
+        
         // Clear selections
         selectedButton = null;
         selectedButtonLinks = [];
@@ -5232,16 +5278,7 @@ function loadGame() {
         const isRedTurn = (r % 2 !== 0);
         const currentTeam = isRedTurn ? 'red' : 'blue';
         
-        const savedDate = new Date(save.timestamp).toLocaleTimeString();
-        va = "Game Loaded!";
-        vb = `From save at ${savedDate}`;
-        vc = `Move ${m} | Factor: ${problemFactor}`;
-        vd = `Score: ${redGoalsDisplay()} - ${blueGoalsDisplay()}`;
-        ve = `Points: ${redPoints} - ${bluePoints}`;
-        vf = `${capitalizeFirst(currentTeam)}'s turn.`;
-        vg = "Touch your button to continue.";
-        vh = currentTeam;
-        
+        generateNextTurnDisplay();
         statDraw(va, vb, vc, vd, ve, vf, vg, vh);
         speakText(`Game loaded. ${currentTeam}'s turn. Factor is ${problemFactor}`);
         
