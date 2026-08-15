@@ -5030,7 +5030,7 @@ function undoMove() {
     drawToggles();
     generateNextTurnDisplay();
     statDraw(va, vb, vc, vd, ve, vf, vg, vh);
-    speakText(`Undo to move ${moveHistory[currentHistoryIndex].n}`);
+    speakText(`Undo to move ${moveHistory[currentHistoryIndex].n-1}`);
     return true;
 }
 
@@ -5049,7 +5049,7 @@ function redoMove() {
     drawToggles();
     generateNextTurnDisplay();
     statDraw(va, vb, vc, vd, ve, vf, vg, vh);
-    speakText(`Redo to move ${moveHistory[currentHistoryIndex].n}`);
+    speakText(`Redo to move ${moveHistory[currentHistoryIndex].n-1}`);
     return true;
 }
 
