@@ -4963,6 +4963,7 @@ function saveGameState() {
         bluePoints: bluePoints,
         problemFactor: problemFactor,
         r: r,
+        m: m,
         n: n,
         h: h,
         g: g,
@@ -5081,6 +5082,7 @@ function restoreState(index) {
     bluePoints = state.bluePoints;
     problemFactor = state.problemFactor;
     r = state.r;
+    m = state.m;
     n = state.n;
     h = state.h;
     g = state.g;
@@ -5142,6 +5144,9 @@ function restoreState(index) {
     // Reset selections
     selectedButton = null;
     selectedButtonLinks = [];
+    
+    redBefore = redPoints;
+    blueBefore = bluePoints;
     
     // Redraw board
     ctx.clearRect(0, 0, cW, cH);
@@ -5384,16 +5389,7 @@ function loadGame() {
         const isRedTurn = (r % 2 !== 0);
         const currentTeam = isRedTurn ? 'red' : 'blue';
         
-        const savedDate = new Date(save.timestamp).toLocaleTimeString();
-        va = "Game Loaded!";
-        vb = `From save at ${savedDate}`;
-        vc = `Move ${m} | Factor: ${problemFactor}`;
-        vd = `Score: ${redGoalsDisplay()} - ${blueGoalsDisplay()}`;
-        ve = `Points: ${redPoints} - ${bluePoints}`;
-        vf = `${capitalizeFirst(currentTeam)}'s turn.`;
-        vg = "Touch your button to continue.";
-        vh = currentTeam;
-        
+     generateNextTurnDisplay();          
         statDraw(va, vb, vc, vd, ve, vf, vg, vh);
         speakText(`Game loaded. ${currentTeam}'s turn. Factor is ${problemFactor}`);
         
@@ -8905,7 +8901,9 @@ renderStats();
 }
 }, 10000);
     }
-  
+    
+generateNextTurnDisplay();        
+      statDraw(va, vb, vc, vd, ve, vf, vg, vh);    
 speakText(`factor is equal to ${problemFactor}`);
 
     // === COUNT CIRCLES AFTER ANIMATION ===
