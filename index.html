@@ -4956,7 +4956,7 @@ function saveGameState() {
             y: btn.y,
             col: btn.col
         })),
-        // ✅ Store game variables
+        // Game variables
         redGoal: redGoal,
         blueGoal: blueGoal,
         redPoints: redPoints,
@@ -4968,13 +4968,33 @@ function saveGameState() {
         g: g,
         side: side,
         scorer: scorer.map(s => ({ ...s })),
-        lastMoveData: lastMoveData ? { ...lastMoveData } : null,
-        // ✅ NEW: Store stats array values
+        // ✅ Simplified lastMoveData (only what's needed)
+        lastMoveData: lastMoveData ? {
+            button: lastMoveData.button ? {
+                id: lastMoveData.button.id,
+                col: lastMoveData.button.col
+            } : null,
+            targetCell: lastMoveData.targetCell ? {
+                id: lastMoveData.targetCell.id
+            } : null,
+            sourceCell: lastMoveData.sourceCell ? {
+                id: lastMoveData.sourceCell.id
+            } : null,
+            chanceType: lastMoveData.chanceType,
+            points: lastMoveData.points,
+            moveTeam: lastMoveData.moveTeam,
+            nextTeam: lastMoveData.nextTeam
+        } : null,
+        // ✅ Scorer positions (for mover and scorer redraw)
+        topX: topX,
+        topY: topY,
+        botX: botX,
+        botY: botY,
+        // ✅ Stats values (from preAnim updates)
         statsValues: stats.map(s => ({
             value: s.value,
             col: s.col
         })),
-        // ✅ NEW: Store calc value
         calcValue: calc.value
     };
     
@@ -5066,9 +5086,43 @@ function restoreState(index) {
     g = state.g;
     side = state.side;
     scorer = state.scorer.map(s => ({ ...s }));
-    lastMoveData = state.lastMoveData ? { ...state.lastMoveData } : null;
     
-    // ✅ NEW: Restore stats array values
+    // ✅ Restore simplified lastMoveData
+    if (state.lastMoveData) {
+        // Reconstruct button object (only id and col needed)
+        const button = state.lastMoveData.button ? {
+            id: state.lastMoveData.button.id,
+            col: state.lastMoveData.button.col
+        } : null;
+        
+        const targetCell = state.lastMoveData.targetCell ? {
+            id: state.lastMoveData.targetCell.id
+        } : null;
+        
+        const sourceCell = state.lastMoveData.sourceCell ? {
+            id: state.lastMoveData.sourceCell.id
+        } : null;
+        
+        lastMoveData = {
+            button: button,
+            targetCell: targetCell,
+            sourceCell: sourceCell,
+            chanceType: state.lastMoveData.chanceType,
+            points: state.lastMoveData.points,
+            moveTeam: state.lastMoveData.moveTeam,
+            nextTeam: state.lastMoveData.nextTeam
+        };
+    } else {
+        lastMoveData = null;
+    }
+    
+    // ✅ Restore scorer positions
+    if (state.topX !== undefined) topX = state.topX;
+    if (state.topY !== undefined) topY = state.topY;
+    if (state.botX !== undefined) botX = state.botX;
+    if (state.botY !== undefined) botY = state.botY;
+    
+    // ✅ Restore stats array values
     if (state.statsValues) {
         state.statsValues.forEach((s, i) => {
             if (i < stats.length) {
@@ -5080,16 +5134,22 @@ function restoreState(index) {
         });
     }
     
-    // ✅ NEW: Restore calc value
+    // ✅ Restore calc value
     if (state.calcValue !== undefined) {
         calc.value = state.calcValue;
     }
+    
+    // Reset selections
+    selectedButton = null;
+    selectedButtonLinks = [];
     
     // Redraw board
     ctx.clearRect(0, 0, cW, cH);
     renderAnswer();
     renderButtons();
     renderStats();
+    
+    // ✅ Regenerate statDraw info from lastMoveData
     generateNextTurnDisplay();
     statDraw(va, vb, vc, vd, ve, vf, vg, vh);
 }
@@ -5125,21 +5185,33 @@ function saveGame() {
             buttonColors: buttons.map(btn => btn.col),
             // Scorer array
             scorerData: scorer.map(g => ({ id: g.id, col: g.col, x: g.x, y: g.y, moveN: g.moveN })),
-            // Last move data
+            // ✅ Simplified lastMoveData
             lastMoveData: lastMoveData ? {
-                button: lastMoveData.button ? { id: lastMoveData.button.id, col: lastMoveData.button.col } : null,
-                targetCell: lastMoveData.targetCell ? { id: lastMoveData.targetCell.id } : null,
+                button: lastMoveData.button ? {
+                    id: lastMoveData.button.id,
+                    col: lastMoveData.button.col
+                } : null,
+                targetCell: lastMoveData.targetCell ? {
+                    id: lastMoveData.targetCell.id
+                } : null,
+                sourceCell: lastMoveData.sourceCell ? {
+                    id: lastMoveData.sourceCell.id
+                } : null,
                 chanceType: lastMoveData.chanceType,
                 points: lastMoveData.points,
                 moveTeam: lastMoveData.moveTeam,
                 nextTeam: lastMoveData.nextTeam
             } : null,
-            // ✅ NEW: Stats values (from preAnim updates)
+            // ✅ Scorer positions
+            topX: topX,
+            topY: topY,
+            botX: botX,
+            botY: botY,
+            // ✅ Stats values
             statsValues: stats.map(s => ({
                 value: s.value,
                 col: s.col
             })),
-            // ✅ NEW: Calc value
             calcValue: calc.value
         };
         
@@ -5232,10 +5304,41 @@ function loadGame() {
             });
         }
         
-        // Restore last move data
-        lastMoveData = save.lastMoveData;
+        // ✅ Restore simplified lastMoveData
+        if (save.lastMoveData) {
+            const button = save.lastMoveData.button ? {
+                id: save.lastMoveData.button.id,
+                col: save.lastMoveData.button.col
+            } : null;
+            
+            const targetCell = save.lastMoveData.targetCell ? {
+                id: save.lastMoveData.targetCell.id
+            } : null;
+            
+            const sourceCell = save.lastMoveData.sourceCell ? {
+                id: save.lastMoveData.sourceCell.id
+            } : null;
+            
+            lastMoveData = {
+                button: button,
+                targetCell: targetCell,
+                sourceCell: sourceCell,
+                chanceType: save.lastMoveData.chanceType,
+                points: save.lastMoveData.points,
+                moveTeam: save.lastMoveData.moveTeam,
+                nextTeam: save.lastMoveData.nextTeam
+            };
+        } else {
+            lastMoveData = null;
+        }
         
-        // ✅ NEW: Restore stats array values
+        // ✅ Restore scorer positions
+        if (save.topX !== undefined) topX = save.topX;
+        if (save.topY !== undefined) topY = save.topY;
+        if (save.botX !== undefined) botX = save.botX;
+        if (save.botY !== undefined) botY = save.botY;
+        
+        // ✅ Restore stats array values
         if (save.statsValues) {
             save.statsValues.forEach((s, i) => {
                 if (i < stats.length) {
@@ -5247,7 +5350,7 @@ function loadGame() {
             });
         }
         
-        // ✅ NEW: Restore calc value
+        // ✅ Restore calc value
         if (save.calcValue !== undefined) {
             calc.value = save.calcValue;
         }
@@ -5274,11 +5377,23 @@ function loadGame() {
         renderStats();
         drawToggles();
         
-        // Update display
+        // ✅ Regenerate statDraw info from lastMoveData
+        generateNextTurnDisplay();
+        statDraw(va, vb, vc, vd, ve, vf, vg, vh);
+        
         const isRedTurn = (r % 2 !== 0);
         const currentTeam = isRedTurn ? 'red' : 'blue';
         
-        generateNextTurnDisplay();
+        const savedDate = new Date(save.timestamp).toLocaleTimeString();
+        va = "Game Loaded!";
+        vb = `From save at ${savedDate}`;
+        vc = `Move ${m} | Factor: ${problemFactor}`;
+        vd = `Score: ${redGoalsDisplay()} - ${blueGoalsDisplay()}`;
+        ve = `Points: ${redPoints} - ${bluePoints}`;
+        vf = `${capitalizeFirst(currentTeam)}'s turn.`;
+        vg = "Touch your button to continue.";
+        vh = currentTeam;
+        
         statDraw(va, vb, vc, vd, ve, vf, vg, vh);
         speakText(`Game loaded. ${currentTeam}'s turn. Factor is ${problemFactor}`);
         
@@ -8561,7 +8676,7 @@ function postAnim() {
 drawSparkleBorder();   
 animationInProgress = false;
     touchEnabled = true;
-  if (lastMoveData) {
+  if (!lastMoveData) return;
         const { button, targetCell, sourceCell, chanceType, points, moveTeam, nextTeam } = lastMoveData;
         
         const fromValue = sourceCell ? sourceCell.id : "?";
@@ -8692,30 +8807,23 @@ else if (pointsEarnedThisMove === 2) {
 
 // === 1 POINT (Goal Line Unblocked) ===
 else if (pointsEarnedThisMove === 1) {
-    if (targetButton.col === playerColor) {
-        if (goalLineExposed) {
+    if (targetButton.col === playerColor && goalLineExposed) {
             speakText(`You left the goal line unblocked. Your ${opponentDifficulty} opponents token ${rebound.id} is about to score now!`);
-     playSound(loud);
-        } else {
-         //   speakText(`You left the goal line unblocked, but your own token is blocking it.`);
-        }
-    } else if (targetButton.col === opponentColor) {
-        if (goalLineExposed) {
+     playSound(loud);        
+    } 
+    
+else if (targetButton.col === opponentColor && goalLineExposed) {
             speakText(`Your ${opponentDifficulty} opponent left the goal line unblocked. You are about to score now with your token ${rebound.id}!`);
-            playSound(loud);
-        } else {
-            //speakText(`Your ${opponentDifficulty} opponent left the goal line unblocked, but their own token is blocking it.`);
-        }
+            playSound(loud);        
     }
 }
 
-
+showCalculationAnimation(calc.value, moveTeam);      
 
     oldFac=problemFactor;
     
 probFac();
 
-speakText(`factor is equal to ${problemFactor}`);
 if(targetAnswer.id==1){
              const scoringTeam = moveTeam;
 
@@ -8748,8 +8856,6 @@ botY-=24;
 }
 
 
- 
-
 // Score update (from YOUR perspective - uses side)
 const playerColor = (side === 0) ? 'red' : 'blue';
 const opponentColor = (side === 0) ? 'blue' : 'red';
@@ -8764,6 +8870,10 @@ if (playerGoals > opponentGoals) {
     speakText("It's " + playerGoals + "-" + opponentGoals + " draw after " + (n-1) + " moves. Try harder!");
 }
 
+
+    var resetTime=setTimeout(function(){
+
+
 if (n > 28) {
         setTimeout(() => {
             showGameOver();
@@ -8771,8 +8881,16 @@ if (n > 28) {
             return;
         }, 10000);
    }
-   
-    var resetTime=setTimeout(function(){
+      
+else{
+    if (h == 0) {
+        speakText("it's your opponent's turn to pass ");
+        var timerCom = setTimeout(compMove, 10000);
+    } else if (h == 1) {
+        r++;
+        speakText("it's your turn to pass ");
+    }
+}
 if (n < 29) {
      pass();
      playSound(welcome);
@@ -8783,28 +8901,12 @@ if (n < 29) {
       // Generate display for next turn
     const display = generateNextTurnDisplay();
 renderStats();           
-   statDraw(va,vb,vc,vd,ve,vf,vg,vh );       
+   statDraw(va,vb,vc,vd,ve,vf,vg,vh );  
 }
-
-   
-else{
-    if (h == 0) {
-        speakText("it's your opponent's turn to pass ");
-        var timerCom = setTimeout(compMove, 10000);
-    } else if (h == 1) {
-        r++;
-        speakText("it's your turn to pass ");
-    }
-}
-    generateNextTurnDisplay();
-    statDraw(va, vb, vc, vd, ve, vf, vg, vh);
 }, 10000);
     }
-else{
-   generateNextTurnDisplay();
-}
-  showCalculationAnimation(calc.value, moveTeam);      
-}
+  
+speakText(`factor is equal to ${problemFactor}`);
 
     // === COUNT CIRCLES AFTER ANIMATION ===
     // Use the targetButton from the current move
