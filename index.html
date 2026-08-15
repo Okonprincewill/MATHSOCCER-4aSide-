@@ -8727,6 +8727,14 @@ if (playerGoals > opponentGoals) {
     speakText("It's " + playerGoals + "-" + opponentGoals + " draw after " + (n-1) + " moves. Try harder!");
 }
 
+if (n > 28) {
+        setTimeout(() => {
+            showGameOver();
+            clearTimeout(timerCom);
+            return;
+        }, 10000);
+   }
+   
     var resetTime=setTimeout(function(){
 if (n < 29) {
      pass();
@@ -8741,14 +8749,7 @@ renderStats();
    statDraw(va,vb,vc,vd,ve,vf,vg,vh );       
 }
 
-   if (n > 28) {
-        setTimeout(() => {
-            showGameOver();
-            clearTimeout(timerCom);
-            return;
-        }, 10000);
-   }
-
+   
 else{
     if (h == 0) {
         speakText("it's your opponent's turn to pass ");
