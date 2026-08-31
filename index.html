@@ -9300,7 +9300,10 @@ setTimeout (() =>{
             showGameOver();
             }
             else{
-            speakText("It's" + redGoal + "goal to " + blueGoal + " after " + (n-1) + " moves!");
+            speakText("This game is over. It's" + redGoal + "goal to " + blueGoal + " after " + (n-1) + " moves!");
+            matchInProgress = false;      
+        setTimeout(quitGame, 5000);
+        gameOverActive = false;  
             }
   clearTimeout(timerCom);
         return;
@@ -12749,7 +12752,7 @@ function afterAutoMove() {
     
     if (n > 28) {
         matchInProgress = false;      
-        setTimeout(quitGame, 3000);
+        setTimeout(quitGame, 7000);
         gameOverActive = false;   
     // speechEnabled = true;
         return;
@@ -12804,7 +12807,7 @@ function autoMove() {
     if (gameOverActive) return;
     if (g !== 15) return;  // ✅ Only run in AvA mode
     if (n > 28) {
-    setTimeout(quitGame, 3000);
+    setTimeout(quitGame, 7000);
         return;
     }
     
