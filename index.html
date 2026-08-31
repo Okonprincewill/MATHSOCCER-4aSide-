@@ -9220,13 +9220,14 @@ if ((side === 0 && targetButton.col === "blue") || (side === 1 && targetButton.c
     }
 }
 
-if (!matchInProgress) {  
+
 // Score update (from YOUR perspective - uses side)
 const playerColor = (side === 0) ? 'red' : 'blue';
 const opponentColor = (side === 0) ? 'blue' : 'red';
 const playerGoals = (playerColor === 'red') ? redGoal : blueGoal;
 const opponentGoals = (opponentColor === 'red') ? redGoal : blueGoal;
 
+if (!matchInProgress) {  
 if (playerGoals > opponentGoals) {
     speakText("You are winning by " + playerGoals + " goal to " + opponentGoals + " after " + (n-1) + " moves. Congratulations!");
 } else if (playerGoals < opponentGoals) {
@@ -9234,8 +9235,12 @@ if (playerGoals > opponentGoals) {
 } else {
     speakText("It's " + playerGoals + "-" + opponentGoals + " draw after " + (n-1) + " moves. Try harder!");
 }
+}
+else{
+speakText("It's" + playerGoals + " " + opponentGoals + " after " + (n-1) + " moves!");
+}
 
-
+if (!matchInProgress) {  
     var resetTime=setTimeout(function(){
 
 
@@ -9269,9 +9274,10 @@ statDraw(va,vb,vc,vd,ve,vf,vg,vh );
 }
 }, 10000);
 }
-        
+        if (!matchInProgress) {  
     generateNextTurnDisplay();
     statDraw(va, vb, vc, vd, ve, vf, vg, vh);
+}
 }
 speakText(`factor is equal to ${problemFactor}`);
 r++;
@@ -9292,6 +9298,9 @@ if (n > 28) {
 setTimeout (() =>{
         if (!matchInProgress) {
             showGameOver();
+            }
+            else{
+            speakText("It's" + playerGoals + " " + opponentGoals + " after " + (n-1) + " moves!");
             }
   clearTimeout(timerCom);
         return;
