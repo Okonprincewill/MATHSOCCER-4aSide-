@@ -4881,7 +4881,7 @@ var splashMath = setTimeout(function() {
         showLandingPage();        // ← Use showLandingPage directly
     }, 3000);
     
-    speakText("Returning to main menu. Choose a side to play.");
+    speakText("Returning to main menu. Choose a side to play: red or blue. Or watch another AI match to learn more.");
     
     console.log("Quit complete - g =", g);
 }
@@ -9300,7 +9300,7 @@ setTimeout (() =>{
             showGameOver();
             }
             else{
-            speakText("It's" + playerGoals + " " + opponentGoals + " after " + (n-1) + " moves!");
+            speakText("It's" + redGoal + " " + blueGoal + " after " + (n-1) + " moves!");
             }
   clearTimeout(timerCom);
         return;
