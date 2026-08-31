@@ -9237,7 +9237,7 @@ if (playerGoals > opponentGoals) {
 }
 }
 else{
-speakText("It's" + playerGoals + " " + opponentGoals + " after " + (n-1) + " moves!");
+speakText("It's" + playerGoals + "goal to " + opponentGoals + " after " + (n-1) + " moves!");
 }
 
 if (!matchInProgress) {  
@@ -9300,7 +9300,7 @@ setTimeout (() =>{
             showGameOver();
             }
             else{
-            speakText("It's" + redGoal + " " + blueGoal + " after " + (n-1) + " moves!");
+            speakText("It's" + redGoal + "goal to " + blueGoal + " after " + (n-1) + " moves!");
             }
   clearTimeout(timerCom);
         return;
