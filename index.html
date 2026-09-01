@@ -7283,7 +7283,7 @@ const bottomBorder = (humanColor === 'red') ? '#FF0000' : '#0000FF';
         ctx.shadowOffsetX = 2;
         ctx.shadowOffsetY = 3;
         
-        const levelGrad = ctx.createRadialGradient(169, 85, 2, 169, 90, 30);
+        const levelGrad = ctx.createRadialGradient(169, 95, 2, 169, 90, 30);
         levelGrad.addColorStop(0, '#FFD700');
         levelGrad.addColorStop(0.5, '#FFA500');
         levelGrad.addColorStop(1, '#FF6B00');
@@ -7292,13 +7292,13 @@ const bottomBorder = (humanColor === 'red') ? '#FF0000' : '#0000FF';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = levelGrad;
-        ctx.fillText('⚡ ' + levelText + ' ⚡', 179, 125);
+        ctx.fillText('⚡ ' + levelText + ' ⚡', 179, 135);
         
         ctx.shadowBlur = 0;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
         ctx.fillStyle = '#FFFFFF';
-        ctx.fillText('⚡ ' + levelText + ' ⚡', 179, 123);
+        ctx.fillText('⚡ ' + levelText + ' ⚡', 179, 133);
         ctx.restore();
         
         ctx.save();
@@ -7307,22 +7307,22 @@ const bottomBorder = (humanColor === 'red') ? '#FF0000' : '#0000FF';
         ctx.shadowOffsetX = 2;
         ctx.shadowOffsetY = 3;
         
-        const botGrad = ctx.createRadialGradient(169, 660, 2, 169, 665, 30);
-        botGrad.addColorStop(0, bottomBorder);
-        botGrad.addColorStop(0.5, bottomBorder);
-        botGrad.addColorStop(1, '#333333');
+        const botGrad = ctx.createRadialGradient(169, 650, 2, 169, 665, 30);
+        botGrad.addColorStop(0, '#FFD700');
+        botGrad.addColorStop(0.5, '#FFA500');
+        botGrad.addColorStop(1, '#FF6B00');
         
         ctx.font = 'bold 18px fantasy, papyrus';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = botGrad;
-        ctx.fillText('⚡ ME ⚡', 179, 628);
+        ctx.fillText('⚡ ME ⚡', 179, 618);
         
         ctx.shadowBlur = 0;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
         ctx.fillStyle = '#FFFFFF';
-        ctx.fillText('⚡ ME ⚡', 179, 626);
+        ctx.fillText('⚡ ME ⚡', 179, 616);
         ctx.restore();
     }   
     
@@ -7353,22 +7353,22 @@ const bottomBorder = (humanColor === 'red') ? '#FF0000' : '#0000FF';
         ctx.shadowOffsetX = 2;
         ctx.shadowOffsetY = 3;
         
-        const topGrad = ctx.createRadialGradient(169, 85, 2, 169, 90, 30);
-        topGrad.addColorStop(0, topBorder);
-        topGrad.addColorStop(0.5, topBorder);
-        topGrad.addColorStop(1, '#333333');
+        const topGrad = ctx.createRadialGradient(169, 95, 2, 169, 90, 30);
+        topGrad.addColorStop(0, '#FFD700');
+        topGrad.addColorStop(0.5, '#FFA500');
+        topGrad.addColorStop(1, '#FF6B00');
         
         ctx.font = 'bold 18px fantasy, papyrus';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = topGrad;
-        ctx.fillText('⚡ ' + topName + ' ⚡', 179, 125);
+        ctx.fillText('⚡ ' + topName + ' ⚡', 179, 135);
         
         ctx.shadowBlur = 0;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
         ctx.fillStyle = '#FFFFFF';
-        ctx.fillText('⚡ ' + topName + ' ⚡', 179, 123);
+        ctx.fillText('⚡ ' + topName + ' ⚡', 179, 133);
         ctx.restore();
         
         // ===========================================
@@ -7380,22 +7380,22 @@ const bottomBorder = (humanColor === 'red') ? '#FF0000' : '#0000FF';
         ctx.shadowOffsetX = 2;
         ctx.shadowOffsetY = 3;
         
-        const botGrad = ctx.createRadialGradient(169, 660, 2, 169, 665, 30);
-        botGrad.addColorStop(0, bottomBorder);
-        botGrad.addColorStop(0.5, bottomBorder);
-        botGrad.addColorStop(1, '#333333');
+        const botGrad = ctx.createRadialGradient(169, 650, 2, 169, 665, 30);
+        botGrad.addColorStop(0, '#FFD700');
+        botGrad.addColorStop(0.5, '#FFA500');
+        botGrad.addColorStop(1, '#FF6B00');
         
         ctx.font = 'bold 18px fantasy, papyrus';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = botGrad;
-        ctx.fillText('⚡ ' + bottomName + ' ⚡', 179, 628);
+        ctx.fillText('⚡ ' + bottomName + ' ⚡', 179, 618);
         
         ctx.shadowBlur = 0;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
         ctx.fillStyle = '#FFFFFF';
-        ctx.fillText('⚡ ' + bottomName + ' ⚡', 179, 626);
+        ctx.fillText('⚡ ' + bottomName + ' ⚡', 179, 616);
         ctx.restore();
     }
     
@@ -7962,12 +7962,12 @@ calc.value=String(problemFactor+" \u00F7 "+problemFactor/targetAnswer.id+" = "+t
    let scorer = [];
 function drawMover() {
     if (lastMoveData) {
-        const { button, targetCell } = lastMoveData;
+        const { button, targetCell, points } = lastMoveData;
         const mover = button;
         
         // side=0: Red is TOP, Blue is BOTTOM
         // side=1: Blue is TOP, Red is BOTTOM
-        if ((side === 0 && mover.col === "blue") || (side === 1 && mover.col === "red")) {
+        if (points !== 10 && ((side === 0 && mover.col === "blue") || (side === 1 && mover.col === "red"))) {
             drawBut(topX, topY, mover, n - 1);
         } else {
             drawBut(botX, botY, mover, n - 1);
@@ -12753,7 +12753,7 @@ function afterAutoMove() {
     
     if (n > 28) {
         matchInProgress = false;      
-        setTimeout(quitGame, 8000);
+        setTimeout(resetForNewGame, 8000);
         gameOverActive = false;   
     // speechEnabled = true;
         return;
@@ -12808,7 +12808,7 @@ function autoMove() {
     if (gameOverActive) return;
     if (g !== 15) return;  // ✅ Only run in AvA mode
     if (n > 28) {
-    setTimeout(quitGame, 7000);
+    setTimeout(resetForNewGame, 7000);
         return;
     }
     
@@ -13497,18 +13497,26 @@ loadAchievements();
     }
 }
 
+// Add this at the top with other variables
+let avaToggleLock = false;
+
 // === SOUND TOGGLE FOR AI VS AI (g=15) ===
 if (g === 15) {
     const soundBox = window._soundToggleBox;
     if (soundBox && touchX >= soundBox.x && touchX <= soundBox.x + soundBox.w &&
         touchY >= soundBox.y && touchY <= soundBox.y + soundBox.h) {
         
+        // ✅ Prevent multiple clicks
+        if (avaToggleLock) return;
+        avaToggleLock = true;
+        
         // ✅ Prevent toggle during animation
         if (animationInProgress) {
+            avaToggleLock = false;
             return;
         }
         
-        // Visual feedback
+        // Visual feedback - only once
         ctx.save();
         ctx.fillStyle = 'rgba(0,0,0,0.5)';
         ctx.beginPath();
@@ -13516,7 +13524,8 @@ if (g === 15) {
         ctx.fill();
         ctx.restore();
         
-        setTimeout(function() {
+        clearTimeout(window._avaToggleTimeout);
+        window._avaToggleTimeout = setTimeout(function() {
             soundEnabled = !soundEnabled;
             console.log("Sound:", soundEnabled ? "ON" : "OFF");
             
@@ -13532,6 +13541,7 @@ if (g === 15) {
             renderButtons();
             renderStats();
             showStartButtons();
+            avaToggleLock = false;
         }, 300);
         
         return;
@@ -13544,10 +13554,16 @@ if (g === 15) {
     if (speechBox && touchX >= speechBox.x && touchX <= speechBox.x + speechBox.w &&
         touchY >= speechBox.y && touchY <= speechBox.y + speechBox.h) {
         
+        // ✅ Prevent multiple clicks
+        if (avaToggleLock) return;
+        avaToggleLock = true;
+        
         if (animationInProgress) {
+            avaToggleLock = false;
             return;
         }
         
+        // Visual feedback - only once
         ctx.save();
         ctx.fillStyle = 'rgba(0,0,0,0.5)';
         ctx.beginPath();
@@ -13555,13 +13571,15 @@ if (g === 15) {
         ctx.fill();
         ctx.restore();
         
-        setTimeout(function() {
+        clearTimeout(window._avaToggleTimeout);
+        window._avaToggleTimeout = setTimeout(function() {
             toggleSpeech();  // ✅ Same function HvA uses!
             ctx.clearRect(0, 0, cW, cH);
             renderAnswer();
             renderButtons();
             renderStats();
             showStartButtons();
+            avaToggleLock = false;
         }, 300);
         
         return;
