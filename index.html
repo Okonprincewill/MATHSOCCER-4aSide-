@@ -4876,8 +4876,7 @@ logo();
 checkExistingUser();
 
 var splashMath = setTimeout(function() {
-        g = 0;
-        matchInProgress = false;  // ← Ensure this is false
+        g = 0;        
         showLandingPage();        // ← Use showLandingPage directly
     }, 3000);
     
@@ -4905,17 +4904,11 @@ function resetGame() {
     animationInProgress = false;
     touchEnabled = true;
     gameOverActive = false;
-        gameOverSoundPlayed = false;
-    matchInProgress = false; 
+        gameOverSoundPlayed = false;    
     // ===========================================
     // RESET ALL GAME STATE VARIABLES TO ZERO
     // ===========================================
-if(side===0){    
-r = 2;         
-}
-else{
-r = 1;       
-}
+    
      // Red's turn first
 
     m = 1;              // Move counter reset to 1 (will increment on first move)
@@ -5006,7 +4999,7 @@ statDraw(va, vb, vc, vd, ve, vf, vg, vh);
     drawToggles();
 playSound(welcome);
     speakText("Game reset. Factor is 1.");
-        timerCom = setTimeout(compMove, 10000);
+        
 n++;
 }
 
@@ -5087,11 +5080,11 @@ function saveGameState() {
 // UNDO
 // ===========================================
 function undoMove() {
-    if (currentHistoryIndex <= 0) {
+    if (currentHistoryIndex <= 1) {
         speakText("Nothing to undo");
         return false;
     }
-    matchInProgress = false; 
+    
     // ✅ Store current state before undoing (for redo to work properly)
     // saveGameState(); // Only if you want to save the current state before undo
     
@@ -5113,7 +5106,7 @@ function redoMove() {
         speakText("Nothing to redo");
         return false;
     }
-    matchInProgress = false; 
+    
     currentHistoryIndex++;
     restoreState(currentHistoryIndex);
     renderStats();
@@ -9303,8 +9296,7 @@ setTimeout (() =>{
             }
             else{
             speakText("This game is over. It's" + redGoal + "goal to " + blueGoal + " after " + (n-1) + " moves!");
-            matchInProgress = false;      
-        setTimeout(quitGame, 5000);
+          setTimeout(quitGame, 5000);
         gameOverActive = false;  
             }
   clearTimeout(timerCom);
@@ -11420,14 +11412,17 @@ function makeMove() {
         return false;
     }
     window._moveExecuted = true;
-    
-    // ✅ Save current state before making the move (for undo)
-    saveGameState();
+       
 
     if (((compAns.id >= problemFactor && compAns.id / problemFactor < 10 && compAns.id % problemFactor == 0) || 
          (compAns.id < problemFactor && problemFactor % compAns.id == 0)) && 
          compAns.occupancy == "no" && 
          (r % 2 !== 0 && compAns.col !== 'red' || r % 2 === 0 && compAns.col !== 'blue')) {
+         
+   sparkleBorderActive = true;
+      
+         // ✅ Save current state before making the move (for undo)
+    saveGameState();
         
         targetButton = compBut;
         targetAnswer = compAns;
@@ -11524,10 +11519,6 @@ function makeMove() {
        // r++;
         z = 0;
         
-        // ✅ If goal scored, revert r (same player continues)
-        if (targetAnswer.id == 1) {
-            //r--;
-        }
         
         // ✅ ONLY set h and g for HUMAN mode
         if (!matchInProgress) {
@@ -12757,10 +12748,8 @@ function launchAIMatch() {
 function afterAutoMove() {    
     
     if (n > 28) {
-        matchInProgress = false;      
-        setTimeout(resetForNewGame, 8000);
-        gameOverActive = false;   
-    // speechEnabled = true;
+       setTimeout(resetForNewGame, 8000);
+        gameOverActive = false;       
         return;
     }
     
@@ -12872,7 +12861,7 @@ function autoMove() {
 
 function land() {
     if (!matchInProgress) {
-//speechEnabled = false;    calculationAnimationEnabled=true;
+calculationAnimationEnabled=true;
         // First time - launch AI match
         launchAIMatch();     
     } 
@@ -14771,9 +14760,11 @@ function executeHumanMove(button, targetCell, currentTeam) {
     selectedButtonLinks = [];
     z = 0;
     g = 2;
-    
+  
+if (!matchInProgress) {  
     if (n < 28) {
         var timerCom = setTimeout(compMove, 10000);
+    }
     }
     
     if (targetAnswer.id == 1) {
