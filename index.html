@@ -12706,6 +12706,10 @@ function highlightButtonAndNumbers(button, numbers) {
 function showStartButtons() {
     drawLandingButton3D('Play Red', 125, 712, 'red', 'white');
     drawLandingButton3D('Play Blue', 207, 712, 'blue', 'white');
+    ctx.fillStyle = '#CFC';
+    ctx.font = 'bold 14px fantasy, papyrus';
+    ctx.fillText("AI match ends after 28 moves.", 180, 775);
+    ctx.fillText("Complete it or choose a side to play: red or blue.", 180, 790);
 }
 
 
@@ -13081,7 +13085,7 @@ function showLandingPage() {
     ctx.fillText("a number framed in your color.", 180, 515);
     ctx.fillText("Find a way to get to number 1.", 180, 535);
     
-    ctx.fillStyle = 'white';
+    ctx.fillStyle = '#CFC';
     ctx.font = 'bold 14px fantasy, papyrus';
     ctx.fillText("Choose a side to play: red or blue.", 180, 775);
     ctx.fillText("Or watch another AI match.", 180, 790);
