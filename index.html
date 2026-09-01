@@ -4906,7 +4906,7 @@ function resetGame() {
     touchEnabled = true;
     gameOverActive = false;
         gameOverSoundPlayed = false;
-    
+    matchInProgress = false; 
     // ===========================================
     // RESET ALL GAME STATE VARIABLES TO ZERO
     // ===========================================
@@ -5091,7 +5091,7 @@ function undoMove() {
         speakText("Nothing to undo");
         return false;
     }
-    
+    matchInProgress = false; 
     // ✅ Store current state before undoing (for redo to work properly)
     // saveGameState(); // Only if you want to save the current state before undo
     
@@ -5113,7 +5113,7 @@ function redoMove() {
         speakText("Nothing to redo");
         return false;
     }
-    
+    matchInProgress = false; 
     currentHistoryIndex++;
     restoreState(currentHistoryIndex);
     renderStats();
@@ -5218,7 +5218,7 @@ function restoreState(index) {
     
     redBefore = redPoints;
     blueBefore = bluePoints;
-    
+    matchInProgress = false; 
     // Redraw board
     ctx.clearRect(0, 0, cW, cH);
     renderAnswer();
@@ -5321,7 +5321,7 @@ function loadGame() {
             speakText("No saved game found");
             return false;
         }
-        
+      matchInProgress = false;   
         const save = JSON.parse(savedData);
         
         // Cancel any ongoing timers/animations
@@ -14931,8 +14931,6 @@ window.addEventListener('resize', function() {
             setupKeyboardControls();
 loadTags();
 loadTagsVisibility();
-loadLifetimeStats();
-loadAchievements();
 checkExistingUser();
 logo();
     var splashMath= setTimeout(land,3000);
