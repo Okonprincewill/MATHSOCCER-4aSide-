@@ -9185,6 +9185,7 @@ if(targetAnswer.id==1){
     const scoringTeam = moveTeam;
 
 if (matchInProgress) {  
+playSound(goal);
 speakText(`It's a GOAL!!!`);
 }
     setTimeout(() => {
@@ -10885,7 +10886,7 @@ for (let i = 0; i < yellowSquares.length; i++) {
                 }
             }
             
-            if ( l < 3  && (!hasOwnButtonLinkedToBlockVul || isLinkedToCriticalButton)) {
+            if ( l < 2  && (!hasOwnButtonLinkedToBlockVul || isLinkedToCriticalButton)) {
                 exemptAnswers.add(ansList);
                 logExemptedNumber(ansList.id, "no factor protecting "+blockVul.id);
             }
@@ -10903,7 +10904,7 @@ for (let i = 0; i < yellowSquares.length; i++) {
                 isOpponentBlockingOwnGoalLocal = true;
             }
             
-            if (hasOpponentClosest && canReachYellow && defFac && l < 3) {
+            if (hasOpponentClosest && canReachYellow && defFac && l < 2) {
                 const cannotBlock = !canReachBlockVul;
                 
                 if (cannotBlock) {
@@ -11031,7 +11032,7 @@ for (let i = 0; i < yellowSquares.length; i++) {
                     }
                     const isLinkedToCriticalButton2 = (linkedButton2 && isCriticalDefender(linkedButton2));
                     
-                    if (l < 3 && ((shouldExemptRule3 && canBlockerGoToWhite) || isLinkedToCriticalButton2)) {
+                    if (l < 2 && ((shouldExemptRule3 && canBlockerGoToWhite) || isLinkedToCriticalButton2)) {
                         exemptAnswers.add(ansList);
                         logExemptedNumber(ansList.id, "goal blocker is marking");
                     } else if (threatType === 'goal_blocker_only') {
@@ -11057,7 +11058,7 @@ for (let i = 0; i < yellowSquares.length; i++) {
                         if (((hasNonGoalBlockerThreat && canBlockerGoToWhite && 
                             targetedYellow && targetedYellow.occupancy === 'no' && 
                             goalBlockerButton.occupancy === 'no') || isLinkedToCriticalButton2) && 
-                            l < 3) {
+                            l < 2) {
                             exemptAnswers.add(ansList);
                             logExemptedNumber(ansList.id, "goal defense fallback (non-goal-blocker threat confirmed)");
                         }
