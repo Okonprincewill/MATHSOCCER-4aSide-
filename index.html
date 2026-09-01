@@ -9069,44 +9069,44 @@ if (pointsEarnedThisMove === 10) {
 // ===========================================
 
 // === 5 & 3 POINTS (Chance Creation) ===
-else if (pointsEarnedThisMove === 5 || pointsEarnedThisMove === 3) {
+if (pointsEarnedThisMove === 5 || pointsEarnedThisMove === 3) {
     const chanceType = (pointsEarnedThisMove === 5) ? "FULL CHANCE" : "HALF CHANCE";
     
     if (targetButton.col === playerColor) {
         if (goalLineExposed) {
+        playSound(loud);
         if (!matchInProgress) {  
             speakText(`You have a ${chanceType}, but your ${opponentDifficulty} opponents token ${rebound.id} is about to score now!`);
             }
             else{
-            speakText(`It's a useless ${chanceType}`)
-            }
-     playSound(loud);
+            speakText(`It's a useless ${chanceType}`);
+            }    
         } else {
+        playSound(loud);
         if (!matchInProgress) {  
             speakText(`You have a ${chanceType} to score!`);
             }
             else{
-            speakText(`It's a ${chanceType}`)
-            }
-            playSound(loud);
+            speakText(`It's a ${chanceType}`);
+            }           
         }
     } else if (targetButton.col === opponentColor) {
         if (goalLineExposed) {
+        playSound(loud);
          if (!matchInProgress) {  
             speakText(`Your ${opponentDifficulty} opponent has a ${chanceType}, but you are about to score now with token ${rebound.id}!`);
             }
             else{
-            speakText(`It's a useless ${chanceType}`)
-            }
-            playSound(loud);
+            speakText(`It's a useless ${chanceType}`);
+            }            
         } else {
+        playSound(loud);
         if (!matchInProgress) { 
             speakText(`Your ${opponentDifficulty} opponent has a ${chanceType} to score!`);
             }
             else{
-            speakText(`It's a ${chanceType}`)
-            }
-     playSound(loud);
+            speakText(`It's a ${chanceType}`);
+            }     
         }
     }
 }
@@ -9115,39 +9115,39 @@ else if (pointsEarnedThisMove === 5 || pointsEarnedThisMove === 3) {
 else if (pointsEarnedThisMove === 2) {
     if (targetButton.col === playerColor) {
         if (goalLineExposed) {
+        playSound(loud);
         if (!matchInProgress) { 
             speakText(`You blocked your ${opponentDifficulty} opponent's chance, but your opponents token ${rebound.id} has a chance to score now!`);
             }
             else{
             speakText(`The chance is blocked, but goal line is still exposed.`);
-            }
-     playSound(loud);
+            }    
         } else {
+        playSound(miss);
         if (!matchInProgress) { 
             speakText(`You blocked your ${opponentDifficulty} opponent's chance!`);
             }
             else{
             speakText(`The chance is blocked.`);
-            }
-           playSound(miss);
+            }          
         }
     } else if (targetButton.col === opponentColor) {
         if (goalLineExposed) {
+        playSound(loud);
         if (!matchInProgress) { 
             speakText(`Your chance is blocked by your ${opponentDifficulty} opponent, but you have another chance to score now with token ${rebound.id}!`);
             }
             else{
             speakText(`The chance is blocked, but goal line is still exposed.`);
-            }
-            playSound(loud);
+            }           
         } else {
+        playSound(miss);
         if (!matchInProgress) { 
             speakText(`Your chance is blocked by your ${opponentDifficulty} opponent!`);
             }
             else{
             speakText(`The chance is blocked.`);
-            }
-            playSound(miss);
+            }            
         }
     }
 }
@@ -9155,23 +9155,23 @@ else if (pointsEarnedThisMove === 2) {
 // === 1 POINT (Goal Line Unblocked) ===
 else if (pointsEarnedThisMove === 1) {
     if (targetButton.col === playerColor && goalLineExposed) {
+    playSound(loud);       
          if (!matchInProgress) {    
 speakText(`You left the goal line unblocked. Your ${opponentDifficulty} opponents token ${rebound.id} is about to score now!`);
 }
 else{
             speakText(`The goal line is exposed.`);
-            }
-     playSound(loud);        
+            }      
     } 
     
 else if (targetButton.col === opponentColor && goalLineExposed) {
+playSound(loud);        
 if (!matchInProgress) {    
             speakText(`Your ${opponentDifficulty} opponent left the goal line unblocked. You are about to score now with your token ${rebound.id}!`);
             }
             else{
             speakText(`The goal line is exposed.`);
-            }
-            playSound(loud);                   
+            }                       
     }
 }
 
@@ -9220,14 +9220,14 @@ if ((side === 0 && targetButton.col === "blue") || (side === 1 && targetButton.c
     }
 }
 
-
+if (!matchInProgress) {  
 // Score update (from YOUR perspective - uses side)
-const playerColor = (side === 0) ? 'red' : 'blue';
-const opponentColor = (side === 0) ? 'blue' : 'red';
+//const playerColor = (side === 0) ? 'red' : 'blue';
+//const opponentColor = (side === 0) ? 'blue' : 'red';
 const playerGoals = (playerColor === 'red') ? redGoal : blueGoal;
 const opponentGoals = (opponentColor === 'red') ? redGoal : blueGoal;
 
-if (!matchInProgress) {  
+
 if (playerGoals > opponentGoals) {
     speakText("You are winning by " + playerGoals + " goal to " + opponentGoals + " after " + (n-1) + " moves. Congratulations!");
 } else if (playerGoals < opponentGoals) {
@@ -9240,13 +9240,13 @@ else{
 speakText("It's" + redGoal + "goal to " + blueGoal + " after " + (n-1) + " moves!");
 }
 
-if (!matchInProgress) {  
+
     var resetTime=setTimeout(function(){
 
-
+if (!matchInProgress) { 
 if (n > 28) {
-        setTimeout(() => {     
-            showGameOver();          
+        setTimeout(() => {              
+            showGameOver();       
             clearTimeout(timerCom);
             return;
         }, 10000);
@@ -9270,15 +9270,16 @@ renderStats();
 
 generateNextTurnDisplay();     
 statDraw(va,vb,vc,vd,ve,vf,vg,vh );  
-
+}
 }
 }, 10000);
 }
+
         if (!matchInProgress) {  
     generateNextTurnDisplay();
     statDraw(va, vb, vc, vd, ve, vf, vg, vh);
 }
-}
+
 speakText(`factor is equal to ${problemFactor}`);
 r++;
     // === COUNT CIRCLES AFTER ANIMATION ===
@@ -13322,6 +13323,7 @@ landingPage.forEach((page) => {
             clearTimeout(window._landingPageTimeout);
             window._landingPageTimeout = setTimeout(function() {
                 g = 1;
+                matchInProgress = false;
                 loadLifetimeStats();
 loadAchievements();
                 playSound(inland);
@@ -13351,6 +13353,7 @@ loadAchievements();
             clearTimeout(window._landingPageTimeout);
             window._landingPageTimeout = setTimeout(function() {
                 g = 1;
+                matchInProgress = false;
                 loadLifetimeStats();
 loadAchievements();
                 playSound(inland);
@@ -13447,6 +13450,7 @@ if (g === 15 && matchInProgress) {
            // Inside the Start Red / Start Blue button handlers
 function rSet() {
         g = 1;
+        matchInProgress = false;
         side = 0;
         k = 0;
         loadLifetimeStats();
@@ -13476,6 +13480,7 @@ loadAchievements();
            // Inside the Start Red / Start Blue button handlers
 function rSet() {
         g = 1;
+        matchInProgress = false;
         side = 1;
         k = 1;
         loadLifetimeStats();
