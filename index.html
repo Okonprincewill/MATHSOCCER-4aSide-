@@ -4819,13 +4819,6 @@ function quitGame() {
     // Reset problem factor
     problemFactor = 1;
     
-    // Stop speech
-    if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-    }
-    speechQueue = [];
-    isSpeaking = false;
-
   // ===========================================
     // RESET CALCULATION DISPLAY TO 1 × 1 = 1
     // ===========================================
@@ -7042,7 +7035,7 @@ drawScorer();
     
     if (g === 15 && matchInProgress) {
     // Sound Button
-    const soundX = 25;
+    const soundX = 30;
     const soundY = 590;
     const soundW = 70;
     const soundH = 25;
@@ -7078,7 +7071,7 @@ drawScorer();
     ctx.restore();
     
     // Speech Button (next to Sound)
-    const speechX = soundX + soundW + 160;
+    const speechX = soundX + soundW + 155;
     const speechY = 590;
     const speechW = 70;
     const speechH = 25;
@@ -7112,13 +7105,7 @@ drawScorer();
     ctx.textBaseline = 'middle';
     ctx.fillText(speechEnabled ? '🗣️ SPEECH' : '🔇 SPH MUTE ', speechX + speechW/2, speechY + speechH/2);
     ctx.restore();
-}
-    
-    if (matchInProgress) {
-        // First time - launch AI match
-     //   launchAIMatch();
-        showStartButtons();
-    } 
+}      
 }
 
 
@@ -7552,6 +7539,9 @@ ctx.restore();
         
         ctx.restore();
     }
+    if (matchInProgress) {  
+        showStartButtons();
+    } 
 }
     
 function statDraw(va, vb, vc, vd, ve, vf, vg, vh) {
@@ -12734,8 +12724,7 @@ function launchAIMatch() {
     redBefore = redPoints;
     blueBefore = bluePoints;
     playSound(welcome);        
-    //showStartButtons();
-    
+       
     if (autoMoveTimer) clearTimeout(autoMoveTimer);
     autoMoveTimer = setTimeout(autoMove, 8000);
 }
@@ -12762,9 +12751,7 @@ function afterAutoMove() {
                 ctx.clearRect(0, 0, cW, cH);
                 renderAnswer();
                 renderButtons();
-                renderStats();
-               // statDraw(va, vb, vc, vd, ve, vf, vg, vh);
-               // showStartButtons();
+                renderStats();              
             }
             
             if (matchInProgress && !gameOverActive && n < 29) {
@@ -12782,9 +12769,7 @@ function afterAutoMove() {
         renderAnswer();
         renderButtons();
         renderStats();
-        //statDraw(va, vb, vc, vd, ve, vf, vg, vh);
-     //   showStartButtons();
-        
+                
         if (matchInProgress && !gameOverActive && n < 29) {
             if (autoMoveTimer) clearTimeout(autoMoveTimer);
             autoMoveTimer = setTimeout(autoMove, 8000);
