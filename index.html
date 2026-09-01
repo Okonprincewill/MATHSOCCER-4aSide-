@@ -7950,10 +7950,12 @@ function drawMover() {
         
         // side=0: Red is TOP, Blue is BOTTOM
         // side=1: Blue is TOP, Red is BOTTOM
-        if (points !== 10 && ((side === 0 && mover.col === "blue") || (side === 1 && mover.col === "red"))) {
+        if (points !== 10) {
+if ((side === 0 && mover.col === "blue") || (side === 1 && mover.col === "red")) {
             drawBut(topX, topY, mover, n - 1);
         } else {
             drawBut(botX, botY, mover, n - 1);
+            }
         }
     }
 }
@@ -9103,7 +9105,7 @@ else if (pointsEarnedThisMove === 2) {
             speakText(`You blocked your ${opponentDifficulty} opponent's chance, but your opponents token ${rebound.id} has a chance to score now!`);
             }
             else{
-            speakText(`The chance is blocked, but goal line is still exposed.`);
+            speakText(`The chance is blocked, but the goal line is still unblocked.`);
             }    
         } else {
         playSound(miss);
@@ -9121,7 +9123,7 @@ else if (pointsEarnedThisMove === 2) {
             speakText(`Your chance is blocked by your ${opponentDifficulty} opponent, but you have another chance to score now with token ${rebound.id}!`);
             }
             else{
-            speakText(`The chance is blocked, but goal line is still exposed.`);
+            speakText(`The chance is blocked, but the goal line is still unblocked.`);
             }           
         } else {
         playSound(miss);
@@ -9143,7 +9145,7 @@ else if (pointsEarnedThisMove === 1) {
 speakText(`You left the goal line unblocked. Your ${opponentDifficulty} opponents token ${rebound.id} is about to score now!`);
 }
 else{
-            speakText(`The goal line is exposed.`);
+            speakText(`The goal line is left unblocked.`);
             }      
     } 
     
@@ -9153,7 +9155,7 @@ if (!matchInProgress) {
             speakText(`Your ${opponentDifficulty} opponent left the goal line unblocked. You are about to score now with your token ${rebound.id}!`);
             }
             else{
-            speakText(`The goal line is exposed.`);
+            speakText(`The goal line is left unblocked.`);
             }                       
     }
 }
@@ -12787,7 +12789,7 @@ function autoMove() {
     if (gameOverActive) return;
     if (g !== 15) return;  // ✅ Only run in AvA mode
     if (n > 28) {
-    setTimeout(resetForNewGame, 7000);
+    setTimeout(resetForNewGame, 8000);
         return;
     }
     
@@ -12905,13 +12907,6 @@ function resetForNewGame() {
     
     // Reset problem factor
     problemFactor = 1;
-    
-    // Stop speech
-    if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-    }
-    speechQueue = [];
-    isSpeaking = false;
     
     // Reset calculation display
     calc.value = "1 × 1 = 1";
