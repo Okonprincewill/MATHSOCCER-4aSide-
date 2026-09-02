@@ -1155,7 +1155,23 @@ function getScaledTouch(clientX, clientY) {
         
         event.preventDefault();
         event.stopPropagation();
-        if (!touchEnabled || animationInProgress) return;
+        
+        if (!touchEnabled || animationInProgress) {
+        // Still process touch for AvA Start buttons
+        const touch = event.touches[0];
+        const pos = getScaledTouch(touch.clientX, touch.clientY);
+        
+        // Check if touch is on Start Red or Start Blue (g=15)
+        if (g === 15) {
+            if ((pos.x >= 125 - 4 && pos.x <= 125 + 42 && pos.y >= 712 - 4 && pos.y <= 712 + 42) ||
+                (pos.x >= 207 - 4 && pos.x <= 207 + 42 && pos.y >= 712 - 4 && pos.y <= 712 + 42)) {
+                // Process Start button click even during animation
+                handleButtonClick(pos.x, pos.y);
+                return;
+            }
+        }
+        return; // Block everything else
+    }
         
         const touch = event.touches[0];
         const pos = getScaledTouch(touch.clientX, touch.clientY);
@@ -1183,7 +1199,16 @@ function getScaledTouch(clientX, clientY) {
         resumeAudio();
         
         const pos = getScaledTouch(event.clientX, event.clientY);
-        if (!touchEnabled || animationInProgress) return;
+if (!touchEnabled || animationInProgress) {
+        if (g === 15) {
+            if ((pos.x >= 125 - 4 && pos.x <= 125 + 42 && pos.y >= 712 - 4 && pos.y <= 712 + 42) ||
+                (pos.x >= 207 - 4 && pos.x <= 207 + 42 && pos.y >= 712 - 4 && pos.y <= 712 + 42)) {
+                handleButtonClick(pos.x, pos.y);
+                return;
+            }
+        }
+        return;
+    }
         
         touchX = pos.x;
         touchY = pos.y;
@@ -7540,11 +7565,12 @@ ctx.restore();
         ctx.restore();
     }
     if (matchInProgress) {  
-        showStartButtons();
+        showStartButtons();       
     } 
 }
     
 function statDraw(va, vb, vc, vd, ve, vf, vg, vh) {
+if (matchInProgress || g === 1) return;
     const opponentColor = vh === 'red' ? 'blue' : 'red';
     const colors = getButtonColors(opponentColor);
     
@@ -9105,7 +9131,7 @@ else if (pointsEarnedThisMove === 2) {
             speakText(`You blocked your ${opponentDifficulty} opponent's chance, but your opponents token ${rebound.id} has a chance to score now!`);
             }
             else{
-            speakText(`The chance is blocked, but the goal line is still unblocked.`);
+            speakText(`The chance is blocked, but the goal line is unblocked.`);
             }    
         } else {
         playSound(miss);
@@ -9123,7 +9149,7 @@ else if (pointsEarnedThisMove === 2) {
             speakText(`Your chance is blocked by your ${opponentDifficulty} opponent, but you have another chance to score now with token ${rebound.id}!`);
             }
             else{
-            speakText(`The chance is blocked, but the goal line is still unblocked.`);
+            speakText(`The chance is blocked, but the goal line is unblocked.`);
             }           
         } else {
         playSound(miss);
@@ -9145,7 +9171,7 @@ else if (pointsEarnedThisMove === 1) {
 speakText(`You left the goal line unblocked. Your ${opponentDifficulty} opponents token ${rebound.id} is about to score now!`);
 }
 else{
-            speakText(`The goal line is left unblocked.`);
+            speakText(`The goal line is unblocked.`);
             }      
     } 
     
@@ -9155,7 +9181,7 @@ if (!matchInProgress) {
             speakText(`Your ${opponentDifficulty} opponent left the goal line unblocked. You are about to score now with your token ${rebound.id}!`);
             }
             else{
-            speakText(`The goal line is left unblocked.`);
+            speakText(`The goal line is unblocked.`);
             }                       
     }
 }
@@ -9235,7 +9261,7 @@ if (n > 28) {
             showGameOver();       
             clearTimeout(timerCom);
             return;
-        }, 10000);
+        }, 7000);
    }
       
 else{
@@ -11398,23 +11424,19 @@ function strictMove() {
 // ============================================================
 
 function makeMove() {
-    // ✅ This stops ALL executions after the first one
     if (window._moveExecuted) {
         console.warn('⚠️ Move already executed — skipping');
         return false;
     }
     window._moveExecuted = true;
-       
 
     if (((compAns.id >= problemFactor && compAns.id / problemFactor < 10 && compAns.id % problemFactor == 0) || 
          (compAns.id < problemFactor && problemFactor % compAns.id == 0)) && 
          compAns.occupancy == "no" && 
          (r % 2 !== 0 && compAns.col !== 'red' || r % 2 === 0 && compAns.col !== 'blue')) {
          
-   sparkleBorderActive = true;
-      
-         // ✅ Save current state before making the move (for undo)
-    saveGameState();
+        sparkleBorderActive = true;
+        saveGameState();
         
         targetButton = compBut;
         targetAnswer = compAns;
@@ -11425,106 +11447,138 @@ function makeMove() {
             logLinkedNumber(linkNum[f].id);
         }
         
-        // Find source cell
         const sourceCell = answer.find(cell => 
             cell.x === compBut.x - 3 && cell.y === compBut.y - 3
         );
         
-        // Update occupancy
-        answer.forEach((origin) => {
-            if (targetButton.x == origin.x + 3 && targetButton.y == origin.y + 3) {
-                origin.occupancy = "no";
-                original = origin;
-            }
-        });
-        
-        targetAnswer.occupancy = "yes";
-
-        
-    // ✅ Determine isComputer for AvA mode
-    let isComputer;
-    if (matchInProgress) {
-        // AvA: Top player = true, Bottom player = false
-        // side=0: Red is TOP (true), Blue is BOTTOM (false)
-        // side=1: Blue is TOP (true), Red is BOTTOM (false)
-        if (side === 0) {
-            // Red is TOP (true), Blue is BOTTOM (false)
-            isComputer = (r % 2 === 0); // Red's turn = true, Blue's turn = false
-        } else {
-            // side=1: Blue is TOP (true), Red is BOTTOM (false)
-            isComputer = (r % 2 !== 0); // Blue's turn = true, Red's turn = false
-        }
-    } else {
-        // HvA: AI is true, Human is false
-        isComputer = true;
-    }
-    
-    calculatePoints(isComputer);
-  
-        showSimpleArm(compBut, compAns);
-        
+        // ===========================================
+        // STEP 1: Button touch feedback (current team color)
+        // ===========================================
+        setTimeout(() => {
         const isRedTurn = (r % 2 !== 0);
-        pointsEarnedThisMove = isRedTurn ? 
-            (redPoints - redBefore) : (bluePoints - blueBefore);
+        const currentTeam = isRedTurn ? 'red' : 'blue';
+        ctx.fillStyle = currentTeam === 'red' ? 'rgba(255,0,0,0.3)' : 'rgba(0,0,255,0.3)';
+        ctx.beginPath();
+        ctx.arc(targetButton.x+22.5, targetButton.y+22.5, 25.5, 0, Math.PI * 2);
+        ctx.fill();
+        }, 1000);
+        // ===========================================
+        // STEP 2: Frame valid numbers (delay 100ms)
+        // ===========================================
+        setTimeout(() => {
+            selectedButton = targetButton;
+            selectedButtonLinks = [];
+            valAns();
+            findLinkedNumbersForButton(selectedButton);
+ generateNextTurnDisplay();           highlightButtonAndNumbers(selectedButton, selectedButtonLinks);
+        }, 2000);
         
-        let chanceType = "no chance";
-        if (pointsEarnedThisMove === 10) chanceType = "GOAL!";
-        else if (pointsEarnedThisMove === 5) chanceType = "full chance";
-        else if (pointsEarnedThisMove === 3) chanceType = "half chance";
-        else if (pointsEarnedThisMove === 2) chanceType = "block chance";
-
-        lastMoveData = {
-            button: compBut,
-            targetCell: compAns,
-            sourceCell: sourceCell,
-            chanceType: chanceType,
-            points: pointsEarnedThisMove,           
-            moveTeam: compBut.col,
-            nextTeam: compBut.col === 'red' ? 'blue' : 'red'
-        };
-           
-        redBefore = redPoints;
-        blueBefore = bluePoints;
+        // ===========================================
+        // STEP 3: Answer touch feedback (delay 600ms)
+        // ===========================================
+        setTimeout(() => {
+            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.fillRect(targetAnswer.x, targetAnswer.y, 51, 51);
+        }, 3500);
         
-        preAnim();
+        // ===========================================
+        // STEP 4: Execute move (delay 400ms after step 3)
+        // ===========================================
         
         setTimeout(() => {
-            playSound(kick);
-            playSound(ball);
-            n++;     
-            moveManimation();
-        }, 500);
+        selectedButton = null;
+    selectedButtonLinks = [];
+            // Clear visual feedback
+            ctx.clearRect(0, 0, cW, cH);
+            renderAnswer();
+            renderButtons();
+            renderStats();
+            if (!matchInProgress) {
+                statDraw(va, vb, vc, vd, ve, vf, vg, vh);
+            }
+            
+            // ===========================================
+            // ORIGINAL MOVE EXECUTION (unchanged)
+            // ===========================================
+            answer.forEach((origin) => {
+                if (targetButton.x == origin.x + 3 && targetButton.y == origin.y + 3) {
+                    origin.occupancy = "no";
+                    original = origin;
+                }
+            });
+            targetAnswer.occupancy = "yes";
+
+            let isComputer;
+            if (matchInProgress) {
+                if (side === 0) {
+                    isComputer = (r % 2 === 0);
+                } else {
+                    isComputer = (r % 2 !== 0);
+                }
+            } else {
+                isComputer = true;
+            }
+            
+            calculatePoints(isComputer);
+            showSimpleArm(compBut, compAns);
+            
+            const isRedTurn2 = (r % 2 !== 0);
+            pointsEarnedThisMove = isRedTurn2 ? 
+                (redPoints - redBefore) : (bluePoints - blueBefore);
+            
+            let chanceType = "no chance";
+            if (pointsEarnedThisMove === 10) chanceType = "GOAL!";
+            else if (pointsEarnedThisMove === 5) chanceType = "full chance";
+            else if (pointsEarnedThisMove === 3) chanceType = "half chance";
+            else if (pointsEarnedThisMove === 2) chanceType = "block chance";
+
+            lastMoveData = {
+                button: compBut,
+                targetCell: compAns,
+                sourceCell: sourceCell,
+                chanceType: chanceType,
+                points: pointsEarnedThisMove,           
+                moveTeam: compBut.col,
+                nextTeam: compBut.col === 'red' ? 'blue' : 'red'
+            };
+               
+            redBefore = redPoints;
+            blueBefore = bluePoints;
+            
+            preAnim();
+            
+            setTimeout(() => {
+                playSound(kick);
+                playSound(ball);
+                n++;     
+                moveManimation();
+            }, 500);
+            
+            saveMoveToHistory({
+                moveNumber: m,
+                teamColor: compBut.col,
+                factor: problemFactor,
+                button: compBut.id,
+                cellNumber: compAns.id,
+                outcome: chanceType,
+                points: pointsEarnedThisMove,
+                circles: 0
+            });
+            
+            z = 0;
+            
+            if (!matchInProgress) {
+                h = 1;
+                g = 2;
+                handleButtonClick();
+            }
+            
+        }, 4000); // 100 + 600 + 400 - 100 = 1000ms total delay before execute
         
-        // Save to history
-        saveMoveToHistory({
-            moveNumber: m,
-            teamColor: compBut.col,
-            factor: problemFactor,
-            button: compBut.id,
-            cellNumber: compAns.id,
-            outcome: chanceType,
-            points: pointsEarnedThisMove,
-            circles: 0
-        });
-        
-        // ✅ Increment turn
-       // r++;
-        z = 0;
-        
-        
-        // ✅ ONLY set h and g for HUMAN mode
-        if (!matchInProgress) {
-            h = 1;
-            g = 2;
-            handleButtonClick();
-        }
-        // ✅ In AI mode, h and g stay unchanged
-        // afterAutoMove() handles the rest
-        
-        return true; // Move successful
+        return true;
     }
     
-    return false; // Move failed
+    return false;
 }
 
     
@@ -12682,17 +12736,19 @@ function highlightButtonAndNumbers(button, numbers) {
     });
 }
 
-// ============================================================
-//  SHOW START BUTTONS ONLY
-// ============================================================
+
+// ===========================================
+// MODIFIED showStartButtons to start scrolling
+// ===========================================
 
 function showStartButtons() {
     drawLandingButton3D('Play Red', 125, 712, 'red', 'white');
-    drawLandingButton3D('Play Blue', 207, 712, 'blue', 'white');
+    drawLandingButton3D('Play Blue', 207, 712, 'blue', 'white');    
     ctx.fillStyle = '#CFC';
     ctx.font = 'bold 14px fantasy, papyrus';
-    ctx.fillText("AI match ends after 28 moves.", 180, 775);
-    ctx.fillText("Complete it or choose a side to play: red or blue.", 180, 790);
+    ctx.fillText("AI match ends after 28 moves.", 180, 680);
+    ctx.fillText("How to play: Touch a token and a framed number.", 180, 775);
+    ctx.fillText("Find a way to get to the top number 1.", 180, 790);
 }
 
 
@@ -13411,6 +13467,9 @@ loadAchievements();
 // ===========================================
 if (g === 15 && matchInProgress) {
     // Play Red button (X: 125, Y: 712)
+    if (!lastMoveData) return;
+        const { button, targetCell, sourceCell, chanceType, points, moveTeam, nextTeam } = lastMoveData;
+        if( points=== 10) return;
     if (touchX >= 125 - 4 && touchX <= 125 + 42 && touchY >= 712 - 4 && touchY <= 712 + 42) {
         // Reset everything
         resetForNewGame();
@@ -14448,6 +14507,7 @@ if (g === 2) {
                         vg = "";
                         vh = currentTeam;
                         statDraw(va, vb, vc, vd, ve, vf, vg, vh);
+                        speakText(vd);    
                         setTimeout(() => {
                             ctx.clearRect(0, 0, cW, cH);
                             renderAnswer();
@@ -14480,6 +14540,7 @@ if (g === 2) {
                         vg = "";
                         vh = currentTeam;
                         statDraw(va, vb, vc, vd, ve, vf, vg, vh);
+                      speakText(vc+ve);      
                         setTimeout(() => {
                             ctx.clearRect(0, 0, cW, cH);
                             renderAnswer();
@@ -14502,6 +14563,7 @@ if (g === 2) {
                         vg = "";
                         vh = currentTeam;
                         statDraw(va, vb, vc, vd, ve, vf, vg, vh);
+                        speakText(vd);    
                         setTimeout(() => {
                             ctx.clearRect(0, 0, cW, cH);
                             renderAnswer();
@@ -14558,6 +14620,7 @@ if (g === 2) {
                         vg = "";
                         vh = currentTeam;
                         statDraw(va, vb, vc, vd, ve, vf, vg, vh);
+                        speakText(vc+ve);    
                         setTimeout(() => {
                             ctx.clearRect(0, 0, cW, cH);
                             renderAnswer();
@@ -14580,6 +14643,7 @@ if (g === 2) {
                         vg = "";
                         vh = currentTeam;
                         statDraw(va, vb, vc, vd, ve, vf, vg, vh);
+                        speakText(vd);    
                         setTimeout(() => {
                             ctx.clearRect(0, 0, cW, cH);
                             renderAnswer();
@@ -14743,7 +14807,7 @@ function executeHumanMove(button, targetCell, currentTeam) {
   
 if (!matchInProgress) {  
     if (n < 28) {
-        var timerCom = setTimeout(compMove, 10000);
+        var timerCom = setTimeout(compMove, 7000);
     }
     }
     
