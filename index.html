@@ -9274,6 +9274,7 @@ else{
     }
 }
 if (n < 29) {
+if(g!==1 && (g===2||g===15)){  
      pass();
      playSound(welcome);         
  ctx.clearRect(0, 0, cW, cH);
@@ -9283,6 +9284,7 @@ renderStats();
 
 generateNextTurnDisplay();     
 statDraw(va,vb,vc,vd,ve,vf,vg,vh );  
+}
 }
 }
 }, 10000);
@@ -12777,8 +12779,7 @@ function launchAIMatch() {
     ctx.clearRect(0, 0, cW, cH);
     renderAnswer();
     renderButtons();
-    renderStats();
-   // statDraw(va, vb, vc, vd, ve, vf, vg, vh);
+    renderStats();   
     redBefore = redPoints;
     blueBefore = bluePoints;
     playSound(welcome);        
@@ -12804,12 +12805,14 @@ function afterAutoMove() {
         // Goal scored - longer pause with reset
         var resetTime = setTimeout(function(){
             if (n < 29) {
+            if(g!==1 && (g===2||g===15)){  
                 pass();
                 playSound(welcome);
                 ctx.clearRect(0, 0, cW, cH);
                 renderAnswer();
                 renderButtons();
-                renderStats();              
+                renderStats();      
+}        
             }
             
             if (matchInProgress && !gameOverActive && n < 29) {
