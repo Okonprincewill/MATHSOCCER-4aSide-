@@ -6881,9 +6881,10 @@ ctx.fillText('Concentrate. Calculate. Celebrate.', 180, 59);
 }
 
 if (matchInProgress) {
-const redName = ['GENIUS', 'ADVAN', 'INTERM', 'BEGIN'][aiDifficulty];
-    const blueName = ['GENIUS', 'ADVAN', 'INTERM', 'BEGIN'][playerDifficulty];
+const redName = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'][aiDifficulty];
+    const blueName = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'][playerDifficulty];
 
+ctx.font = 'bold 12px fantasy, papyrus';
 ctx.fillText(`⚔️ ${redName} vs ${blueName} AI Match`, 180, 59);  // X+10
 }
 ctx.restore();
@@ -12745,7 +12746,7 @@ function showStartButtons() {
     drawLandingButton3D('Play Blue', 207, 712, 'blue', 'white');    
     ctx.fillStyle = '#CFC';
     ctx.font = 'bold 12px fantasy, papyrus';
-    ctx.fillText("AI match ends after 28 moves.", 180, 680);
+    ctx.fillText("AI match ends after 28 moves.", 180, 685);
     ctx.fillText("How to play: Touch a token and a framed number.", 180, 775);
     ctx.fillText("Find a way to get to the top number 1.", 180, 790);
 }
@@ -12783,7 +12784,7 @@ function launchAIMatch() {
     playSound(welcome);        
        
     if (autoMoveTimer) clearTimeout(autoMoveTimer);
-    autoMoveTimer = setTimeout(autoMove, 8000);
+    autoMoveTimer = setTimeout(autoMove, 10000);
 }
 
 
@@ -12794,7 +12795,7 @@ function launchAIMatch() {
 function afterAutoMove() {    
     
     if (n > 28) {
-       setTimeout(resetForNewGame, 8000);
+       setTimeout(resetForNewGame, 10000);
         gameOverActive = false;       
         return;
     }
@@ -12813,7 +12814,7 @@ function afterAutoMove() {
             
             if (matchInProgress && !gameOverActive && n < 29) {
                 if (autoMoveTimer) clearTimeout(autoMoveTimer);
-                autoMoveTimer = setTimeout(autoMove, 8000);
+                autoMoveTimer = setTimeout(autoMove, 10000);
             }
         }, 10000);
     } else {
@@ -12829,7 +12830,7 @@ function afterAutoMove() {
                 
         if (matchInProgress && !gameOverActive && n < 29) {
             if (autoMoveTimer) clearTimeout(autoMoveTimer);
-            autoMoveTimer = setTimeout(autoMove, 8000);
+            autoMoveTimer = setTimeout(autoMove, 10000);
         }
     }
 }
@@ -12844,7 +12845,7 @@ function autoMove() {
     if (gameOverActive) return;
     if (g !== 15) return;  // ✅ Only run in AvA mode
     if (n > 28) {
-    setTimeout(resetForNewGame, 8000);
+    setTimeout(resetForNewGame, 10000);
         return;
     }
     
