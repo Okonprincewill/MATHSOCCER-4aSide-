@@ -11423,7 +11423,7 @@ function strictMove() {
 //  MAKE MOVE - FIXED FOR BOTH HUMAN AND AI VS AI
 // ============================================================
 
-function makeMove() {
+function makeMove() { 
     if (window._moveExecuted) {
         console.warn('⚠️ Move already executed — skipping');
         return false;
@@ -11450,45 +11450,41 @@ function makeMove() {
         const sourceCell = answer.find(cell => 
             cell.x === compBut.x - 3 && cell.y === compBut.y - 3
         );
-        
+       
         // ===========================================
-        // STEP 1: Button touch feedback (current team color)
-        // ===========================================
-        setTimeout(() => {
-        const isRedTurn = (r % 2 !== 0);
-        const currentTeam = isRedTurn ? 'red' : 'blue';
-        ctx.fillStyle = currentTeam === 'red' ? 'rgba(255,0,0,0.3)' : 'rgba(0,0,255,0.3)';
-        ctx.beginPath();
-        ctx.arc(targetButton.x+22.5, targetButton.y+22.5, 25.5, 0, Math.PI * 2);
-        ctx.fill();
-        }, 1000);
-        // ===========================================
-        // STEP 2: Frame valid numbers (delay 100ms)
+        // STEP 1: Frame valid numbers (delay 100ms)
         // ===========================================
         setTimeout(() => {
             selectedButton = targetButton;
             selectedButtonLinks = [];
             valAns();
             findLinkedNumbersForButton(selectedButton);
- generateNextTurnDisplay();           highlightButtonAndNumbers(selectedButton, selectedButtonLinks);
-        }, 2000);
+ generateNextTurnDisplay();      
+     if(g!==1 && (g===2||g===15)){ 
+playSound(kick);  highlightButtonAndNumbers(selectedButton, selectedButtonLinks);
+     }
+        }, 1000);
         
         // ===========================================
-        // STEP 3: Answer touch feedback (delay 600ms)
+        // STEP 2: Answer touch feedback (delay 600ms)
         // ===========================================
         setTimeout(() => {
-            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+           if(g!==1 && (g===2||g===15)){  
+        playSound(kick);
+            ctx.fillStyle = 'rgba(0,0,0,0.6)';
             ctx.fillRect(targetAnswer.x, targetAnswer.y, 51, 51);
-        }, 3500);
+            }
+        }, 4500);
         
         // ===========================================
-        // STEP 4: Execute move (delay 400ms after step 3)
+        // STEP 3: Execute move (delay 400ms after step 3)
         // ===========================================
         
         setTimeout(() => {
         selectedButton = null;
     selectedButtonLinks = [];
             // Clear visual feedback
+            if(g!==1 && (g===2||g===15)){   
             ctx.clearRect(0, 0, cW, cH);
             renderAnswer();
             renderButtons();
@@ -11496,7 +11492,7 @@ function makeMove() {
             if (!matchInProgress) {
                 statDraw(va, vb, vc, vd, ve, vf, vg, vh);
             }
-            
+            }
             // ===========================================
             // ORIGINAL MOVE EXECUTION (unchanged)
             // ===========================================
@@ -11520,8 +11516,9 @@ function makeMove() {
             }
             
             calculatePoints(isComputer);
-            showSimpleArm(compBut, compAns);
-            
+           if(g!==1 && (g===2||g===15)){   
+ showSimpleArm(compBut, compAns);
+      }      
             const isRedTurn2 = (r % 2 !== 0);
             pointsEarnedThisMove = isRedTurn2 ? 
                 (redPoints - redBefore) : (bluePoints - blueBefore);
@@ -11551,7 +11548,9 @@ function makeMove() {
                 playSound(kick);
                 playSound(ball);
                 n++;     
+                if(g!==1 && (g===2||g===15)){    
                 moveManimation();
+                }
             }, 500);
             
             saveMoveToHistory({
@@ -11573,7 +11572,7 @@ function makeMove() {
                 handleButtonClick();
             }
             
-        }, 4000); // 100 + 600 + 400 - 100 = 1000ms total delay before execute
+        }, 5000); // 100 + 600 + 400 - 100 = 1000ms total delay before execute
         
         return true;
     }
@@ -12745,7 +12744,7 @@ function showStartButtons() {
     drawLandingButton3D('Play Red', 125, 712, 'red', 'white');
     drawLandingButton3D('Play Blue', 207, 712, 'blue', 'white');    
     ctx.fillStyle = '#CFC';
-    ctx.font = 'bold 14px fantasy, papyrus';
+    ctx.font = 'bold 12px fantasy, papyrus';
     ctx.fillText("AI match ends after 28 moves.", 180, 680);
     ctx.fillText("How to play: Touch a token and a framed number.", 180, 775);
     ctx.fillText("Find a way to get to the top number 1.", 180, 790);
@@ -13467,9 +13466,7 @@ loadAchievements();
 // ===========================================
 if (g === 15 && matchInProgress) {
     // Play Red button (X: 125, Y: 712)
-    if (!lastMoveData) return;
-        const { button, targetCell, sourceCell, chanceType, points, moveTeam, nextTeam } = lastMoveData;
-        if( points=== 10) return;
+    
     if (touchX >= 125 - 4 && touchX <= 125 + 42 && touchY >= 712 - 4 && touchY <= 712 + 42) {
         // Reset everything
         resetForNewGame();
@@ -14175,6 +14172,16 @@ if (g === 14 && viewingOpponentLogs && !paginationLock) {
         if (selectedButton) {
             highlightButtonAndNumbers(selectedButton, selectedButtonLinks);
         }
+        if(h===0){      
+        speakText("Wait for your opponent move.");  
+    if (n < 28) {
+    clearTimeout(timerCom);
+        var timerCom = setTimeout(compMove, 7000);    
+    }
+        }
+        else{
+        handleButtonClick();
+        }
         return;
     }
     
@@ -14228,6 +14235,16 @@ if (g === 13 && viewingHistory && !paginationLock) {
         drawToggles();
         if (selectedButton) {
             highlightButtonAndNumbers(selectedButton, selectedButtonLinks);
+        }
+        if(h===0){      
+        speakText("Wait for your opponent move.");  
+    if (n < 28) {
+    clearTimeout(timerCom);
+        var timerCom = setTimeout(compMove, 7000);    
+    }
+        }
+        else{
+        handleButtonClick();
         }
         return;
     }
@@ -14301,6 +14318,16 @@ if (g === 8) {
         drawToggles();
         if (selectedButton) {
             highlightButtonAndNumbers(selectedButton, selectedButtonLinks);
+        }
+        if(h===0){      
+        speakText("Wait for your opponent move.");  
+    if (n < 28) {
+    clearTimeout(timerCom);
+        var timerCom = setTimeout(compMove, 7000);    
+    }
+        }
+        else{
+        handleButtonClick();
         }
         return;
     }
@@ -14487,7 +14514,7 @@ if (g === 2) {
                 if (gameSelectionLock) return;
                 gameSelectionLock = true;
                 
-                ctx.fillStyle = 'rgba(0,0,0,0.5)';
+                ctx.fillStyle = 'rgba(0,0,0,0.6)';
                 ctx.beginPath();
                 ctx.arc(touchedButton.x+22.5, touchedButton.y+22.5, 25.5, 0, Math.PI * 2);
                 ctx.fill();
@@ -14567,9 +14594,7 @@ if (g === 2) {
                         vg = "";
                         vh = currentTeam;
                         statDraw(va, vb, vc, vd, ve, vf, vg, vh);
-                        if(n<2){
-                        speakText(vd);    
-                        }
+                        
                         setTimeout(() => {
                             ctx.clearRect(0, 0, cW, cH);
                             renderAnswer();
@@ -14651,9 +14676,7 @@ if (g === 2) {
                         vg = "";
                         vh = currentTeam;
                         statDraw(va, vb, vc, vd, ve, vf, vg, vh);
-                        if(n<2){
-                        speakText(vd);    
-                        }
+                        
                         setTimeout(() => {
                             ctx.clearRect(0, 0, cW, cH);
                             renderAnswer();
@@ -14686,7 +14709,7 @@ if (g === 2) {
                 if (gameSelectionLock) return;
                 gameSelectionLock = true;
                 
-                ctx.fillStyle = 'rgba(0,0,0,0.5)';
+                ctx.fillStyle = 'rgba(0,0,0,0.6)';
                 ctx.fillRect(touchedCell.x, touchedCell.y, 51, 51);
                 
                 clearTimeout(window._gameSelectionTimeout);
