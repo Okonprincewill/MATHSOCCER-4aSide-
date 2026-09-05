@@ -95,6 +95,38 @@
         #desktopControls button:hover {
             background: rgba(255,255,255,0.2);
         }
+        #installButton {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99999;
+    padding: 16px 32px;
+    font-size: 18px;
+    font-family: fantasy, papyrus, sans-serif;
+    background: linear-gradient(145deg, #2E8B57, #1B5E20);
+    color: #FFFFFF;
+    border: 2px solid #FFD700;
+    border-radius: 16px;
+    cursor: pointer;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+    display: none;
+    animation: pulseGlow 2s infinite;
+}
+
+#installButton:hover {
+    transform: translateX(-50%) scale(1.05);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.8), 0 0 30px rgba(46, 139, 87, 0.5);
+}
+
+@keyframes pulseGlow {
+    0%, 100% { 
+        box-shadow: 0 8px 32px rgba(0,0,0,0.7), 0 0 20px rgba(46, 139, 87, 0.3); 
+    }
+    50% { 
+        box-shadow: 0 8px 40px rgba(0,0,0,0.8), 0 0 40px rgba(255, 215, 0, 0.3); 
+    }
+}
     </style>
 <script> 
                 
