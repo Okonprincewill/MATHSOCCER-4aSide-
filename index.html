@@ -112,7 +112,8 @@
     cursor: pointer;
     box-shadow: 0 8px 32px rgba(0,0,0,0.7);
     display: none;
-    animation: pulseGlow 2s infinite;
+    animation: pulseGlow 2s infinite;  /* ← THIS MAKES IT PULSE */
+    transition: all 0.3s ease;
 }
 
 #installButton:hover {
@@ -142,6 +143,7 @@
     50% { 
         box-shadow: 0 8px 40px rgba(0,0,0,0.8), 0 0 40px rgba(255, 215, 0, 0.3); 
     }
+}
 }
     </style>
 <script> 
