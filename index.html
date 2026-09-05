@@ -6910,8 +6910,8 @@ ctx.fillText('Concentrate. Calculate. Celebrate.', 180, 59);
 }
 
 if (matchInProgress) {
-const redName = ['GENIUS', 'ADVAN', 'INTERM', 'BEGIN'][aiDifficulty];
-    const blueName = ['GENIUS', 'ADVAN', 'INTERM', 'BEGIN'][playerDifficulty];
+const redName = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'][aiDifficulty];
+    const blueName = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'][playerDifficulty];
 
 ctx.fillText(`⚔️ ${redName} vs ${blueName} AI Match`, 180, 59);  // X+10
 }
@@ -9338,18 +9338,34 @@ r++;
     }
     
 if (n > 28) {
-setTimeout (() =>{
+    setTimeout(() => {
         if (!matchInProgress) {
             showGameOver();
+        } else {
+            // ✅ WINNER ANNOUNCEMENT
+            const difficultyNames = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'];
+            const topColor = (side === 0) ? 'Red' : 'Blue';
+            const bottomColor = (side === 0) ? 'Blue' : 'Red';
+            const topDifficulty = difficultyNames[(topColor === 'Red') ? aiDifficulty : playerDifficulty];
+            const bottomDifficulty = difficultyNames[(bottomColor === 'Red') ? aiDifficulty : playerDifficulty];
+            
+            let winnerMessage = '';
+            if (redGoal > blueGoal) {
+                winnerMessage = `${bottomColor} ${topDifficulty} won the game! `;
+            } else if (blueGoal > redGoal) {
+                winnerMessage = `${topColor} ${bottomDifficulty} won the game! `;
+            } else {
+                winnerMessage = `It's a draw between ${bottomColor} ${topDifficulty} and ${topColor} ${bottomDifficulty}! `;
             }
-            else{
-            speakText("This game is over. It's" + redGoal + "goal to " + blueGoal + " after " + (n-1) + " moves!");
-          resetForNewGame
-        gameOverActive = false;  
-            }
-  clearTimeout(timerCom);
+            
+            speakText("This game is over. It's " + redGoal + " goal to " + blueGoal + " after " + (n-1) + " moves!" + winnerMessage);
+            
+            setTimeout(quitGame, 5000);
+            gameOverActive = false;
+        }
+        clearTimeout(timerCom);
         return;
-},7000);
+    }, 7000);
 }
 sparkleBorderActive = false;
 } 
@@ -12810,7 +12826,6 @@ function launchAIMatch() {
     const redName = ['GEN', 'ADV', 'INT', 'BEG'][aiDifficulty];
     const blueName = ['GEN', 'ADV', 'INT', 'BEG'][playerDifficulty];
     
-    
     ctx.clearRect(0, 0, cW, cH);
     renderAnswer();
     renderButtons();
@@ -12821,6 +12836,17 @@ function launchAIMatch() {
        
     if (autoMoveTimer) clearTimeout(autoMoveTimer);
     autoMoveTimer = setTimeout(autoMove, 12000);
+    
+    // ✅ ADDED: Intro speech for AvA match
+    const topColor = (side === 0) ? 'Red' : 'Blue';
+    const bottomColor = (side === 0) ? 'Blue' : 'Red';
+    const difficultyNames = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'];
+    const topDifficulty = difficultyNames[(topColor === 'Red') ? aiDifficulty : playerDifficulty];
+    const bottomDifficulty = difficultyNames[(bottomColor === 'Red') ? aiDifficulty : playerDifficulty];
+    
+   setTimeout(() => { 
+        speakText(`Let's watch a match between ${bottomColor} ${topDifficulty} and ${topColor} ${bottomDifficulty}. This match will end after 28 moves.  Each move requires touching a token and one framed number.`);
+     }, 1500);
 }
 
 
@@ -13164,7 +13190,7 @@ function showLandingPage() {
     ctx.fillText("Find a way to get to number 1.", 180, 535);
     
     ctx.fillStyle = '#CFC';
-    ctx.font = 'bold 14px fantasy, papyrus';
+    ctx.font = 'bold 12px fantasy, papyrus';
     ctx.fillText("Choose a side to play: red or blue.", 180, 775);
     ctx.fillText("Or just click AI match to watch a demo.", 180, 790);
     
