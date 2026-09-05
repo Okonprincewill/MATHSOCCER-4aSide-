@@ -545,6 +545,8 @@ let calcAnimationTeamColor = "";
 let calcAnimationFrameId = null;
 let explosionSoundPlayed = false;
 let calculationAnimationEnabled = true;
+// Install button
+let deferredPrompt;
 // ===========================================
 // AI ARM ANIMATION VARIABLES
 // ===========================================
@@ -1418,7 +1420,7 @@ function redrawGameScreen() {
         land();
     }
     
-    drawInstallButton();
+    //drawInstallButton();
     
     if (debugTouch && touchX !== undefined) {
         drawTouchDebug();
@@ -15468,8 +15470,7 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// Install button
-let deferredPrompt;
+
 
 window.addEventListener('beforeinstallprompt', (event) => {
     event.preventDefault();
