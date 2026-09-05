@@ -1263,15 +1263,14 @@ function redrawGameScreen() {
     ctx.clearRect(0, 0, cW, cH);
     
     if (g === 0) {
-        land();
+        showLandingPage();
     } else if (g === 1) {
         renderAnswer();
         renderButtons();
         renderLevels(side === 0 ? 'red' : 'blue', 'Beginner', 43, 687);
         renderLevels(side === 0 ? 'red' : 'blue', 'Intermediate', 125, 687);
         renderLevels(side === 0 ? 'red' : 'blue', 'Advanced', 207, 687);
-        renderLevels(side === 0 ? 'red' : 'blue', 'Genius', 289, 687);
-        drawTagsToggle();
+        renderLevels(side === 0 ? 'red' : 'blue', 'Genius', 289, 687);      
     } else if (g === 2) {
         renderAnswer();
         renderButtons();
@@ -2533,6 +2532,12 @@ function handleShareTouch(touchX, touchY) {
     
     // Twitter
     if (touchX >= 50 && touchX <= 150 && touchY >= 180 && touchY <= 215) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(50, 180, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         window.open(window._shareUrls.twitter, '_blank', 'width=600,height=400');
         shareOverlayActive = false;
         renderGameOverScreen();
@@ -2541,6 +2546,12 @@ function handleShareTouch(touchX, touchY) {
     
     // WhatsApp
     if (touchX >= 190 && touchX <= 290 && touchY >= 180 && touchY <= 215) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(190, 180, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         window.open(window._shareUrls.whatsapp, '_blank', 'width=600,height=400');
         shareOverlayActive = false;
         renderGameOverScreen();
@@ -2549,6 +2560,12 @@ function handleShareTouch(touchX, touchY) {
     
     // Facebook
     if (touchX >= 50 && touchX <= 150 && touchY >= 230 && touchY <= 265) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(50, 230, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         window.open(window._shareUrls.facebook, '_blank', 'width=600,height=400');
         shareOverlayActive = false;
         renderGameOverScreen();
@@ -2557,6 +2574,12 @@ function handleShareTouch(touchX, touchY) {
     
     // Telegram
     if (touchX >= 190 && touchX <= 290 && touchY >= 230 && touchY <= 265) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(190, 230, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         window.open(window._shareUrls.telegram, '_blank', 'width=600,height=400');
         shareOverlayActive = false;
         renderGameOverScreen();
@@ -2565,6 +2588,12 @@ function handleShareTouch(touchX, touchY) {
     
     // Cancel
     if (touchX >= 120 && touchX <= 200 && touchY >= 280 && touchY <= 310) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(120, 280, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         shareOverlayActive = false;
         renderGameOverScreen();
         return true;
@@ -3649,8 +3678,8 @@ function announceGameOver() {
     let playerScorersList = scorer.filter(g => g.col === playerColor).map(g => g.id).join(', ');
     let aiScorersList = scorer.filter(g => g.col === aiColor).map(g => g.id).join(', ');
     
-    let playerScorerText = playerScorersList ? `${playerColor} scorers: ${playerScorersList}` : `No ${playerColor} scorers`;
-    let aiScorerText = aiScorersList ? `${aiColor} scorers: ${aiScorersList}` : `No ${aiColor} scorers`;
+    let playerScorerText = playerScorersList ? `${playerColor} scorer: ${playerScorersList}` : `No ${playerColor} scorer`;
+    let aiScorerText = aiScorersList ? `${aiColor} scorer: ${aiScorersList}` : `No ${aiColor} scorer`;
     
     // Determine result
     let resultType = '';
@@ -6232,7 +6261,7 @@ function logo() {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('Concentrate. Calculate. Celebrate.', 180, 414);  // Y+25
-ctx.fillText('Version 1.0.1', 180, 780);  // Y+25
+ctx.fillText('Version 1.1.1', 180, 780);  // Y+25
 
     ctx.restore();
     
@@ -6881,10 +6910,9 @@ ctx.fillText('Concentrate. Calculate. Celebrate.', 180, 59);
 }
 
 if (matchInProgress) {
-const redName = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'][aiDifficulty];
-    const blueName = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'][playerDifficulty];
+const redName = ['GENIUS', 'ADVAN', 'INTERM', 'BEGIN'][aiDifficulty];
+    const blueName = ['GENIUS', 'ADVAN', 'INTERM', 'BEGIN'][playerDifficulty];
 
-ctx.font = 'bold 12px fantasy, papyrus';
 ctx.fillText(`⚔️ ${redName} vs ${blueName} AI Match`, 180, 59);  // X+10
 }
 ctx.restore();
@@ -7322,13 +7350,13 @@ const bottomBorder = (humanColor === 'red') ? '#FF0000' : '#0000FF';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = botGrad;
-        ctx.fillText('⚡ ME ⚡', 179, 618);
+        ctx.fillText('⚡ YOU ⚡', 179, 618);
         
         ctx.shadowBlur = 0;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
         ctx.fillStyle = '#FFFFFF';
-        ctx.fillText('⚡ ME ⚡', 179, 616);
+        ctx.fillText('⚡ YOU ⚡', 179, 616);
         ctx.restore();
     }   
     
@@ -7566,7 +7594,7 @@ ctx.restore();
         ctx.restore();
     }
     if (matchInProgress) {  
-        showStartButtons();       
+        showStartButtons();
     } 
 }
     
@@ -9132,7 +9160,7 @@ else if (pointsEarnedThisMove === 2) {
             speakText(`You blocked your ${opponentDifficulty} opponent's chance, but your opponents token ${rebound.id} has a chance to score now!`);
             }
             else{
-            speakText(`The chance is blocked, but the goal line is unblocked.`);
+            speakText(`The chance is blocked, but the goal line is still unblocked.`);
             }    
         } else {
         playSound(miss);
@@ -9150,7 +9178,7 @@ else if (pointsEarnedThisMove === 2) {
             speakText(`Your chance is blocked by your ${opponentDifficulty} opponent, but you have another chance to score now with token ${rebound.id}!`);
             }
             else{
-            speakText(`The chance is blocked, but the goal line is unblocked.`);
+            speakText(`The chance is blocked, but the goal line is still unblocked.`);
             }           
         } else {
         playSound(miss);
@@ -9172,7 +9200,7 @@ else if (pointsEarnedThisMove === 1) {
 speakText(`You left the goal line unblocked. Your ${opponentDifficulty} opponents token ${rebound.id} is about to score now!`);
 }
 else{
-            speakText(`The goal line is unblocked.`);
+            speakText(`The goal line is left unblocked.`);
             }      
     } 
     
@@ -9182,7 +9210,7 @@ if (!matchInProgress) {
             speakText(`Your ${opponentDifficulty} opponent left the goal line unblocked. You are about to score now with your token ${rebound.id}!`);
             }
             else{
-            speakText(`The goal line is unblocked.`);
+            speakText(`The goal line is left unblocked.`);
             }                       
     }
 }
@@ -9262,7 +9290,7 @@ if (n > 28) {
             showGameOver();       
             clearTimeout(timerCom);
             return;
-        }, 7000);
+        }, 10000);
    }
       
 else{
@@ -9274,7 +9302,6 @@ else{
     }
 }
 if (n < 29) {
-if(g!==1 && (g===2||g===15)){  
      pass();
      playSound(welcome);         
  ctx.clearRect(0, 0, cW, cH);
@@ -9286,17 +9313,17 @@ generateNextTurnDisplay();
 statDraw(va,vb,vc,vd,ve,vf,vg,vh );  
 }
 }
-}
 }, 10000);
 }
+
+speakText(`factor is equal to ${problemFactor}`);
+r++;
 
         if (!matchInProgress) {  
     generateNextTurnDisplay();
     statDraw(va, vb, vc, vd, ve, vf, vg, vh);
 }
 
-speakText(`factor is equal to ${problemFactor}`);
-r++;
     // === COUNT CIRCLES AFTER ANIMATION ===
     // Use the targetButton from the current move
     if (targetButton) {
@@ -9317,12 +9344,12 @@ setTimeout (() =>{
             }
             else{
             speakText("This game is over. It's" + redGoal + "goal to " + blueGoal + " after " + (n-1) + " moves!");
-          setTimeout(quitGame, 5000);
+          resetForNewGame
         gameOverActive = false;  
             }
   clearTimeout(timerCom);
         return;
-},5000);
+},7000);
 }
 sparkleBorderActive = false;
 } 
@@ -11426,12 +11453,15 @@ function strictMove() {
 //  MAKE MOVE - FIXED FOR BOTH HUMAN AND AI VS AI
 // ============================================================
 
-function makeMove() { 
+function makeMove() {
+    // ✅ Lock immediately
     if (window._moveExecuted) {
         console.warn('⚠️ Move already executed — skipping');
         return false;
     }
     window._moveExecuted = true;
+    animationInProgress = true;
+    touchEnabled = false;
 
     if (((compAns.id >= problemFactor && compAns.id / problemFactor < 10 && compAns.id % problemFactor == 0) || 
          (compAns.id < problemFactor && problemFactor % compAns.id == 0)) && 
@@ -11453,51 +11483,50 @@ function makeMove() {
         const sourceCell = answer.find(cell => 
             cell.x === compBut.x - 3 && cell.y === compBut.y - 3
         );
-       
-        // ===========================================
-        // STEP 1: Frame valid numbers (delay 100ms)
-        // ===========================================
-        setTimeout(() => {
-            selectedButton = targetButton;
-            selectedButtonLinks = [];
-            valAns();
-            findLinkedNumbersForButton(selectedButton);
- generateNextTurnDisplay();      
-     if(g!==1 && (g===2||g===15)){ 
-playSound(kick);  highlightButtonAndNumbers(selectedButton, selectedButtonLinks);
-     }
-        }, 1000);
         
         // ===========================================
-        // STEP 2: Answer touch feedback (delay 600ms)
+        // EDUCATIONAL STEPS - Using setTimeout like Code A
         // ===========================================
+        
+        // Step 1: Frame valid numbers (1000ms)
         setTimeout(() => {
-           if(g!==1 && (g===2||g===15)){  
-        playSound(kick);
-            ctx.fillStyle = 'rgba(0,0,0,0.6)';
-            ctx.fillRect(targetAnswer.x, targetAnswer.y, 51, 51);
+            if (g !== 1 && (g === 2 || g === 15)) {
+                selectedButton = targetButton;
+                selectedButtonLinks = [];
+                valAns();
+                findLinkedNumbersForButton(selectedButton);
+                generateNextTurnDisplay();
+                playSound(kick);
+                highlightButtonAndNumbers(selectedButton, selectedButtonLinks);
+            }
+        }, 1000);
+        
+        // Step 2: Touch feedback (4500ms)
+        setTimeout(() => {
+            if (g !== 1 && (g === 2 || g === 15)) {
+                playSound(kick);
+                ctx.fillStyle = 'rgba(0,0,0,0.6)';
+                ctx.fillRect(targetAnswer.x, targetAnswer.y, 51, 51);
             }
         }, 4500);
         
-        // ===========================================
-        // STEP 3: Execute move (delay 400ms after step 3)
-        // ===========================================
-        
+        // Step 3: Execute move (5000ms) - SAME AS CODE A
         setTimeout(() => {
-        selectedButton = null;
-    selectedButtonLinks = [];
             // Clear visual feedback
-            if(g!==1 && (g===2||g===15)){   
-            ctx.clearRect(0, 0, cW, cH);
-            renderAnswer();
-            renderButtons();
-            renderStats();
-            if (!matchInProgress) {
-                statDraw(va, vb, vc, vd, ve, vf, vg, vh);
+            if (g !== 1 && (g === 2 || g === 15)) {
+                selectedButton = null;
+                selectedButtonLinks = [];
+                ctx.clearRect(0, 0, cW, cH);
+                renderAnswer();
+                renderButtons();
+                renderStats();
+                if (!matchInProgress) {
+                    statDraw(va, vb, vc, vd, ve, vf, vg, vh);
+                }
             }
-            }
+            
             // ===========================================
-            // ORIGINAL MOVE EXECUTION (unchanged)
+            // ORIGINAL MOVE EXECUTION (from Code A)
             // ===========================================
             answer.forEach((origin) => {
                 if (targetButton.x == origin.x + 3 && targetButton.y == origin.y + 3) {
@@ -11519,9 +11548,11 @@ playSound(kick);  highlightButtonAndNumbers(selectedButton, selectedButtonLinks)
             }
             
             calculatePoints(isComputer);
-           if(g!==1 && (g===2||g===15)){   
- showSimpleArm(compBut, compAns);
-      }      
+            
+            if (g !== 1 && (g === 2 || g === 15)) {
+                showSimpleArm(compBut, compAns);
+            }
+            
             const isRedTurn2 = (r % 2 !== 0);
             pointsEarnedThisMove = isRedTurn2 ? 
                 (redPoints - redBefore) : (bluePoints - blueBefore);
@@ -11551,8 +11582,8 @@ playSound(kick);  highlightButtonAndNumbers(selectedButton, selectedButtonLinks)
                 playSound(kick);
                 playSound(ball);
                 n++;     
-                if(g!==1 && (g===2||g===15)){    
-                moveManimation();
+                if (g !== 1 && (g === 2 || g === 15)) {
+                    moveManimation();
                 }
             }, 500);
             
@@ -11575,13 +11606,18 @@ playSound(kick);  highlightButtonAndNumbers(selectedButton, selectedButtonLinks)
                 handleButtonClick();
             }
             
-        }, 5000); // 100 + 600 + 400 - 100 = 1000ms total delay before execute
+        }, 5000); // Execute after 5 seconds
         
-        return true;
+        return true; // ✅ Function returns immediately!
     }
     
+    // Move failed - unlock
+    animationInProgress = false;
+    touchEnabled = true;
+    window._moveExecuted = false;
     return false;
 }
+
 
     
 function goalMove(){
@@ -12738,10 +12774,9 @@ function highlightButtonAndNumbers(button, numbers) {
     });
 }
 
-
-// ===========================================
-// MODIFIED showStartButtons to start scrolling
-// ===========================================
+// ============================================================
+//  SHOW START BUTTONS ONLY
+// ============================================================
 
 function showStartButtons() {
     drawLandingButton3D('Play Red', 125, 712, 'red', 'white');
@@ -12785,7 +12820,7 @@ function launchAIMatch() {
     playSound(welcome);        
        
     if (autoMoveTimer) clearTimeout(autoMoveTimer);
-    autoMoveTimer = setTimeout(autoMove, 10000);
+    autoMoveTimer = setTimeout(autoMove, 12000);
 }
 
 
@@ -12796,7 +12831,7 @@ function launchAIMatch() {
 function afterAutoMove() {    
     
     if (n > 28) {
-       setTimeout(resetForNewGame, 10000);
+       setTimeout(resetForNewGame, 12000);
         gameOverActive = false;       
         return;
     }
@@ -12817,7 +12852,7 @@ function afterAutoMove() {
             
             if (matchInProgress && !gameOverActive && n < 29) {
                 if (autoMoveTimer) clearTimeout(autoMoveTimer);
-                autoMoveTimer = setTimeout(autoMove, 10000);
+                autoMoveTimer = setTimeout(autoMove, 12000);
             }
         }, 10000);
     } else {
@@ -12833,7 +12868,7 @@ function afterAutoMove() {
                 
         if (matchInProgress && !gameOverActive && n < 29) {
             if (autoMoveTimer) clearTimeout(autoMoveTimer);
-            autoMoveTimer = setTimeout(autoMove, 10000);
+            autoMoveTimer = setTimeout(autoMove, 12000);
         }
     }
 }
@@ -12848,7 +12883,7 @@ function autoMove() {
     if (gameOverActive) return;
     if (g !== 15) return;  // ✅ Only run in AvA mode
     if (n > 28) {
-    setTimeout(resetForNewGame, 10000);
+    setTimeout(resetForNewGame, 12000);
         return;
     }
     
@@ -12920,6 +12955,10 @@ function resetForNewGame() {
     if (animationFrameId) cancelAnimationFrame(animationFrameId);
     if (pulseFrameId) cancelAnimationFrame(pulseFrameId);
     if (calcAnimationFrameId) cancelAnimationFrame(calcAnimationFrameId);
+    if (autoMoveTimer) {
+        clearTimeout(autoMoveTimer);
+        autoMoveTimer = null;
+    }
     
     // Reset animation flags
     pulseAnimationActive = false;
@@ -12931,13 +12970,21 @@ function resetForNewGame() {
     matchInProgress = false;
     clearOpponentLogs();
     opponentLogsPage = 0;
+    targetButton=null;
+    targetAnswer=null;
     
     // Reset game state flags (keep g, side, k as they will be set by caller)
+    g = 0;
+    k = 0;
     h = 0;
     m = 1;
     n = 0;
     r = 0;
     z = 0;
+ k=0;
+ g=0;
+ q=0;
+    side = 0;
     
     // Reset scores
     redGoal = 0;
@@ -12984,6 +13031,9 @@ function resetForNewGame() {
     if (typeof pass === 'function') {
         pass();
     }
+    selectedButton = null;
+    selectedButtonLinks = [];
+    scorer = [];
     
     // Reset exemption logs
     unifiedExemptionLogs = new Set();
@@ -13116,7 +13166,7 @@ function showLandingPage() {
     ctx.fillStyle = '#CFC';
     ctx.font = 'bold 14px fantasy, papyrus';
     ctx.fillText("Choose a side to play: red or blue.", 180, 775);
-    ctx.fillText("Or watch another AI match.", 180, 790);
+    ctx.fillText("Or just click AI match to watch a demo.", 180, 790);
     
     // ===========================================
     // TOP BUTTONS (3D) — X+20 only (Y unchanged)
@@ -13242,6 +13292,12 @@ if (g === 1) {
     const btnBox = window._btnTagsToggleBox;
     if (btnBox && touchX >= btnBox.x && touchX <= btnBox.x + btnBox.w &&
         touchY >= btnBox.y && touchY <= btnBox.y + btnBox.h) {
+        ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(btnBox.x, btnBox.y, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         toggleButtonTags();
         return;
     }
@@ -13250,6 +13306,12 @@ if (g === 1) {
     const ansBox = window._ansTagsToggleBox;
     if (ansBox && touchX >= ansBox.x && touchX <= ansBox.x + ansBox.w &&
         touchY >= ansBox.y && touchY <= ansBox.y + ansBox.h) {
+        ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(ansBox.x, ansBox.y, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         toggleAnswerTags();
         return;
     }
@@ -13271,7 +13333,7 @@ landingPage.forEach((page) => {
         // ===========================================
         if (page.id === 'Register') {
             playSound(inland);
-            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.fillStyle = 'rgba(0,0,0,0.6)';
             ctx.beginPath();
             ctx.arc(page.x + 14, page.y + 14, 45, 0, Math.PI * 2);
             ctx.fill();
@@ -13290,7 +13352,7 @@ landingPage.forEach((page) => {
         // ===========================================
         if (page.id === 'Login') {
             playSound(inland);
-            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.fillStyle = 'rgba(0,0,0,0.6)';
             ctx.beginPath();
             ctx.arc(page.x + 14, page.y + 14, 45, 0, Math.PI * 2);
             ctx.fill();
@@ -13310,7 +13372,7 @@ landingPage.forEach((page) => {
         if (page.id === 'Privacy') {
             g = 5;
             playSound(inland);
-            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.fillStyle = 'rgba(0,0,0,0.6)';
             ctx.beginPath();
             ctx.arc(page.x + 14, page.y + 14, 45, 0, Math.PI * 2);
             ctx.fill();
@@ -13329,7 +13391,7 @@ landingPage.forEach((page) => {
         if (page.id === 'Terms') {
             g = 6;
             playSound(inland);
-            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.fillStyle = 'rgba(0,0,0,0.6)';
             ctx.beginPath();
             ctx.arc(page.x + 14, page.y + 14, 45, 0, Math.PI * 2);
             ctx.fill();
@@ -13348,7 +13410,7 @@ landingPage.forEach((page) => {
         if (page.id === 'Start Red') {
             side = 0;
             k = 0;
-            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.fillStyle = 'rgba(0,0,0,0.6)';
             ctx.beginPath();
             ctx.arc(page.x + 14, page.y + 14, 45, 0, Math.PI * 2);
             ctx.fill();
@@ -13378,7 +13440,7 @@ loadAchievements();
         if (page.id === 'Start Blue') {
             side = 1;
             k = 1;
-            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.fillStyle = 'rgba(0,0,0,0.6)';
             ctx.beginPath();
             ctx.arc(page.x + 14, page.y + 14, 45, 0, Math.PI * 2);
             ctx.fill();
@@ -13407,7 +13469,7 @@ loadAchievements();
         // ===========================================
         if (page.id === 'About') {
             g--;
-            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.fillStyle = 'rgba(0,0,0,0.6)';
             ctx.beginPath();
             ctx.arc(page.x + 14, page.y + 14, 45, 0, Math.PI * 2);
             ctx.fill();
@@ -13428,7 +13490,7 @@ loadAchievements();
         // ===========================================
         if (page.id === 'Rules') {
             g--;
-            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.fillStyle = 'rgba(0,0,0,0.6)';
             ctx.beginPath();
             ctx.arc(page.x + 14, page.y + 14, 45, 0, Math.PI * 2);
             ctx.fill();
@@ -13448,7 +13510,7 @@ loadAchievements();
         // AI MATCH BUTTON
         // ===========================================
         if (page.id === 'AI') {
-            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.fillStyle = 'rgba(0,0,0,0.6)';
             ctx.beginPath();
             ctx.arc(page.x + 14, page.y + 14, 45, 0, Math.PI * 2);
             ctx.fill();
@@ -13470,12 +13532,11 @@ loadAchievements();
 // ===========================================
 if (g === 15 && matchInProgress) {
     // Play Red button (X: 125, Y: 712)
-    
     if (touchX >= 125 - 4 && touchX <= 125 + 42 && touchY >= 712 - 4 && touchY <= 712 + 42) {
         // Reset everything
         resetForNewGame();
         // Set up HvA with Red
-        ctx.fillStyle = 'rgba(0,0,0,0.5)';
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
             ctx.beginPath();
                      ctx.arc(139, 726, 45, 0, Math.PI * 2);
             ctx.fill();
@@ -13505,7 +13566,7 @@ loadAchievements();
         // Reset everything
         resetForNewGame();
         // Set up HvA with Blue
-        ctx.fillStyle = 'rgba(0,0,0,0.5)';
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
             ctx.beginPath();
                      ctx.arc(221, 726, 45, 0, Math.PI * 2);
             ctx.fill();
@@ -13552,7 +13613,7 @@ if (g === 15) {
         
         // Visual feedback - only once
         ctx.save();
-        ctx.fillStyle = 'rgba(0,0,0,0.5)';
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
         ctx.beginPath();
         ctx.roundRect(soundBox.x, soundBox.y, soundBox.w, soundBox.h, 4);
         ctx.fill();
@@ -13599,7 +13660,7 @@ if (g === 15) {
         
         // Visual feedback - only once
         ctx.save();
-        ctx.fillStyle = 'rgba(0,0,0,0.5)';
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
         ctx.beginPath();
         ctx.roundRect(speechBox.x, speechBox.y, speechBox.w, speechBox.h, 4);
         ctx.fill();
@@ -13716,6 +13777,12 @@ g=0;
 if (rulesPanelActive && !paginationLock) {
     // PREV
     if (g===10 && touchX >= 20 && touchX <= 75 && touchY >= 610 && touchY <= 638) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(20, 610, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         paginationLock = true;
         if (rulesPage > 0) { rulesPage--; renderRulesPage(); }
         setTimeout(() => { paginationLock = false; }, 300);
@@ -13723,6 +13790,12 @@ if (rulesPanelActive && !paginationLock) {
     }
     // NEXT
     if (g===10 && touchX >= 265 && touchX <= 320 && touchY >= 610 && touchY <= 638) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(265, 610, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         paginationLock = true;
         if (rulesPage < rulesTotalPages - 1) { rulesPage++; renderRulesPage(); }
         setTimeout(() => { paginationLock = false; }, 300);
@@ -13730,6 +13803,12 @@ if (rulesPanelActive && !paginationLock) {
     }
     // BACK
     if (g===10 && touchX >= 135 && touchX <= 205 && touchY >= 610 && touchY <= 638) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(135, 610, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         g=0;
         rulesPanelActive = false;
         ctx.clearRect(0, 0, cW, cH);
@@ -13742,6 +13821,12 @@ if (rulesPanelActive && !paginationLock) {
 if (infoPanelActive && !paginationLock) {
     // PREV
     if (g===11 && touchX >= 20 && touchX <= 75 && touchY >= 610 && touchY <= 638) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(20, 610, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         paginationLock = true;
         if (infoPage > 0) { infoPage--; renderInfoPage(); }
         setTimeout(() => { paginationLock = false; }, 300);
@@ -13749,6 +13834,12 @@ if (infoPanelActive && !paginationLock) {
     }
     // NEXT
     if (g===11 && touchX >= 265 && touchX <= 320 && touchY >= 610 && touchY <= 638) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(265, 610, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         paginationLock = true;
         if (infoPage < infoTotalPages - 1) { infoPage++; renderInfoPage(); }
         setTimeout(() => { paginationLock = false; }, 300);
@@ -13756,6 +13847,12 @@ if (infoPanelActive && !paginationLock) {
     }
     // BACK
     if (g===11 && touchX >= 135 && touchX <= 205 && touchY >= 610 && touchY <= 638) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(135, 610, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         g=0;
         infoPanelActive = false;
         ctx.clearRect(0, 0, cW, cH);
@@ -13768,6 +13865,12 @@ if (infoPanelActive && !paginationLock) {
 if (viewingTerms && !paginationLock) {
     // PREV
     if (g===6 && touchX >= 30 && touchX <= 90 && touchY >= 540 && touchY <= 565) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(30, 540, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         paginationLock = true;
         if (termsPage > 0) { termsPage--; renderTermsOfService(); }
         setTimeout(() => { paginationLock = false; }, 300);
@@ -13775,6 +13878,12 @@ if (viewingTerms && !paginationLock) {
     }
     // NEXT
     if (g===6 && touchX >= 250 && touchX <= 310 && touchY >= 540 && touchY <= 565) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(250, 540, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         paginationLock = true;
         const totalPages = Math.ceil(TERMS_CONTENT.length / TERMS_PER_PAGE);
         if (termsPage < totalPages - 1) { termsPage++; renderTermsOfService(); }
@@ -13783,6 +13892,12 @@ if (viewingTerms && !paginationLock) {
     }
     // BACK
     if (g===6 && touchX >= 100 && touchX <= 240 && touchY >= 540 && touchY <= 570) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(100, 540, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         g=0;
         viewingTerms = false;
         viewingRegistration = false;
@@ -13795,6 +13910,12 @@ if (viewingTerms && !paginationLock) {
 if (viewingPrivacy && !paginationLock) {
     // PREV
     if (g===5 && touchX >= 30 && touchX <= 90 && touchY >= 540 && touchY <= 565) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(30, 540, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         paginationLock = true;
         if (privacyPage > 0) { privacyPage--; renderPrivacyPolicy(); }
         setTimeout(() => { paginationLock = false; }, 300);
@@ -13802,6 +13923,12 @@ if (viewingPrivacy && !paginationLock) {
     }
     // NEXT
     if (g===5 && touchX >= 250 && touchX <= 310 && touchY >= 540 && touchY <= 565) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(250, 540, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         paginationLock = true;
         const totalPages = Math.ceil(PRIVACY_CONTENT.length / PRIVACY_PER_PAGE);
         if (privacyPage < totalPages - 1) { privacyPage++; renderPrivacyPolicy(); }
@@ -13810,6 +13937,12 @@ if (viewingPrivacy && !paginationLock) {
     }
     // BACK
     if (g===5 && touchX >= 100 && touchX <= 240 && touchY >= 540 && touchY <= 570) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(100, 540, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         g=0;
         viewingPrivacy = false;
         viewingRegistration = false;
@@ -13825,7 +13958,7 @@ if (g === 2 && touchX >= cW - 53 && touchX <= cW - 1 && touchY >= SETTINGS_BUTTO
     settingsClickLock = true;
     
     ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
     ctx.beginPath();
     ctx.roundRect(cW - 53, SETTINGS_BUTTON_Y, 52, 20, 4);
     ctx.fill();
@@ -13845,7 +13978,7 @@ if (g === 2 && settingsVisible && touchX >= cW - 53 && touchX <= cW - 3 && touch
     settingsClickLock = true;
     
     ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
     ctx.beginPath();
     ctx.roundRect(cW - 53, 195, 52, 29.75, 4);
     ctx.fill();
@@ -13866,7 +13999,7 @@ if (g === 2 && settingsVisible && touchX >= cW - 53 && touchX <= cW - 3 && touch
     settingsClickLock = true;
     
     ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
     ctx.beginPath();
     ctx.roundRect(cW - 53, 224.75, 52, 29.75, 4);
     ctx.fill();
@@ -13887,7 +14020,7 @@ if (g === 2 && settingsVisible && touchX >= cW - 53 && touchX <= cW - 3 && touch
     settingsClickLock = true;
     
     ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
     ctx.beginPath();
     ctx.roundRect(cW - 53, 254.5, 52, 29.75, 4);
     ctx.fill();
@@ -13908,7 +14041,7 @@ if (g === 2 && settingsVisible && touchX >= cW - 53 && touchX <= cW - 3 && touch
     settingsClickLock = true;
     
     ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
     ctx.beginPath();
     ctx.roundRect(cW - 53, 284.25, 52, 29.75, 4);
     ctx.fill();
@@ -13929,7 +14062,7 @@ if (g === 2 && settingsVisible && touchX >= cW - 53 && touchX <= cW - 3 && touch
     settingsClickLock = true;
     
     ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
     ctx.beginPath();
     ctx.roundRect(cW - 53, 314, 52, 29.75, 4);
     ctx.fill();
@@ -13958,7 +14091,7 @@ if (g === 2 && settingsVisible && touchX >= cW - 53 && touchX <= cW - 3 && touch
     touchEnabled = true;
 
     ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
     ctx.beginPath();
     ctx.roundRect(cW - 53, 343.75, 52, 29.75, 4);
     ctx.fill();
@@ -13989,7 +14122,7 @@ if (g === 2 && settingsVisible && touchX >= cW - 53 && touchX <= cW - 1 && touch
     touchEnabled = true;
 
     ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
     ctx.beginPath();
     ctx.roundRect(cW - 53, 373.5, 52, 29.75, 4);
     ctx.fill();
@@ -14020,7 +14153,7 @@ if (g === 2 && settingsVisible && touchX >= cW - 53 && touchX <= cW - 3 && touch
     touchEnabled = true;
 
     ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
     ctx.beginPath();
     ctx.roundRect(cW - 53, 403.25, 52, 29.75, 4);
     ctx.fill();
@@ -14043,7 +14176,7 @@ if (g === 2 && settingsVisible && touchX >= cW - 53 && touchX <= cW - 3 && touch
     settingsClickLock = true;
     
     ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
     ctx.beginPath();
     ctx.roundRect(cW - 53, 433, 52, 29.75, 4);
     ctx.fill();
@@ -14064,7 +14197,7 @@ if (g === 2 && settingsVisible && touchX >= cW - 53 && touchX <= cW - 3 && touch
     settingsClickLock = true;
     
     ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
     ctx.beginPath();
     ctx.roundRect(cW - 53, 462.75, 52, 29.75, 4);
     ctx.fill();
@@ -14085,7 +14218,7 @@ if (g === 2 && settingsVisible && touchX >= cW - 53 && touchX <= cW - 3 && touch
     settingsClickLock = true;
     
     ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
     ctx.beginPath();
     ctx.roundRect(cW - 53, 492.5, 52, 29.75, 4);
     ctx.fill();
@@ -14107,7 +14240,7 @@ if (g === 2 && settingsVisible && touchX >= cW - 53 && touchX <= cW - 3 && touch
     settingsClickLock = true;
     
     ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
     ctx.beginPath();
     ctx.roundRect(cW - 53, 522.25, 52, 29.75, 4);
     ctx.fill();
@@ -14137,6 +14270,12 @@ if (g === 14 && viewingOpponentLogs && !paginationLock) {
     // PREV
     if (touchX >= btnX && touchX <= btnX + btnWidth && 
         touchY >= btnY && touchY <= btnY + btnHeight) {
+        ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(btnX, btnY, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         paginationLock = true;
         if (opponentLogsPage > 0) {
             opponentLogsPage--;
@@ -14151,6 +14290,12 @@ if (g === 14 && viewingOpponentLogs && !paginationLock) {
     // NEXT
     if (touchX >= btnX && touchX <= btnX + btnWidth && 
         touchY >= btnY && touchY <= btnY + btnHeight) {
+        ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(btnX, btnY, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         paginationLock = true;
         if (opponentLogsPage < totalPages - 1 && totalPages > 0) {
             opponentLogsPage++;
@@ -14165,6 +14310,12 @@ if (g === 14 && viewingOpponentLogs && !paginationLock) {
     // BACK
     if (touchX >= btnX && touchX <= btnX + btnWidth && 
         touchY >= btnY && touchY <= btnY + btnHeight) {
+        ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(btnX, btnY, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         g = 2;
         viewingOpponentLogs = false;
         ctx.clearRect(0, 0, cW, cH);
@@ -14176,16 +14327,6 @@ if (g === 14 && viewingOpponentLogs && !paginationLock) {
         if (selectedButton) {
             highlightButtonAndNumbers(selectedButton, selectedButtonLinks);
         }
-        if(h===0){      
-        speakText("Wait for your opponent move.");  
-    if (n < 28) {
-    clearTimeout(timerCom);
-        var timerCom = setTimeout(compMove, 7000);    
-    }
-        }
-        else{
-        handleButtonClick();
-        }
         return;
     }
     
@@ -14194,6 +14335,12 @@ if (g === 14 && viewingOpponentLogs && !paginationLock) {
     // CLEAR LOGS
     if (touchX >= btnX && touchX <= btnX + btnWidth && 
         touchY >= btnY && touchY <= btnY + btnHeight) {
+        ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(btnX, btnY, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         clearOpponentLogs();
         opponentLogsPage = 0;
         renderOpponentLogsPage();
@@ -14207,6 +14354,12 @@ if (g === 13 && viewingHistory && !paginationLock) {
     
     // Previous button (X: 50-120, Y: 720-750)
     if (touchX >= 50 && touchX <= 120 && touchY >= 720 && touchY <= 750) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(50, 720, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         paginationLock = true;
         if (historyPage > 0) {
             historyPage--;
@@ -14218,6 +14371,12 @@ if (g === 13 && viewingHistory && !paginationLock) {
     
     // Next button (X: 220-290, Y: 720-750)
     if (touchX >= 220 && touchX <= 290 && touchY >= 720 && touchY <= 750) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(220, 720, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         paginationLock = true;
         if (historyPage < totalPages - 1 && totalPages > 0) {
             historyPage++;
@@ -14229,6 +14388,12 @@ if (g === 13 && viewingHistory && !paginationLock) {
     
     // Back button (X: 135-205, Y: 720-750)
     if (touchX >= 135 && touchX <= 205 && touchY >= 720 && touchY <= 750) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(135, 720, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         g = 2;
         viewingHistory = false;
         ctx.clearRect(0, 0, cW, cH);
@@ -14240,21 +14405,17 @@ if (g === 13 && viewingHistory && !paginationLock) {
         if (selectedButton) {
             highlightButtonAndNumbers(selectedButton, selectedButtonLinks);
         }
-        if(h===0){      
-        speakText("Wait for your opponent move.");  
-    if (n < 28) {
-    clearTimeout(timerCom);
-        var timerCom = setTimeout(compMove, 7000);    
-    }
-        }
-        else{
-        handleButtonClick();
-        }
         return;
     }
     
     // Reset Tags button (X: 105-165, Y: 760-788)
     if (touchX >= 105 && touchX <= 165 && touchY >= 760 && touchY <= 788) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(105, 760, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         if (confirm('Reset all button tags to defaults?')) {
             resetTags();
             renderHistoryPage();
@@ -14264,6 +14425,12 @@ if (g === 13 && viewingHistory && !paginationLock) {
     
     // Reset Answer Tags button (X: 175-235, Y: 760-788)
     if (touchX >= 175 && touchX <= 235 && touchY >= 760 && touchY <= 788) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(175, 760, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         if (confirm('Reset all answer tags to defaults?')) {
             resetAnswerTags();
             renderHistoryPage();
@@ -14283,14 +14450,32 @@ if (g === 8) {
     // Time filter buttons (Y: 45-73)
     if (touchY >= 45 && touchY <= 73) {
         if (touchX >= 55 && touchX <= 125) {
+        ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(55, 45, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
             statsTimeFilter = 'week';
             renderStatsPage();
             return;
         } else if (touchX >= 135 && touchX <= 205) {
+        ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(135, 205, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
             statsTimeFilter = 'month';
             renderStatsPage();
             return;
         } else if (touchX >= 215 && touchX <= 285) {
+        ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(215, 285, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
             statsTimeFilter = 'all';
             renderStatsPage();
             return;
@@ -14299,18 +14484,36 @@ if (g === 8) {
     
     // Reset button (X: 300-332, Y: 710-738)
     if (touchX >= 300 && touchX <= 332 && touchY >= 710 && touchY <= 738) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(300, 710, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         resetStatistics();
         return;
     }
     
     // Leaderboard button (X: 30-110, Y: 750-782)
     if (touchX >= 30 && touchX <= 110 && touchY >= 750 && touchY <= 782) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(30, 750, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         alert('🏆 Leaderboard Coming Soon!\n\nWe are building a global leaderboard to track the best Mathsoccer players. Stay tuned!');
         return;
     }
     
     // Back button (X: 230-310, Y: 750-782)
     if (touchX >= 230 && touchX <= 310 && touchY >= 750 && touchY <= 782) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(230, 750, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
         g = 2;
         viewingStats = false;
         viewingLeaderboard = false;
@@ -14322,16 +14525,6 @@ if (g === 8) {
         drawToggles();
         if (selectedButton) {
             highlightButtonAndNumbers(selectedButton, selectedButtonLinks);
-        }
-        if(h===0){      
-        speakText("Wait for your opponent move.");  
-    if (n < 28) {
-    clearTimeout(timerCom);
-        var timerCom = setTimeout(compMove, 7000);    
-    }
-        }
-        else{
-        handleButtonClick();
         }
         return;
     }
@@ -14374,102 +14567,94 @@ if (g === 7) {
 // This is handled in handleButtonClick() when gameOverActive is true
 
 // ===========================================
+// ===========================================
 // GAME OVER TOUCH HANDLERS (in handleButtonClick)
 // ===========================================
 if (gameOverActive) {
     // History button (X:30-95, Y:550-580)
-    if (g===9 && touchX >= 20 && touchX <= 90 && touchY >= 580 && touchY <= 610) {
+    if (avaToggleLock) return;
+        avaToggleLock = true;
+    if (g===9 && touchX >= 30 && touchX <= 90 && touchY >= 580 && touchY <= 610) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(30, 580, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
+    setTimeout(function() {
 g=13;
         historySource = 'gameover';  // ✅ Set source
         viewingHistory = true;
         renderHistoryPage();
+        avaToggleLock = false; }, 500);
         return;
     }
     
     // Stats button (X:100-165, Y:550-580)
-    if (g===9 && touchX >= 95 && touchX <= 165 && touchY >= 580 && touchY <= 610) {
+    if (g===9 && touchX >= 105 && touchX <= 165 && touchY >= 580 && touchY <= 610) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(105, 580, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
+    setTimeout(function() {
 g=8;
         statsSource = 'gameover';  // ✅ Set source
         viewingStats = true;
         renderStatsPage();
+        avaToggleLock = false; }, 500);
         return;
     }
     
     // Share button (X:170-235, Y:550-580)
-    if (g===9 && touchX >= 170 && touchX <= 240 && touchY >= 580 && touchY <= 610) {
+    if (g===9 && touchX >= 180 && touchX <= 240 && touchY >= 580 && touchY <= 610) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(180, 580, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
+    setTimeout(function() {
 g=12;
         shareGameResult();
+        avaToggleLock = false; }, 500);
         return;
     }
     
     // Reset button (X:240-305, Y:550-580)
-    if (g===9 && touchX >= 245&& touchX <= 305 && touchY >= 580 && touchY <= 610) {
+    if (g===9 && touchX >= 255&& touchX <= 305 && touchY >= 580 && touchY <= 610) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(255, 580, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
+    setTimeout(function() {
 g=2;
         gameOverActive = false;
         resetGame();
+        avaToggleLock = false; }, 500);
         return;
     }
     
     // Quit button (X:135-205, Y:590-620)
-    if (g===9 && touchX >= 135 && touchX <= 205 && touchY >= 620 && touchY <= 650) {
+    if (g===9 && touchX >= 145 && touchX <= 205 && touchY >= 620 && touchY <= 650) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(145, 620, 70, 30, 4);
+    ctx.fill();
+    ctx.restore();
+    
+    setTimeout(function() {
 g=0;
+
         gameOverActive = false;
         quitGame();
+        avaToggleLock = false; }, 500);
         return;
     }
-}
-
-// ===========================================
-// STATS TOUCH HANDLER
-// ===========================================
-if (viewingStats) {
-    // === STATISTICS TOUCH HANDLERS (g === 8) ===
-
-// Time filter buttons (Y: 45-73)
-if (g === 8 && touchY >= 45 && touchY <= 73) {
-    if (touchX >= 55 && touchX <= 125) {
-        statsTimeFilter = 'week';
-        renderStatsPage();
-        return;
-    } else if (touchX >= 135 && touchX <= 205) {
-        statsTimeFilter = 'month';
-        renderStatsPage();
-        return;
-    } else if (touchX >= 215 && touchX <= 285) {
-        statsTimeFilter = 'all';
-        renderStatsPage();
-        return;
-    }
-}
-
-// Reset button
-if (g === 8 && touchX >= 300 && touchX <= 332 && touchY >= 550 && touchY <= 578) {
-    resetStatistics();
-    return;
-}
-
-// Leaderboard button
-if (g === 8 && touchX >= 30 && touchX <= 110 && touchY >= 590 && touchY <= 622) {
-    alert('🏆 Leaderboard Coming Soon!');
-    return;
-}
-
-// Back button
-if (g === 8 && touchX >= 230 && touchX <= 310 && touchY >= 590 && touchY <= 622) {
-    g = 2;
-    viewingStats = false;
-    viewingLeaderboard = false;
-    ctx.clearRect(0, 0, cW, cH);
-    renderAnswer();
-    renderButtons();
-    renderStats();
-    statDraw(va, vb, vc, vd, ve, vf, vg, vh);
-    drawToggles();
-    if (selectedButton) {
-        highlightButtonAndNumbers(selectedButton, selectedButtonLinks);
-    }
-    return;
-}
 }
      
 
@@ -14538,9 +14723,9 @@ if (g === 2) {
                         vg = "";
                         vh = currentTeam;
                         statDraw(va, vb, vc, vd, ve, vf, vg, vh);
-                        if(n<2){
-                        speakText(vd);    
-                        }
+                          
+                        speakText(vd);  
+
                         setTimeout(() => {
                             ctx.clearRect(0, 0, cW, cH);
                             renderAnswer();
@@ -14573,9 +14758,9 @@ if (g === 2) {
                         vg = "";
                         vh = currentTeam;
                         statDraw(va, vb, vc, vd, ve, vf, vg, vh);
-                        if(n<2){
-                      speakText(vc+ve);  
-}    
+                          
+                        speakText(vc+ve);  
+
                         setTimeout(() => {
                             ctx.clearRect(0, 0, cW, cH);
                             renderAnswer();
@@ -14598,7 +14783,6 @@ if (g === 2) {
                         vg = "";
                         vh = currentTeam;
                         statDraw(va, vb, vc, vd, ve, vf, vg, vh);
-                        
                         setTimeout(() => {
                             ctx.clearRect(0, 0, cW, cH);
                             renderAnswer();
@@ -14631,7 +14815,7 @@ if (g === 2) {
                 if (gameSelectionLock) return;
                 gameSelectionLock = true;
                 
-                ctx.fillStyle = 'rgba(0,0,0,0.5)';
+                ctx.fillStyle = 'rgba(0,0,0,0.6)';
                 ctx.beginPath();
                 ctx.arc(touchedButton.x+22.5, touchedButton.y+22.5, 25.5, 0, Math.PI * 2);
                 ctx.fill();
@@ -14655,9 +14839,9 @@ if (g === 2) {
                         vg = "";
                         vh = currentTeam;
                         statDraw(va, vb, vc, vd, ve, vf, vg, vh);
-                        if(n<2){
+                          
                         speakText(vc+ve);  
-}  
+
                         setTimeout(() => {
                             ctx.clearRect(0, 0, cW, cH);
                             renderAnswer();
@@ -14680,7 +14864,6 @@ if (g === 2) {
                         vg = "";
                         vh = currentTeam;
                         statDraw(va, vb, vc, vd, ve, vf, vg, vh);
-                        
                         setTimeout(() => {
                             ctx.clearRect(0, 0, cW, cH);
                             renderAnswer();
@@ -14728,7 +14911,7 @@ if (g === 2) {
     }
 }
 function executeCommon(rVal, mX, mY) {
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
     ctx.beginPath();
     ctx.arc(mX + 18, mY + 18, 45, 0, Math.PI * 2);
     ctx.fill();
@@ -14844,7 +15027,7 @@ function executeHumanMove(button, targetCell, currentTeam) {
   
 if (!matchInProgress) {  
     if (n < 28) {
-        var timerCom = setTimeout(compMove, 7000);
+        var timerCom = setTimeout(compMove, 10000);
     }
     }
     
@@ -15005,8 +15188,7 @@ loadTags();
 loadTagsVisibility();
 checkExistingUser();
 logo();
-    var splashMath= setTimeout(land,3000);
-g=15;
+    var splashMath= setTimeout(showLandingPage,3000);
 }
 
   //loading the canvas
