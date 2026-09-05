@@ -1037,6 +1037,83 @@ let answerTags = { ...DEFAULT_ANSWER_TAGS };
 
 let buttonTagsVisible = false;
 let answerTagsVisible = false;
+// At the top with your other variables
+let isAppInstalled = false;
+
+// On page load, check if already installed
+window.addEventListener('load', function() {
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        isAppInstalled = true;
+        document.getElementById('installButton').style.display = 'none';
+    }
+});
+
+// Listen for installation completion
+window.addEventListener('appinstalled', function() {
+    isAppInstalled = true;
+    document.getElementById('installButton').style.display = 'none';
+});
+
+// Modified install button handler
+document.getElementById('installButton')?.addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const result = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    document.getElementById('installButton').style.display = 'none';
+    isAppInstalled = true;
+});
+
+// Modified draw function
+function drawInstallButton() {
+    // Don't draw if installed or button is hidden
+    if (isAppInstalled) return;
+    if (document.getElementById('installButton').style.display !== 'block') return;
+    
+    ctx.save();
+    
+    // Button dimensions
+    const btnX = 80;
+    const btnY = 650;
+    const btnW = 200;
+    const btnH = 50;
+    
+    // Glowing background
+    const grad = ctx.createLinearGradient(btnX, btnY, btnX, btnY + btnH);
+    grad.addColorStop(0, '#2E8B57');
+    grad.addColorStop(1, '#1B5E20');
+    
+    ctx.shadowColor = 'rgba(0,0,0,0.7)';
+    ctx.shadowBlur = 20;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 4;
+    
+    ctx.beginPath();
+    ctx.roundRect(btnX, btnY, btnW, btnH, 12);
+    ctx.fillStyle = grad;
+    ctx.fill();
+    
+    ctx.shadowBlur = 0;
+    
+    // Gold border
+    ctx.strokeStyle = '#FFD700';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(btnX, btnY, btnW, btnH, 12);
+    ctx.stroke();
+    
+    // Text
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = 'bold 18px fantasy, papyrus';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('⚽ INSTALL', btnX + btnW/2, btnY + btnH/2);
+    
+    // Store for touch detection
+    window._installBtnBounds = { x: btnX, y: btnY, w: btnW, h: btnH };
+    
+    ctx.restore();
+}
 
 // ✅ Lock orientation on phones
 
@@ -1340,6 +1417,8 @@ function redrawGameScreen() {
     } else {
         land();
     }
+    
+    drawInstallButton();
     
     if (debugTouch && touchX !== undefined) {
         drawTouchDebug();
