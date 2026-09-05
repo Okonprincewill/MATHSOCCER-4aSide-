@@ -1,7 +1,7 @@
 {
-  "name": "Mathsoccer",
+  "name": "MathSoccer – Learn Strategy by Watching AI Think",
   "short_name": "Mathsoccer",
-  "description": "A mathematical football game where you use numbers to score goals",
+  "description": "Train your predictive intuition. Outsmart the AI in this chess-like football strategy game where the AI handles the math. Learn by watching the machine think. Free to play.",
   "start_url": "/MATHSOCCER-4aSide-/",
   "scope": "/MATHSOCCER-4aSide-/",
   "display": "standalone",
