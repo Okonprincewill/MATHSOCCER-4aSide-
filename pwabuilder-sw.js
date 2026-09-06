@@ -3,7 +3,7 @@
 // GitHub: Okonprincewill/MATHSOCCER-4aSide-
 // ============================================================
 
-const CACHE_NAME = 'mathsoccer-v6';
+const CACHE_NAME = 'mathsoccer-v7';
 const APP_ROOT = '/MATHSOCCER-4aSide-/';
 
 // ✅ FILES TO CACHE - NO APP_ROOT ALONE!

@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <title>MathSoccer – Learn Strategy by Watching AI Think</title>
+    <title>🏆MathSoccer🏆  Concentrate. Calculate. Celebrate.</title>
 
-<meta name="description" content="Train your predictive intuition. Outsmart the AI in this chess-like football strategy game where the AI handles the math. Learn by watching the machine think. Free to play.">
+<meta name="description" content="Football is dirty. Math is boring. MathSoccer kills two birds with one stone. AI does the math. You score the goals. Learning becomes automatic. Free to play.">
 
 <meta name="robots" content="index, follow">
 
@@ -153,6 +153,10 @@
 let k=0;
 let g=0;
 let q=0;
+// At the top with other variables
+let playerName = localStorage.getItem('mathsoccer_player_name') || "YOU";
+let playerPhoto = localStorage.getItem('mathsoccer_player_photo') || null;
+let playerPhotoData = null; // For storing the image object
 // ============================================================
 //  GLOBAL VARIABLES
 // ============================================================
@@ -1332,6 +1336,170 @@ function resumeAudio() {
 }
 
 
+function showGeneralError() {
+    document.body.innerHTML = '';
+    document.body.style.background = '#000';
+    document.body.style.display = 'flex';
+    document.body.style.justifyContent = 'center';
+    document.body.style.alignItems = 'center';
+    document.body.style.height = '100vh';
+    document.body.style.color = '#CFC';
+    document.body.style.fontFamily = 'fantasy, papyrus';
+    document.body.style.textAlign = 'center';
+    document.body.style.padding = '20px';
+    
+    document.body.innerHTML = `
+        <div style="max-width: 360px; padding: 20px;">
+            <div style="font-size: 48px; margin-bottom: 20px;">🛠️</div>
+            <h1 style="color: #FFD700; font-size: 24px;">Can't open MathSoccer?</h1>
+            <p style="color: #CFC; font-size: 16px; line-height: 1.6; margin: 20px 0;">
+                Try these solutions:
+            </p>
+            <div style="background: #1a3a1a; border-radius: 12px; padding: 16px; margin: 16px 0; text-align: left;">
+                <p style="color: #FFD700; font-size: 14px; margin: 4px 0;">1. <span style="color:#CFC;">Update your browser</span> <span style="color:#888;font-size:11px;">(Chrome, Firefox, Safari)</span></p>
+                <p style="color: #FFD700; font-size: 14px; margin: 4px 0;">2. <span style="color:#CFC;">Use a modern browser</span> <span style="color:#888;font-size:11px;">(not older/obscure one)</span></p>
+                <p style="color: #FFD700; font-size: 14px; margin: 4px 0;">3. <span style="color:#CFC;">Allow storage</span> <span style="color:#888;font-size:11px;">(enable local storage)</span></p>
+                <p style="color: #FFD700; font-size: 14px; margin: 4px 0;">4. <span style="color:#CFC;">Switch to HTTPS</span> <span style="color:#888;font-size:11px;">(secure connection required)</span></p>
+                <p style="color: #FFD700; font-size: 14px; margin: 4px 0;">5. <span style="color:#CFC;">Try a different device</span> <span style="color:#888;font-size:11px;">(if possible)</span></p>
+            </div>
+            <button onclick="location.reload()" style="
+                margin-top: 24px;
+                padding: 12px 32px;
+                background: #2E8B57;
+                color: white;
+                border: 2px solid #FFD700;
+                border-radius: 12px;
+                font-size: 16px;
+                font-family: fantasy, papyrus;
+                cursor: pointer;
+            ">🔄 Try Again</button>
+            <br>
+            <button onclick="location.href='https://okonprincewill.github.io/MATHSOCCER-4aSide-'" style="
+                margin-top: 12px;
+                padding: 10px 24px;
+                background: transparent;
+                color: #AAA;
+                border: 1px solid #444;
+                border-radius: 8px;
+                font-size: 14px;
+                font-family: fantasy, papyrus;
+                cursor: pointer;
+            ">🌐 Open in Browser</button>
+        </div>
+    `;
+}
+
+
+function showBrowserWarning() {
+    document.body.innerHTML = '';
+    document.body.style.background = '#000';
+    document.body.style.display = 'flex';
+    document.body.style.justifyContent = 'center';
+    document.body.style.alignItems = 'center';
+    document.body.style.height = '100vh';
+    document.body.style.color = '#CFC';
+    document.body.style.fontFamily = 'fantasy, papyrus';
+    document.body.style.textAlign = 'center';
+    document.body.style.padding = '20px';
+    
+    document.body.innerHTML = `
+        <div style="max-width: 360px; padding: 20px;">
+            <div style="font-size: 48px; margin-bottom: 20px;">⚠️</div>
+            <h1 style="color: #FFD700; font-size: 24px;">Can't open MathSoccer?</h1>
+            <p style="color: #CFC; font-size: 16px; line-height: 1.6; margin: 20px 0;">
+                Your browser doesn't support this app.
+            </p>
+            <div style="background: #1a3a1a; border-radius: 12px; padding: 16px; margin: 16px 0; text-align: left;">
+                <p style="color: #FFD700; font-size: 14px; margin: 4px 0;">Try These:</p>
+                <p style="color: #CFC; font-size: 14px; margin: 4px 0;">1. Update your browser</p>
+                <p style="color: #CFC; font-size: 14px; margin: 4px 0;">2. Use Chrome, Firefox, or Safari</p>
+                <p style="color: #CFC; font-size: 14px; margin: 4px 0;">3. Allow local storage in settings</p>
+                <p style="color: #CFC; font-size: 14px; margin: 4px 0;">4. Switch to HTTPS (secure connection)</p>
+            </div>
+            <p style="color: #AAA; font-size: 12px; margin-top: 20px;">
+                MathSoccer works best on modern browsers.
+            </p>
+            <button onclick="location.reload()" style="
+                margin-top: 24px;
+                padding: 12px 32px;
+                background: #2E8B57;
+                color: white;
+                border: 2px solid #FFD700;
+                border-radius: 12px;
+                font-size: 16px;
+                font-family: fantasy, papyrus;
+                cursor: pointer;
+            ">🔄 Try Again</button>
+            <br>
+            <button onclick="location.href='https://okonprincewill.github.io/MATHSOCCER-4aSide-'" style="
+                margin-top: 12px;
+                padding: 10px 24px;
+                background: transparent;
+                color: #AAA;
+                border: 1px solid #444;
+                border-radius: 8px;
+                font-size: 14px;
+                font-family: fantasy, papyrus;
+                cursor: pointer;
+            ">🌐 Open in Browser</button>
+        </div>
+    `;
+}
+
+
+function showOfflineFirstTime() {
+    document.body.innerHTML = '';
+    document.body.style.background = '#000';
+    document.body.style.display = 'flex';
+    document.body.style.justifyContent = 'center';
+    document.body.style.alignItems = 'center';
+    document.body.style.height = '100vh';
+    document.body.style.color = '#CFC';
+    document.body.style.fontFamily = 'fantasy, papyrus';
+    document.body.style.textAlign = 'center';
+    document.body.style.padding = '20px';
+    
+    document.body.innerHTML = `
+        <div style="max-width: 360px; padding: 20px;">
+            <div style="font-size: 48px; margin-bottom: 20px;">📡</div>
+            <h1 style="color: #FFD700; font-size: 24px;">Can't open MathSoccer?</h1>
+            <p style="color: #CFC; font-size: 16px; line-height: 1.6; margin: 20px 0;">
+                No internet connection detected.
+            </p>
+            <div style="background: #1a3a1a; border-radius: 12px; padding: 16px; margin: 16px 0; text-align: left;">
+                <p style="color: #FFD700; font-size: 14px; margin: 4px 0;">Try These:</p>
+                <p style="color: #CFC; font-size: 14px; margin: 4px 0;">1. Connect to the internet</p>
+                <p style="color: #CFC; font-size: 14px; margin: 4px 0;">2. Refresh the page</p>
+                <p style="color: #CFC; font-size: 14px; margin: 4px 0;">3. After first load, you can play offline</p>
+                <p style="color: #888; font-size: 12px; margin: 4px 0;">Tip: Open once online to cache the game.</p>
+            </div>
+            <button onclick="location.reload()" style="
+                margin-top: 24px;
+                padding: 12px 32px;
+                background: #2E8B57;
+                color: white;
+                border: 2px solid #FFD700;
+                border-radius: 12px;
+                font-size: 16px;
+                font-family: fantasy, papyrus;
+                cursor: pointer;
+            ">🔄 Retry</button>
+            <br>
+            <button onclick="location.href='https://okonprincewill.github.io/MATHSOCCER-4aSide-'" style="
+                margin-top: 12px;
+                padding: 10px 24px;
+                background: transparent;
+                color: #AAA;
+                border: 1px solid #444;
+                border-radius: 8px;
+                font-size: 14px;
+                font-family: fantasy, papyrus;
+                cursor: pointer;
+            ">🌐 Open in Browser</button>
+        </div>
+    `;
+}
+
                
 // ============================================================
 //  MODIFIED REDRAW GAME SCREEN - Handles AI match properly
@@ -1543,6 +1711,45 @@ function playSound(sound) {
 }
 
 
+// Save player name
+function savePlayerName(name) {
+    playerName = name || "YOU";
+    localStorage.setItem('mathsoccer_player_name', playerName);
+    redrawGameScreen();
+}
+
+// Save player photo
+function savePlayerPhoto(photoData) {
+    if (photoData) {
+        playerPhoto = photoData;
+        localStorage.setItem('mathsoccer_player_photo', photoData);
+        const img = new Image();
+        img.onload = function() {
+            playerPhotoData = img;
+            redrawGameScreen();
+        };
+        img.src = photoData;
+    }
+}
+
+// Load player data on startup
+function loadPlayerData() {
+    const savedName = localStorage.getItem('mathsoccer_player_name');
+    const savedPhoto = localStorage.getItem('mathsoccer_player_photo');
+    
+    if (savedName) playerName = savedName;
+    if (savedPhoto) {
+        playerPhoto = savedPhoto;
+        const img = new Image();
+        img.onload = function() {
+            playerPhotoData = img;
+            redrawGameScreen();
+        };
+        img.src = savedPhoto;
+    }
+}
+
+
 function loadTagsVisibility() {
     const savedBtn = localStorage.getItem('button_tags_visible');
     const savedAns = localStorage.getItem('answer_tags_visible');
@@ -1587,9 +1794,6 @@ function resetAnswerTags() {
     answerTags = { ...DEFAULT_ANSWER_TAGS };
     saveAnswerTags();
 }
-// ============================================================
-//  DRAW TAGS TOGGLES (Difficulty Page - g === 1)
-// ============================================================
 
 // ============================================================
 //  DRAW TAGS TOGGLES (Difficulty Page - g === 1) — 3D Style
@@ -1998,6 +2202,34 @@ function drawAnswerTag(answer) {
     // Store for touch detection
     answer.tagBox = { x: boxX, y: boxY, w: boxWidth, h: boxHeight };
 }
+
+function showBrowserWarning() {
+    // Draw on canvas instead of alert
+    ctx.fillStyle = 'rgba(0,0,0,0.9)';
+    ctx.fillRect(0, 0, cW, cH);
+    
+    ctx.fillStyle = '#FFD700';
+    ctx.font = 'bold 20px fantasy, papyrus';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('⚠️ Browser Not Supported', 180, 200);
+    
+    ctx.fillStyle = '#CFC';
+    ctx.font = '16px fantasy, papyrus';
+    ctx.fillText('Please use Chrome, Firefox, or Safari', 180, 250);
+    ctx.fillText('to play MathSoccer', 180, 280);
+    
+    ctx.fillStyle = '#AAA';
+    ctx.font = '14px fantasy, papyrus';
+    ctx.fillText('Tap anywhere to continue anyway', 180, 400);
+    
+    // Wait for tap
+    canvas.addEventListener('click', function continueAnyway() {
+        canvas.removeEventListener('click', continueAnyway);
+        // Continue loading
+    }, { once: true });
+}
+
 
 function renderInfoPage() {
 g=11;
@@ -2972,6 +3204,75 @@ function drawFireworks() {
 }
 
 // ===========================================
+// DRAW THE "O" WITH PHOTO OR EQUAL SIGN
+// ===========================================
+function drawLogoO(centerX, centerY, radius) {
+    // Draw the circle
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = '#CFC';
+    ctx.stroke();
+    ctx.restore();
+
+    // Draw lines around the "O"
+    const lineLength = 25;
+    const lineSpacing = 10;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(centerX - lineLength / 2, centerY - lineSpacing / 2);
+    ctx.lineTo(centerX + lineLength / 2, centerY - lineSpacing / 2);
+    ctx.moveTo(centerX - lineLength / 2, centerY + lineSpacing / 2);
+    ctx.lineTo(centerX + lineLength / 2, centerY + lineSpacing / 2);
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = '#CFC';
+    ctx.stroke();
+    ctx.restore();
+
+    // ===========================================
+    // ✅ PHOTO INSIDE "O" (only in HvA mode)
+    // ===========================================
+    const showPhotoInO = (g !== 0 && g !== 1 && g !== 15 && playerPhotoData);
+
+    if (showPhotoInO) {
+        // Draw photo inside the "O"
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius - 2, 0, 2 * Math.PI);
+        ctx.clip();
+        ctx.drawImage(playerPhotoData, centerX - radius + 2, centerY - radius + 2, (radius - 2) * 2, (radius - 2) * 2);
+        ctx.restore();
+        
+        // Gold border
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius - 2, 0, 2 * Math.PI);
+        ctx.strokeStyle = '#FFD700';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.restore();
+    } else {
+        // Draw equal sign (original)
+        ctx.save();
+        ctx.fillStyle = '#032';
+        ctx.font = 'bold 22px fantasy, papyrus';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('=', centerX, centerY);
+        ctx.restore();
+    }
+
+    // Store "O" position for touch detection
+    window._logoOBox = { 
+        x: centerX - radius - 5, 
+        y: centerY - radius - 5, 
+        w: (radius + 5) * 2, 
+        h: (radius + 5) * 2 
+    };
+}
+
+// ===========================================
 // RENDER GAME OVER SCREEN - 3D
 // ===========================================
 
@@ -3059,7 +3360,13 @@ function renderGameOverScreen() {
 
     ctx.fillStyle = '#000000'; // Pure black
     ctx.fillRect(0, 80, cW, cH - 80);
-
+    
+    // ===========================================
+    // ✅ DRAW THE "O" WITH PHOTO (using shared function)
+    // ===========================================
+    
+    drawLogoO(centerX, centerY, radius);
+        
     // === REGISTERED SIGN (®) AT TOP RIGHT OF TITLE ===
     ctx.save();
     ctx.font = '12px fantasy, papyrus';
@@ -3248,15 +3555,20 @@ function renderGameOverScreen() {
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 0;
     ctx.restore();
+    
+    // === WINNER MESSAGE ===
+    const humanColor = (side === 0) ? 'red' : 'blue';
+    let winnerMessage = '';
+    let winnerColor = '';
+    let isHumanWinner = false;
 
-    // === GLOSSY GREEN BACKGROUND ===
-    const msgX = 70; // X+10
+        // === GLOSSY GREEN BACKGROUND (Winner Message Box) ===
+    const msgX = 70;
     const msgY = 395;
     const msgW = 220;
     const msgH = 60;
 
     ctx.save();
-
     ctx.shadowColor = 'rgba(0,0,0,0.4)';
     ctx.shadowBlur = 15;
     ctx.shadowOffsetX = 3;
@@ -3276,6 +3588,8 @@ function renderGameOverScreen() {
     ctx.shadowBlur = 0;
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 0;
+
+    // Inner glow
     const shineGrad = ctx.createRadialGradient(
         msgX + 30, msgY + 10, 5,
         msgX + 50, msgY + 15, msgW * 0.5
@@ -3295,11 +3609,52 @@ function renderGameOverScreen() {
 
     ctx.restore();
 
-    // === WINNER MESSAGE ===
-    const humanColor = (side === 0) ? 'red' : 'blue';
-    let winnerMessage = '';
-    let winnerColor = '';
-    let isHumanWinner = false;
+    // ===========================================
+    // ✅ PLAYER NAME (ONLY if name was changed)
+    // ===========================================
+    let nameOffset = 0;
+    if (playerName !== "YOU") {
+        const displayName = playerName || "YOU";
+        
+        ctx.save();
+        ctx.shadowColor = 'rgba(0,0,0,0.5)';
+        ctx.shadowBlur = 10;
+        ctx.shadowOffsetX = 2;
+        ctx.shadowOffsetY = 3;
+        
+        const nameGrad = ctx.createLinearGradient(180, msgY + 5, 180, msgY + 25);
+        nameGrad.addColorStop(0, '#FFD700');
+        nameGrad.addColorStop(0.5, '#FFA500');
+        nameGrad.addColorStop(1, '#FF6B00');
+        
+        ctx.font = 'bold 20px fantasy, papyrus';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillStyle = nameGrad;
+        ctx.fillText(displayName, 181, msgY + 6);
+        
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+        // In renderGameOverScreen(), before the name is drawn:
+
+// ✅ Determine player color
+const humanColor = (side === 0) ? 'red' : 'blue';
+const playerColor = (humanColor === 'red') ? '#FF0000' : '#0000FF';
+
+// Then where the name is drawn:
+ctx.fillStyle = playerColor;  // ← Changed from '#FFFFFF'
+        ctx.fillText(displayName, 180, msgY + 5);
+        
+        ctx.restore();
+        
+        nameOffset = 32;  // ← Space for name
+    }
+
+    // ===========================================
+    // WINNER MESSAGE (position adjusts if name is shown)
+    // ===========================================
+    const winnerY = msgY + 12 + nameOffset;  // ← Dynamic position
 
     if (redGoal > blueGoal) {
         winnerMessage = 'RED WON!';
@@ -3336,11 +3691,11 @@ function renderGameOverScreen() {
     ctx.fillStyle = winnerColor;
 
     if (isHumanWinner) {
-        ctx.fillText('🎉 YOU WON! 🎉', 180, msgY + msgH / 2); // X+10
+        ctx.fillText('🎉 YOU WON! 🎉', 180, winnerY);
     } else if (!isHumanWinner && (redGoal !== blueGoal || redPoints !== bluePoints)) {
-        ctx.fillText('😞 YOU LOST! 😞', 180, msgY + msgH / 2); // X+10
+        ctx.fillText('😞 YOU LOST! 😞', 180, winnerY);
     } else {
-        ctx.fillText('🤝 IT\'S A DRAW! 🤝', 180, msgY + msgH / 2); // X+10
+        ctx.fillText('🤝 IT\'S A DRAW! 🤝', 180, winnerY);
     }
     ctx.shadowBlur = 0;
     ctx.shadowOffsetX = 0;
@@ -6340,7 +6695,7 @@ function logo() {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('Concentrate. Calculate. Celebrate.', 180, 414);  // Y+25
-ctx.fillText('Version 1.1.1', 180, 780);  // Y+25
+ctx.fillText('Version 1.2.1', 180, 780);  // Y+25
 
     ctx.restore();
     
@@ -6989,7 +7344,7 @@ ctx.fillText('Concentrate. Calculate. Celebrate.', 180, 59);
 }
 
 if (matchInProgress) {
-ctx.font = 'bold 12px fantasy, papyrus';
+ctx.font = 'bold 11px fantasy, papyrus';
 const redName = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'][aiDifficulty];
     const blueName = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'][playerDifficulty];
 
@@ -7028,6 +7383,13 @@ ctx.textAlign = 'center';
 ctx.textBaseline = 'middle';
 ctx.fillText('=', centerX, centerY);
 ctx.restore();
+
+
+// ===========================================
+    // ✅ DRAW THE "O" WITH PHOTO (using shared function)
+    // ===========================================
+    
+    drawLogoO(centerX, centerY, radius);
 
 // === SIDE INDICATOR (Exact original, 3D) ===
 ctx.save();
@@ -7383,10 +7745,10 @@ function renderStats() {
     // ===========================================
     if (!matchInProgress && l >= 0) {
         let levelText = '';
-        if (l === 3) levelText = 'BEG';
-        else if (l === 2) levelText = 'INT';
-        else if (l === 1) levelText = 'ADV';
-        else if (l === 0) levelText = 'GEN';
+        if (l === 3) levelText = 'BEGINNER';
+        else if (l === 2) levelText = 'INTERMEDIATE';
+        else if (l === 1) levelText = 'ADVANCED';
+        else if (l === 0) levelText = 'GENIUS';
         
         const humanColor = (side === 0) ? 'blue' : 'red';
 const bottomBorder = (humanColor === 'red') ? '#FF0000' : '#0000FF';
@@ -7402,7 +7764,7 @@ const bottomBorder = (humanColor === 'red') ? '#FF0000' : '#0000FF';
         levelGrad.addColorStop(0.5, '#FFA500');
         levelGrad.addColorStop(1, '#FF6B00');
         
-        ctx.font = 'bold 18px fantasy, papyrus';
+        ctx.font = 'bold 14px fantasy, papyrus';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = levelGrad;
@@ -7426,19 +7788,32 @@ const bottomBorder = (humanColor === 'red') ? '#FF0000' : '#0000FF';
         botGrad.addColorStop(0.5, '#FFA500');
         botGrad.addColorStop(1, '#FF6B00');
         
-        ctx.font = 'bold 18px fantasy, papyrus';
+        ctx.font = 'bold 14px fantasy, papyrus';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillStyle = botGrad;
-        ctx.fillText('⚡ YOU ⚡', 179, 618);
+        
+
+const displayName = playerName || "YOU";
+ctx.fillStyle = botGrad;
+ctx.fillText('⚡ ' + displayName + ' ⚡', 179, 618);
         
         ctx.shadowBlur = 0;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
         ctx.fillStyle = '#FFFFFF';
-        ctx.fillText('⚡ YOU ⚡', 179, 616);
+        ctx.fillText('⚡ ' + displayName + ' ⚡', 179, 616);
         ctx.restore();
+        
+        // Store name position for touch detection
+window._playerNameBox = { 
+    x: 140, 
+    y: 600, 
+    w: 80, 
+    h: 30 
+};
     }   
+    
+    
     
     // ===========================================
     //  LEVEL DISPLAY - AvA Mode (Two Difficulties)
@@ -7452,8 +7827,8 @@ const bottomBorder = (humanColor === 'red') ? '#FF0000' : '#0000FF';
         const bottomDifficulty = (bottomColor === 'red') ? aiDifficulty : playerDifficulty;
         
         // Abbreviated names
-        const topName = (topDifficulty === 3) ? 'BEG' : (topDifficulty === 2) ? 'INT' : (topDifficulty === 1) ? 'ADV' : 'GEN';
-        const bottomName = (bottomDifficulty === 3) ? 'BEG' : (bottomDifficulty === 2) ? 'INT' : (bottomDifficulty === 1) ? 'ADV' : 'GEN';
+        const topName = (topDifficulty === 3) ? 'BEGINNER' : (topDifficulty === 2) ? 'INTERMEDIATE' : (topDifficulty === 1) ? 'ADVANCED' : 'GENIUS';
+        const bottomName = (bottomDifficulty === 3) ? 'BEGINNER' : (bottomDifficulty === 2) ? 'INTERMEDIATE' : (bottomDifficulty === 1) ? 'ADVANCED' : 'GENIUS';
         
         const topBorder = (topColor === 'red') ? '#FF0000' : '#0000FF';
         const bottomBorder = (bottomColor === 'red') ? '#FF0000' : '#0000FF';
@@ -7472,7 +7847,7 @@ const bottomBorder = (humanColor === 'red') ? '#FF0000' : '#0000FF';
         topGrad.addColorStop(0.5, '#FFA500');
         topGrad.addColorStop(1, '#FF6B00');
         
-        ctx.font = 'bold 18px fantasy, papyrus';
+        ctx.font = 'bold 14px fantasy, papyrus';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = topGrad;
@@ -7499,7 +7874,7 @@ const bottomBorder = (humanColor === 'red') ? '#FF0000' : '#0000FF';
         botGrad.addColorStop(0.5, '#FFA500');
         botGrad.addColorStop(1, '#FF6B00');
         
-        ctx.font = 'bold 18px fantasy, papyrus';
+        ctx.font = 'bold 14px fantasy, papyrus';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = botGrad;
@@ -9417,7 +9792,7 @@ r++;
         }
     }
     
-if (n > 28) {
+if (n > 2) {
     setTimeout(() => {
         if (!matchInProgress) {
             showGameOver();
@@ -11040,7 +11415,7 @@ for (let i = 0; i < yellowSquares.length; i++) {
                 isOpponentBlockingOwnGoalLocal = true;
             }
             
-            if (hasOpponentClosest && canReachYellow && defFac && l < 3) {
+            if (hasOpponentClosest && canReachYellow && defFac && l < 2) {
                 const cannotBlock = !canReachBlockVul;
                 
                 if (cannotBlock) {
@@ -11168,7 +11543,7 @@ for (let i = 0; i < yellowSquares.length; i++) {
                     }
                     const isLinkedToCriticalButton2 = (linkedButton2 && isCriticalDefender(linkedButton2));
                     
-                    if (l < 3 && ((shouldExemptRule3 && canBlockerGoToWhite) || isLinkedToCriticalButton2)) {
+                    if (l < 2 && ((shouldExemptRule3 && canBlockerGoToWhite) || isLinkedToCriticalButton2)) {
                         exemptAnswers.add(ansList);
                         logExemptedNumber(ansList.id, "goal blocker is marking");
                     } else if (threatType === 'goal_blocker_only') {
@@ -11194,7 +11569,7 @@ for (let i = 0; i < yellowSquares.length; i++) {
                         if (((hasNonGoalBlockerThreat && canBlockerGoToWhite && 
                             targetedYellow && targetedYellow.occupancy === 'no' && 
                             goalBlockerButton.occupancy === 'no') || isLinkedToCriticalButton2) && 
-                            l < 3) {
+                            l < 1) {
                             exemptAnswers.add(ansList);
                             logExemptedNumber(ansList.id, "goal defense fallback (non-goal-blocker threat confirmed)");
                         }
@@ -12937,7 +13312,7 @@ function launchAIMatch() {
 function afterAutoMove() {    
     
     if (n > 28) {
-       setTimeout(resetForNewGame, 12000);
+       setTimeout(resetForNewGame, 10000);
         gameOverActive = false;       
         return;
     }
@@ -12955,12 +13330,12 @@ function afterAutoMove() {
                 renderStats();      
 }        
             }
+            }, 13000);
             
             if (matchInProgress && !gameOverActive && n < 29) {
                 if (autoMoveTimer) clearTimeout(autoMoveTimer);
-                autoMoveTimer = setTimeout(autoMove, 12000);
-            }
-        }, 10000);
+                autoMoveTimer = setTimeout(autoMove, 18000);
+            }      
     } else {
         // ✅ No goal - statDraw display AND auto move timer
         const redName = ['GEN', 'ADV', 'INT', 'BEG'][aiDifficulty];
@@ -13375,6 +13750,238 @@ if (window._shareActive) {
         return;
     }
 }
+
+
+    const nameBox = window._playerNameBox;
+    if (g===2 && nameBox && touchX >= nameBox.x && touchX <= nameBox.x + nameBox.w &&
+        touchY >= nameBox.y && touchY <= nameBox.y + nameBox.h) {
+        
+        // Visual feedback
+        ctx.save();
+        ctx.fillStyle = 'rgba(255,215,0,0.3)';
+        ctx.beginPath();
+        ctx.roundRect(nameBox.x, nameBox.y, nameBox.w, nameBox.h, 4);
+        ctx.fill();
+        ctx.restore();
+        
+        const newName = prompt("Enter your name:", playerName !== "YOU" ? playerName : "");
+        if (newName !== null && newName.trim() !== '') {
+            savePlayerName(newName.trim());
+            speakText("Name saved: " + newName.trim());
+        }
+        redrawGameScreen();
+        return;
+    }
+                      
+    // ===========================================
+// TAP THE "O" TO MANAGE PHOTO (with custom dialog)
+// ===========================================
+const logoBox = window._logoOBox;
+if (logoBox && touchX >= logoBox.x && touchX <= logoBox.x + logoBox.w &&
+    touchY >= logoBox.y && touchY <= logoBox.y + logoBox.h) {
+    
+    // Visual feedback
+    ctx.save();
+    ctx.fillStyle = 'rgba(255,215,0,0.3)';
+    ctx.beginPath();
+    ctx.arc(logoBox.x + logoBox.w/2, logoBox.y + logoBox.h/2, logoBox.w/2, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.restore();
+    redrawGameScreen();
+    
+    // If photo exists, show custom dialog
+    if (playerPhotoData) {
+        showPhotoOptionsDialog();
+        return;
+    }
+    
+    // No photo → open file picker directly
+    openPhotoPicker();
+    return;
+}
+
+// ===========================================
+// CUSTOM PHOTO OPTIONS DIALOG
+// ===========================================
+function showPhotoOptionsDialog() {
+    // Draw overlay
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.7)';
+    ctx.fillRect(0, 0, cW, cH);
+    
+    // Dialog box
+    const dialogX = 50;
+    const dialogY = 280;
+    const dialogW = 260;
+    const dialogH = 140;
+    
+    ctx.shadowColor = 'rgba(0,0,0,0.5)';
+    ctx.shadowBlur = 20;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 4;
+    
+    ctx.fillStyle = '#1a3a1a';
+    ctx.beginPath();
+    ctx.roundRect(dialogX, dialogY, dialogW, dialogH, 12);
+    ctx.fill();
+    
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    
+    // Border
+    ctx.strokeStyle = 'rgba(255,215,0,0.3)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(dialogX, dialogY, dialogW, dialogH, 12);
+    ctx.stroke();
+    
+    // Title
+    ctx.fillStyle = '#CFC';
+    ctx.font = 'bold 18px fantasy, papyrus';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText('📷 Your Photo', 180, dialogY + 15);
+    
+    // Subtitle
+    ctx.fillStyle = '#AAA';
+    ctx.font = '14px fantasy, papyrus';
+    ctx.fillText('What would you like to do?', 180, dialogY + 45);
+    
+    // === CHANGE PHOTO BUTTON (Left) ===
+    const btn1X = dialogX + 15;
+    const btn1Y = dialogY + 75;
+    const btn1W = 105;
+    const btn1H = 40;
+    
+    ctx.shadowColor = 'rgba(0,0,0,0.3)';
+    ctx.shadowBlur = 8;
+    ctx.shadowOffsetX = 2;
+    ctx.shadowOffsetY = 3;
+    
+    const grad1 = ctx.createLinearGradient(btn1X, btn1Y, btn1X, btn1Y + btn1H);
+    grad1.addColorStop(0, '#2E86C1');
+    grad1.addColorStop(1, '#1A5276');
+    ctx.fillStyle = grad1;
+    ctx.beginPath();
+    ctx.roundRect(btn1X, btn1Y, btn1W, btn1H, 6);
+    ctx.fill();
+    
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 14px fantasy, papyrus';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🔄 Change', btn1X + btn1W/2, btn1Y + btn1H/2);
+    
+    // === REMOVE PHOTO BUTTON (Right) ===
+    const btn2X = dialogX + dialogW - btn1W - 15;
+    const btn2Y = dialogY + 75;
+    const btn2W = 105;
+    const btn2H = 40;
+    
+    ctx.shadowColor = 'rgba(0,0,0,0.3)';
+    ctx.shadowBlur = 8;
+    ctx.shadowOffsetX = 2;
+    ctx.shadowOffsetY = 3;
+    
+    const grad2 = ctx.createLinearGradient(btn2X, btn2Y, btn2X, btn2Y + btn2H);
+    grad2.addColorStop(0, '#E74C3C');
+    grad2.addColorStop(1, '#922B21');
+    ctx.fillStyle = grad2;
+    ctx.beginPath();
+    ctx.roundRect(btn2X, btn2Y, btn2W, btn2H, 6);
+    ctx.fill();
+    
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 14px fantasy, papyrus';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🗑️ Remove', btn2X + btn2W/2, btn2Y + btn2H/2);
+    
+    ctx.restore();
+    
+    // Store button positions for touch detection
+    window._photoDialogButtons = {
+        change: { x: btn1X, y: btn1Y, w: btn1W, h: btn1H },
+        remove: { x: btn2X, y: btn2Y, w: btn2W, h: btn2H }
+    };
+    
+    // Set flag to prevent other touches
+    window._photoDialogActive = true;
+}
+
+// ===========================================
+// HANDLE PHOTO DIALOG TOUCHES
+// ===========================================
+// Add this at the top of handleButtonClick()
+if (window._photoDialogActive) {
+    const buttons = window._photoDialogButtons;
+    if (buttons) {
+        // Change button
+        if (touchX >= buttons.change.x && touchX <= buttons.change.x + buttons.change.w &&
+            touchY >= buttons.change.y && touchY <= buttons.change.y + buttons.change.h) {
+            window._photoDialogActive = false;
+            window._photoDialogButtons = null;
+            redrawGameScreen();
+            openPhotoPicker();
+            return;
+        }
+        
+        // Remove button
+        if (touchX >= buttons.remove.x && touchX <= buttons.remove.x + buttons.remove.w &&
+            touchY >= buttons.remove.y && touchY <= buttons.remove.y + buttons.remove.h) {
+            window._photoDialogActive = false;
+            window._photoDialogButtons = null;
+            playerPhoto = null;
+            playerPhotoData = null;
+            localStorage.removeItem('mathsoccer_player_photo');
+            redrawGameScreen();
+            speakText("Photo removed");
+            return;
+        }
+        
+        // Tap outside dialog → close it
+        window._photoDialogActive = false;
+        window._photoDialogButtons = null;
+        redrawGameScreen();
+        return;
+    }
+}
+
+// ===========================================
+// HELPER: OPEN PHOTO PICKER
+// ===========================================
+function openPhotoPicker() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                savePlayerPhoto(event.target.result);
+                speakText("Photo saved!");
+            };
+            reader.readAsDataURL(file);
+        }
+        redrawGameScreen();
+    };
+    input.oncancel = function() {
+        redrawGameScreen();
+    };
+    input.click();
+}
+    
+ 
 
     // ===========================================
     // TAG EDITING - Check FIRST
@@ -13877,182 +14484,216 @@ g=0;
     }
 }
 
-// In handleButtonClick(), wherever you have pagination:
-
 // === RULES PAGE NAVIGATION ===
 if (rulesPanelActive && !paginationLock) {
-    // PREV
+    // PREV (X: 20, Y: 610, W: 55, H: 28)
     if (g===10 && touchX >= 20 && touchX <= 75 && touchY >= 610 && touchY <= 638) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(20, 610, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(20, 610, 55, 28, 4);  // ← Fixed dimensions
+        ctx.fill();
+        ctx.restore();
+        
         paginationLock = true;
-        if (rulesPage > 0) { rulesPage--; renderRulesPage(); }
-        setTimeout(() => { paginationLock = false; }, 300);
+        setTimeout(() => {
+            if (rulesPage > 0) { rulesPage--; renderRulesPage(); }
+            setTimeout(() => { paginationLock = false; }, 300);
+        }, 300);
         return;
     }
-    // NEXT
+    // NEXT (X: 265, Y: 610, W: 55, H: 28)
     if (g===10 && touchX >= 265 && touchX <= 320 && touchY >= 610 && touchY <= 638) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(265, 610, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(265, 610, 55, 28, 4);  // ← Fixed dimensions
+        ctx.fill();
+        ctx.restore();
+        
         paginationLock = true;
-        if (rulesPage < rulesTotalPages - 1) { rulesPage++; renderRulesPage(); }
-        setTimeout(() => { paginationLock = false; }, 300);
+        setTimeout(() => {
+            if (rulesPage < rulesTotalPages - 1) { rulesPage++; renderRulesPage(); }
+            setTimeout(() => { paginationLock = false; }, 300);
+        }, 300);
         return;
     }
-    // BACK
+    // BACK (X: 135, Y: 610, W: 70, H: 28)
     if (g===10 && touchX >= 135 && touchX <= 205 && touchY >= 610 && touchY <= 638) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(135, 610, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
-        g=0;
-        rulesPanelActive = false;
-        ctx.clearRect(0, 0, cW, cH);
-        showLandingPage();
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(135, 610, 70, 28, 4);  // ← Fixed dimensions
+        ctx.fill();
+        ctx.restore();
+        
+        setTimeout(() => {
+            g=0;
+            rulesPanelActive = false;
+            ctx.clearRect(0, 0, cW, cH);
+            showLandingPage();
+        }, 300);
         return;
     }
 }
 
 // === INFO PAGE NAVIGATION ===
 if (infoPanelActive && !paginationLock) {
-    // PREV
+    // PREV (X: 20, Y: 610, W: 55, H: 28)
     if (g===11 && touchX >= 20 && touchX <= 75 && touchY >= 610 && touchY <= 638) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(20, 610, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(20, 610, 55, 28, 4);  // ← Fixed dimensions
+        ctx.fill();
+        ctx.restore();
+        
         paginationLock = true;
-        if (infoPage > 0) { infoPage--; renderInfoPage(); }
-        setTimeout(() => { paginationLock = false; }, 300);
+        setTimeout(() => {
+            if (infoPage > 0) { infoPage--; renderInfoPage(); }
+            setTimeout(() => { paginationLock = false; }, 300);
+        }, 300);
         return;
     }
-    // NEXT
+    // NEXT (X: 265, Y: 610, W: 55, H: 28)
     if (g===11 && touchX >= 265 && touchX <= 320 && touchY >= 610 && touchY <= 638) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(265, 610, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(265, 610, 55, 28, 4);  // ← Fixed dimensions
+        ctx.fill();
+        ctx.restore();
+        
         paginationLock = true;
-        if (infoPage < infoTotalPages - 1) { infoPage++; renderInfoPage(); }
-        setTimeout(() => { paginationLock = false; }, 300);
+        setTimeout(() => {
+            if (infoPage < infoTotalPages - 1) { infoPage++; renderInfoPage(); }
+            setTimeout(() => { paginationLock = false; }, 300);
+        }, 300);
         return;
     }
-    // BACK
+    // BACK (X: 135, Y: 610, W: 70, H: 28)
     if (g===11 && touchX >= 135 && touchX <= 205 && touchY >= 610 && touchY <= 638) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(135, 610, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
-        g=0;
-        infoPanelActive = false;
-        ctx.clearRect(0, 0, cW, cH);
-        showLandingPage();
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(135, 610, 70, 28, 4);  // ← Fixed dimensions
+        ctx.fill();
+        ctx.restore();
+        
+        setTimeout(() => {
+            g=0;
+            infoPanelActive = false;
+            ctx.clearRect(0, 0, cW, cH);
+            showLandingPage();
+        }, 300);
         return;
     }
 }
 
 // === TERMS OF SERVICE NAVIGATION ===
 if (viewingTerms && !paginationLock) {
-    // PREV
+    // PREV (X: 30, Y: 540, W: 60, H: 25)
     if (g===6 && touchX >= 30 && touchX <= 90 && touchY >= 540 && touchY <= 565) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(30, 540, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(30, 540, 60, 25, 4);  // ← Fixed dimensions
+        ctx.fill();
+        ctx.restore();
+        
         paginationLock = true;
-        if (termsPage > 0) { termsPage--; renderTermsOfService(); }
-        setTimeout(() => { paginationLock = false; }, 300);
+        setTimeout(() => {
+            if (termsPage > 0) { termsPage--; renderTermsOfService(); }
+            setTimeout(() => { paginationLock = false; }, 300);
+        }, 300);
         return;
     }
-    // NEXT
+    // NEXT (X: 250, Y: 540, W: 60, H: 25)
     if (g===6 && touchX >= 250 && touchX <= 310 && touchY >= 540 && touchY <= 565) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(250, 540, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(250, 540, 60, 25, 4);  // ← Fixed dimensions
+        ctx.fill();
+        ctx.restore();
+        
         paginationLock = true;
-        const totalPages = Math.ceil(TERMS_CONTENT.length / TERMS_PER_PAGE);
-        if (termsPage < totalPages - 1) { termsPage++; renderTermsOfService(); }
-        setTimeout(() => { paginationLock = false; }, 300);
+        setTimeout(() => {
+            const totalPages = Math.ceil(TERMS_CONTENT.length / TERMS_PER_PAGE);
+            if (termsPage < totalPages - 1) { termsPage++; renderTermsOfService(); }
+            setTimeout(() => { paginationLock = false; }, 300);
+        }, 300);
         return;
     }
-    // BACK
+    // BACK (X: 100, Y: 540, W: 140, H: 30)
     if (g===6 && touchX >= 100 && touchX <= 240 && touchY >= 540 && touchY <= 570) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(100, 540, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
-        g=0;
-        viewingTerms = false;
-        viewingRegistration = false;
-        showLandingPage();
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(100, 540, 140, 30, 4);  // ← Fixed dimensions
+        ctx.fill();
+        ctx.restore();
+        
+        setTimeout(() => {
+            g=0;
+            viewingTerms = false;
+            viewingRegistration = false;
+            showLandingPage();
+        }, 300);
         return;
     }
 }
 
 // === PRIVACY POLICY NAVIGATION ===
 if (viewingPrivacy && !paginationLock) {
-    // PREV
+    // PREV (X: 30, Y: 540, W: 60, H: 25)
     if (g===5 && touchX >= 30 && touchX <= 90 && touchY >= 540 && touchY <= 565) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(30, 540, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(30, 540, 60, 25, 4);  // ← Fixed dimensions
+        ctx.fill();
+        ctx.restore();
+        
         paginationLock = true;
-        if (privacyPage > 0) { privacyPage--; renderPrivacyPolicy(); }
-        setTimeout(() => { paginationLock = false; }, 300);
+        setTimeout(() => {
+            if (privacyPage > 0) { privacyPage--; renderPrivacyPolicy(); }
+            setTimeout(() => { paginationLock = false; }, 300);
+        }, 300);
         return;
     }
-    // NEXT
+    // NEXT (X: 250, Y: 540, W: 60, H: 25)
     if (g===5 && touchX >= 250 && touchX <= 310 && touchY >= 540 && touchY <= 565) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(250, 540, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(250, 540, 60, 25, 4);  // ← Fixed dimensions
+        ctx.fill();
+        ctx.restore();
+        
         paginationLock = true;
-        const totalPages = Math.ceil(PRIVACY_CONTENT.length / PRIVACY_PER_PAGE);
-        if (privacyPage < totalPages - 1) { privacyPage++; renderPrivacyPolicy(); }
-        setTimeout(() => { paginationLock = false; }, 300);
+        setTimeout(() => {
+            const totalPages = Math.ceil(PRIVACY_CONTENT.length / PRIVACY_PER_PAGE);
+            if (privacyPage < totalPages - 1) { privacyPage++; renderPrivacyPolicy(); }
+            setTimeout(() => { paginationLock = false; }, 300);
+        }, 300);
         return;
     }
-    // BACK
+    // BACK (X: 100, Y: 540, W: 140, H: 30)
     if (g===5 && touchX >= 100 && touchX <= 240 && touchY >= 540 && touchY <= 570) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(100, 540, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
-        g=0;
-        viewingPrivacy = false;
-        viewingRegistration = false;
-        showLandingPage();
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(100, 540, 140, 30, 4);  // ← Fixed dimensions
+        ctx.fill();
+        ctx.restore();
+        
+        setTimeout(() => {
+            g=0;
+            viewingPrivacy = false;
+            viewingRegistration = false;
+            showLandingPage();
+        }, 300);
         return;
     }
 }
@@ -14373,269 +15014,316 @@ if (g === 14 && viewingOpponentLogs && !paginationLock) {
     const spacing = 45;
     let btnY = 60;
     
-    // PREV
+    // PREV (X: 280, Y: 60, W: 60, H: 30)
     if (touchX >= btnX && touchX <= btnX + btnWidth && 
         touchY >= btnY && touchY <= btnY + btnHeight) {
         ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(btnX, btnY, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(btnX, btnY, btnWidth, btnHeight, 4);  // ← Fixed: 60x30
+        ctx.fill();
+        ctx.restore();
+        
         paginationLock = true;
-        if (opponentLogsPage > 0) {
-            opponentLogsPage--;
-            renderOpponentLogsPage();
-        }
-        setTimeout(() => { paginationLock = false; }, 300);
+        setTimeout(() => {
+            if (opponentLogsPage > 0) {
+                opponentLogsPage--;
+                renderOpponentLogsPage();
+            }
+            setTimeout(() => { paginationLock = false; }, 300);
+        }, 300);
         return;
     }
     
     btnY += spacing;
     
-    // NEXT
+    // NEXT (X: 280, Y: 105, W: 60, H: 30)
     if (touchX >= btnX && touchX <= btnX + btnWidth && 
         touchY >= btnY && touchY <= btnY + btnHeight) {
         ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(btnX, btnY, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(btnX, btnY, btnWidth, btnHeight, 4);  // ← Fixed: 60x30
+        ctx.fill();
+        ctx.restore();
+        
         paginationLock = true;
-        if (opponentLogsPage < totalPages - 1 && totalPages > 0) {
-            opponentLogsPage++;
+        setTimeout(() => {
+            if (opponentLogsPage < totalPages - 1 && totalPages > 0) {
+                opponentLogsPage++;
+                renderOpponentLogsPage();
+            }
+            setTimeout(() => { paginationLock = false; }, 300);
+        }, 300);
+        return;
+    }
+    
+    btnY += spacing;
+    
+    // BACK (X: 280, Y: 150, W: 60, H: 30)
+    if (touchX >= btnX && touchX <= btnX + btnWidth && 
+        touchY >= btnY && touchY <= btnY + btnHeight) {
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(btnX, btnY, btnWidth, btnHeight, 4);  // ← Fixed: 60x30
+        ctx.fill();
+        ctx.restore();
+        
+        setTimeout(() => {
+            g = 2;
+            viewingOpponentLogs = false;
+            ctx.clearRect(0, 0, cW, cH);
+            renderAnswer();
+            renderButtons();
+            renderStats();
+            statDraw(va, vb, vc, vd, ve, vf, vg, vh);
+            drawToggles();
+            if (selectedButton) {
+                highlightButtonAndNumbers(selectedButton, selectedButtonLinks);
+            }
+        }, 300);
+        return;
+    }
+    
+    btnY += spacing;
+    
+    // CLEAR LOGS (X: 280, Y: 195, W: 60, H: 30)
+    if (touchX >= btnX && touchX <= btnX + btnWidth && 
+        touchY >= btnY && touchY <= btnY + btnHeight) {
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(btnX, btnY, btnWidth, btnHeight, 4);  // ← Fixed: 60x30
+        ctx.fill();
+        ctx.restore();
+        
+        setTimeout(() => {
+            clearOpponentLogs();
+            opponentLogsPage = 0;
             renderOpponentLogsPage();
-        }
-        setTimeout(() => { paginationLock = false; }, 300);
-        return;
-    }
-    
-    btnY += spacing;
-    
-    // BACK
-    if (touchX >= btnX && touchX <= btnX + btnWidth && 
-        touchY >= btnY && touchY <= btnY + btnHeight) {
-        ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(btnX, btnY, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
-        g = 2;
-        viewingOpponentLogs = false;
-        ctx.clearRect(0, 0, cW, cH);
-        renderAnswer();
-        renderButtons();
-        renderStats();
-        statDraw(va, vb, vc, vd, ve, vf, vg, vh);
-        drawToggles();
-        if (selectedButton) {
-            highlightButtonAndNumbers(selectedButton, selectedButtonLinks);
-        }
-        return;
-    }
-    
-    btnY += spacing;
-    
-    // CLEAR LOGS
-    if (touchX >= btnX && touchX <= btnX + btnWidth && 
-        touchY >= btnY && touchY <= btnY + btnHeight) {
-        ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(btnX, btnY, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
-        clearOpponentLogs();
-        opponentLogsPage = 0;
-        renderOpponentLogsPage();
+        }, 300);
         return;
     }
 }
+
 
 // === HISTORY PAGE NAVIGATION ===
 if (g === 13 && viewingHistory && !paginationLock) {
     const totalPages = Math.ceil(gameHistory.length / historyPerPage);
     
-    // Previous button (X: 50-120, Y: 720-750)
+    // Previous button (X: 50, Y: 720, W: 70, H: 30)
     if (touchX >= 50 && touchX <= 120 && touchY >= 720 && touchY <= 750) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(50, 720, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(50, 720, 70, 30, 4);  // ← Fixed: 70x30
+        ctx.fill();
+        ctx.restore();
+        
         paginationLock = true;
-        if (historyPage > 0) {
-            historyPage--;
-            renderHistoryPage();
-        }
-        setTimeout(() => { paginationLock = false; }, 300);
+        setTimeout(() => {
+            if (historyPage > 0) {
+                historyPage--;
+                renderHistoryPage();
+            }
+            setTimeout(() => { paginationLock = false; }, 300);
+        }, 300);
         return;
     }
     
-    // Next button (X: 220-290, Y: 720-750)
+    // Next button (X: 220, Y: 720, W: 70, H: 30)
     if (touchX >= 220 && touchX <= 290 && touchY >= 720 && touchY <= 750) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(220, 720, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(220, 720, 70, 30, 4);  // ← Fixed: 70x30
+        ctx.fill();
+        ctx.restore();
+        
         paginationLock = true;
-        if (historyPage < totalPages - 1 && totalPages > 0) {
-            historyPage++;
-            renderHistoryPage();
-        }
-        setTimeout(() => { paginationLock = false; }, 300);
+        setTimeout(() => {
+            if (historyPage < totalPages - 1 && totalPages > 0) {
+                historyPage++;
+                renderHistoryPage();
+            }
+            setTimeout(() => { paginationLock = false; }, 300);
+        }, 300);
         return;
     }
     
-    // Back button (X: 135-205, Y: 720-750)
+    // Back button (X: 135, Y: 720, W: 70, H: 30)
     if (touchX >= 135 && touchX <= 205 && touchY >= 720 && touchY <= 750) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(135, 720, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
-        g = 2;
-        viewingHistory = false;
-        ctx.clearRect(0, 0, cW, cH);
-        renderAnswer();
-        renderButtons();
-        renderStats();
-        statDraw(va, vb, vc, vd, ve, vf, vg, vh);
-        drawToggles();
-        if (selectedButton) {
-            highlightButtonAndNumbers(selectedButton, selectedButtonLinks);
-        }
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(135, 720, 70, 30, 4);  // ← Fixed: 70x30
+        ctx.fill();
+        ctx.restore();
+        
+        setTimeout(() => {
+            g = 2;
+            viewingHistory = false;
+            ctx.clearRect(0, 0, cW, cH);
+            renderAnswer();
+            renderButtons();
+            renderStats();
+            statDraw(va, vb, vc, vd, ve, vf, vg, vh);
+            drawToggles();
+            if (selectedButton) {
+                highlightButtonAndNumbers(selectedButton, selectedButtonLinks);
+            }
+        }, 300);
         return;
     }
     
-    // Reset Tags button (X: 105-165, Y: 760-788)
+    // Reset Tags button (X: 105, Y: 760, W: 60, H: 28)
     if (touchX >= 105 && touchX <= 165 && touchY >= 760 && touchY <= 788) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(105, 760, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
-        if (confirm('Reset all button tags to defaults?')) {
-            resetTags();
-            renderHistoryPage();
-        }
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(105, 760, 60, 28, 4);  // ← Fixed: 60x28
+        ctx.fill();
+        ctx.restore();
+        
+        setTimeout(() => {
+            if (confirm('Reset all button tags to defaults?')) {
+                resetTags();
+                renderHistoryPage();
+            }
+        }, 300);
         return;
     }
     
-    // Reset Answer Tags button (X: 175-235, Y: 760-788)
+    // Reset Answer Tags button (X: 175, Y: 760, W: 60, H: 28)
     if (touchX >= 175 && touchX <= 235 && touchY >= 760 && touchY <= 788) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(175, 760, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
-        if (confirm('Reset all answer tags to defaults?')) {
-            resetAnswerTags();
-            renderHistoryPage();
-        }
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(175, 760, 60, 28, 4);  // ← Fixed: 60x28
+        ctx.fill();
+        ctx.restore();
+        
+        setTimeout(() => {
+            if (confirm('Reset all answer tags to defaults?')) {
+                resetAnswerTags();
+                renderHistoryPage();
+            }
+        }, 300);
         return;
     }
 }
-    // ===========================================
-// STATISTICS & LEADERBOARD NAVIGATION
-// ===========================================
-if (viewingStats) {
-    // Time filter buttons
-    // === STATISTICS TOUCH HANDLERS (g === 8) ===
+
 
 // === STATISTICS TOUCH HANDLERS (g === 8) ===
 if (g === 8) {
     // Time filter buttons (Y: 45-73)
     if (touchY >= 45 && touchY <= 73) {
+        // Week (X: 55, W: 70, H: 28)
         if (touchX >= 55 && touchX <= 125) {
-        ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(55, 45, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
-            statsTimeFilter = 'week';
-            renderStatsPage();
+            ctx.save();
+            ctx.fillStyle = 'rgba(0,0,0,0.6)';
+            ctx.beginPath();
+            ctx.roundRect(55, 45, 70, 28, 4);  // ← Fixed: 70x28
+            ctx.fill();
+            ctx.restore();
+            
+            setTimeout(() => {
+                statsTimeFilter = 'week';
+                renderStatsPage();
+            }, 300);
             return;
-        } else if (touchX >= 135 && touchX <= 205) {
-        ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(135, 205, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
-            statsTimeFilter = 'month';
-            renderStatsPage();
+        } 
+        // Month (X: 135, W: 70, H: 28)
+        else if (touchX >= 135 && touchX <= 205) {
+            ctx.save();
+            ctx.fillStyle = 'rgba(0,0,0,0.6)';
+            ctx.beginPath();
+            ctx.roundRect(135, 45, 70, 28, 4);  // ← Fixed: 70x28
+            ctx.fill();
+            ctx.restore();
+            
+            setTimeout(() => {
+                statsTimeFilter = 'month';
+                renderStatsPage();
+            }, 300);
             return;
-        } else if (touchX >= 215 && touchX <= 285) {
-        ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(215, 285, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
-            statsTimeFilter = 'all';
-            renderStatsPage();
+        } 
+        // All (X: 215, W: 70, H: 28)
+        else if (touchX >= 215 && touchX <= 285) {
+            ctx.save();
+            ctx.fillStyle = 'rgba(0,0,0,0.6)';
+            ctx.beginPath();
+            ctx.roundRect(215, 45, 70, 28, 4);  // ← Fixed: 70x28
+            ctx.fill();
+            ctx.restore();
+            
+            setTimeout(() => {
+                statsTimeFilter = 'all';
+                renderStatsPage();
+            }, 300);
             return;
         }
     }
     
-    // Reset button (X: 300-332, Y: 710-738)
+    // Reset button (X: 300, Y: 710, W: 32, H: 28)
     if (touchX >= 300 && touchX <= 332 && touchY >= 710 && touchY <= 738) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(300, 710, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
-        resetStatistics();
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(300, 710, 32, 28, 4);  // ← Fixed: 32x28
+        ctx.fill();
+        ctx.restore();
+        
+        setTimeout(() => {
+            resetStatistics();
+        }, 300);
         return;
     }
     
-    // Leaderboard button (X: 30-110, Y: 750-782)
+    // Leaderboard button (X: 30, Y: 750, W: 80, H: 32)
     if (touchX >= 30 && touchX <= 110 && touchY >= 750 && touchY <= 782) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(30, 750, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
-        alert('🏆 Leaderboard Coming Soon!\n\nWe are building a global leaderboard to track the best Mathsoccer players. Stay tuned!');
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(30, 750, 80, 32, 4);  // ← Fixed: 80x32
+        ctx.fill();
+        ctx.restore();
+        
+        setTimeout(() => {
+            alert('🏆 Leaderboard Coming Soon!\n\nWe are building a global leaderboard to track the best Mathsoccer players. Stay tuned!');
+            renderStatsPage();
+        }, 300);
         return;
     }
     
-    // Back button (X: 230-310, Y: 750-782)
+    // Back button (X: 230, Y: 750, W: 80, H: 32)
     if (touchX >= 230 && touchX <= 310 && touchY >= 750 && touchY <= 782) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(230, 750, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
-        g = 2;
-        viewingStats = false;
-        viewingLeaderboard = false;
-        ctx.clearRect(0, 0, cW, cH);
-        renderAnswer();
-        renderButtons();
-        renderStats();
-        statDraw(va, vb, vc, vd, ve, vf, vg, vh);
-        drawToggles();
-        if (selectedButton) {
-            highlightButtonAndNumbers(selectedButton, selectedButtonLinks);
-        }
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.roundRect(230, 750, 80, 32, 4);  // ← Fixed: 80x32
+        ctx.fill();
+        ctx.restore();
+        
+        setTimeout(() => {
+            g = 2;
+            viewingStats = false;
+            viewingLeaderboard = false;
+            ctx.clearRect(0, 0, cW, cH);
+            renderAnswer();
+            renderButtons();
+            renderStats();
+            statDraw(va, vb, vc, vd, ve, vf, vg, vh);
+            drawToggles();
+            if (selectedButton) {
+                highlightButtonAndNumbers(selectedButton, selectedButtonLinks);
+            }
+        }, 300);
         return;
     }
 }
-}
+
 
 if (viewingLeaderboard) {
     // Back to Stats button
@@ -15132,7 +15820,7 @@ function executeHumanMove(button, targetCell, currentTeam) {
     g = 2;
   
 if (!matchInProgress) {  
-    if (n < 28) {
+    if (n < 2) {
         var timerCom = setTimeout(compMove, 10000);
     }
     }
@@ -15238,14 +15926,46 @@ function compMove() {
 // ============================================================
 
 function initcanvas() {
-    canvas = document.getElementById('gameCanvas');
-    ctx = canvas.getContext('2d');
+    // ===========================================
+    // ✅ STEP 1: CHECK BROWSER COMPATIBILITY
+    // ===========================================
+    try {
+        // Check Service Worker
+        if (!navigator.serviceWorker) {
+            showBrowserWarning();
+            return;
+        }
+        
+        // Check Online Status (first time)
+        if (!navigator.onLine) {
+            const isCached = localStorage.getItem('mathsoccer_cached');
+            if (!isCached) {
+                showOfflineFirstTime();
+                return;
+            }
+        }
+        
+    } catch(e) {
+        showGeneralError();
+        return;
+    }
     
-    canvas.width = DESIGN_WIDTH;
-    canvas.height = DESIGN_HEIGHT;
-    cW = DESIGN_WIDTH;
-    cH = DESIGN_HEIGHT;
-    
+    // ===========================================
+    // ✅ STEP 2: NORMAL LOADING
+    // ===========================================
+    try {
+        canvas = document.getElementById('gameCanvas');
+        ctx = canvas.getContext('2d');
+        
+        canvas.width = DESIGN_WIDTH;
+        canvas.height = DESIGN_HEIGHT;
+        cW = DESIGN_WIDTH;
+        cH = DESIGN_HEIGHT;
+        
+        // Mark as cached for offline use
+        localStorage.setItem('mathsoccer_cached', 'true');
+                  
+       
     // ✅ Set container to actual window size
     const container = document.getElementById('gameContainer');
     container.style.width = window.innerWidth + 'px';
@@ -15290,12 +16010,16 @@ window.addEventListener('resize', function() {
  // Setup controls
             setupDesktopControls();
             setupKeyboardControls();
+            loadPlayerData(); 
 loadTags();
 loadTagsVisibility();
 checkExistingUser();
 logo();
     var splashMath= setTimeout(showLandingPage,3000);
-}
+} catch(e) {
+        showGeneralError();
+    }
+    }
 
   //loading the canvas
   
