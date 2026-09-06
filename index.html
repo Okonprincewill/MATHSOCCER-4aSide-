@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <title>🏆MathSoccer🏆  Concentrate. Calculate. Celebrate.</title>
+    <title>MathSoccer - Just goals. No ball. No dirt.</title>
 
 <meta name="description" content="Football is dirty. Math is boring. MathSoccer kills two birds with one stone. AI does the math. You score the goals. Learning becomes automatic. Free to play.">
 
@@ -3654,7 +3654,7 @@ ctx.fillStyle = playerColor;  // ← Changed from '#FFFFFF'
     // ===========================================
     // WINNER MESSAGE (position adjusts if name is shown)
     // ===========================================
-    const winnerY = msgY + 12 + nameOffset;  // ← Dynamic position
+    const winnerY = msgY + 32;  // ← Dynamic position
 
     if (redGoal > blueGoal) {
         winnerMessage = 'RED WON!';
@@ -9792,7 +9792,7 @@ r++;
         }
     }
     
-if (n > 2) {
+if (n > 28) {
     setTimeout(() => {
         if (!matchInProgress) {
             showGameOver();
@@ -15820,7 +15820,7 @@ function executeHumanMove(button, targetCell, currentTeam) {
     g = 2;
   
 if (!matchInProgress) {  
-    if (n < 2) {
+    if (n < 28) {
         var timerCom = setTimeout(compMove, 10000);
     }
     }
