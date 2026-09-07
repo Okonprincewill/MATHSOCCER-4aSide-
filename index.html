@@ -13367,35 +13367,6 @@ function launchAIMatch() {
 
 function afterAutoMove() {    
     
-    if (n === 28) {
-    // ✅ WINNER ANNOUNCEMENT
-            const difficultyNames = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'];
-            const topColor = (side === 0) ? 'Red' : 'Blue';
-            const bottomColor = (side === 0) ? 'Blue' : 'Red';
-            const topDifficulty = difficultyNames[(topColor === 'Red') ? aiDifficulty : playerDifficulty];
-            const bottomDifficulty = difficultyNames[(bottomColor === 'Red') ? aiDifficulty : playerDifficulty];
-            
-            let winnerMessage = '';
-            if (redGoal > blueGoal) {
-                winnerMessage = `${bottomColor} ${topDifficulty} won the game! `;
-            } else if (blueGoal > redGoal) {
-                winnerMessage = `${topColor} ${bottomDifficulty} won the game! `;
-            } else {
-                winnerMessage = `It's a draw between ${bottomColor} ${topDifficulty} and ${topColor} ${bottomDifficulty}! `;
-            }
-            
-            speakText("This game is over. It's " + redGoal + " goal to " + blueGoal + " after " + (n-1) + " moves!" + winnerMessage);
-            
-            
-            setTimeout(function(){    
-setTimeout(quitGame, 5000);       
-            showLandingPage();
-            gameOverActive = false;
-            clearTimeout(timerCom);
-        return;      
-        }, 8000);
-    }
-    
     if (targetAnswer && targetAnswer.id == 1) {
         // Goal scored - longer pause with reset
         var resetTime = setTimeout(function(){
@@ -13414,7 +13385,7 @@ setTimeout(quitGame, 5000);
                 autoMoveTimer = setTimeout(autoMove, 18000);
             }      
     } 
-    else {
+    else if (matchInProgress && !gameOverActive && n < 28) {
         // ✅ No goal - statDraw display AND auto move timer
         const redName = ['GEN', 'ADV', 'INT', 'BEG'][aiDifficulty];
         const blueName = ['GEN', 'ADV', 'INT', 'BEG'][playerDifficulty];
@@ -13423,12 +13394,38 @@ setTimeout(quitGame, 5000);
         ctx.clearRect(0, 0, cW, cH);
         renderAnswer();
         renderButtons();
-        renderStats();
-                
-        if (matchInProgress && !gameOverActive && n < 28) {
+        renderStats();               
+        
             if (autoMoveTimer) clearTimeout(autoMoveTimer);
-            autoMoveTimer = setTimeout(autoMove, 12000);
-        }
+            autoMoveTimer = setTimeout(autoMove, 12000);       
+    }
+    else if(n===28){
+    setTimeout(function(){   
+    // ✅ WINNER ANNOUNCEMENT
+            const difficultyNames = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'];
+            const topColor = (side === 0) ? 'Red' : 'Blue';
+            const bottomColor = (side === 0) ? 'Blue' : 'Red';
+            const topDifficulty = difficultyNames[(topColor === 'Red') ? aiDifficulty : playerDifficulty];
+            const bottomDifficulty = difficultyNames[(bottomColor === 'Red') ? aiDifficulty : playerDifficulty];
+            
+            let winnerMessage = '';
+            if (redGoal > blueGoal) {
+                winnerMessage = `${bottomColor} ${topDifficulty} won the game! `;
+            } else if (blueGoal > redGoal) {
+                winnerMessage = `${topColor} ${bottomDifficulty} won the game! `;
+            } else {
+                winnerMessage = `It's a draw between ${bottomColor} ${topDifficulty} and ${topColor} ${bottomDifficulty}! `;
+            }
+            
+            speakText("This game is over. It's " + redGoal + " goal to " + blueGoal + " after " + (n-1) + " moves!" + winnerMessage);
+            
+    setTimeout(quitGame, 8000);       
+            matchInProgress = false;
+            gameOverActive = false;
+            clearTimeout(timerCom);
+        return;      
+        
+        }, 12000);
     }
 }
 
