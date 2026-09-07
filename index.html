@@ -292,6 +292,73 @@ const INFO_CONTENT = [
     "battle of wits between human intuition ",
     "and artificial intelligence. ",
     "                            ",
+    "------- THE UNCONSCIOUS LESSONS ---------",
+"             ",
+"Four Foundational Math Topics MathSoccer Covers:",
+"             ",
+"MathSoccer unconsciously teaches four core",
+"mathematical concepts that are the building",
+"blocks for all higher mathematics:",
+"             ",
+"• Multiplication: Every time you move, the AI",
+"  calculates: visited = access × emerging.",
+"  You learn multiplication patterns without",
+"  memorizing tables.",
+"             ",
+"• Division: When the visited number is",
+"  smaller, the AI divides: visited = access",
+"  ÷ emerging. Division becomes intuitive",
+"  through gameplay.",
+"             ",
+"• Factors: The AI only frames numbers that",
+"  are derived from your current access",
+"  factor. You learn to recognize factor",
+"  relationships naturally.",
+"             ",
+"• Inequalities: The AI compares numbers to",
+"  determine if multiplication or division",
+"  applies. You build number sense through",
+"  constant comparison.",
+"             ",
+"------- UNCONSCIOUS LEARNING -------",
+"             ",
+"MathSoccer uses unconscious learning.",
+"You don't study math — you play soccer.",
+"The AI handles every calculation, showing",
+"you the math visually with every move.",
+"Over time, your brain absorbs the patterns:",
+"             ",
+"• Pattern Recognition: You see which",
+"  numbers connect and why.",
+"             ",
+"• Number Sense: You develop an instinct",
+"  for factors and multiples.",
+"             ",
+"• Strategic Thinking: You plan moves based",
+"  on mathematical relationships.",
+"             ",
+"When you later study algebra, calculus, or",
+"statistics, you already understand the",
+"foundation. Multiplication, division,",
+"factors, and inequalities are second nature.",
+"Math becomes easy because you've already",
+"learned it unconsciously through play.",
+"             ",
+"Children want to play football games,",
+"but parents want them to learn math.",
+"MathSoccer gives them both.",
+"             ",
+"No, it doesn't cover algebra.",
+"No, it doesn't teach calculus.",
+"But without multiplication, division,",
+"factors, and inequality, none of these",
+"topics can exist. Every other math topic",
+"depends on them.",
+"             ",
+"MathSoccer builds the foundation.",
+"The rest follows automatically through",
+"fun and unconscious learning.",
+"             ",
     "------- THE CORE CONCEPT ----",
     "                            ",
     "Players command colored tokens (W, X, Y, Z)     ",
@@ -404,7 +471,7 @@ const INFO_CONTENT = [
     "• Active Screen Time: Turn your child's tablet     ",
     "time into a rigorous mental workout — no        ",
     "mindless scrolling allowed.           ",
-    "                            ",
+    "                            ", 
     "------- THE VERDICT ---------",
     "                            ",
     "MathSoccer is a game where humans   ",
@@ -3623,9 +3690,9 @@ function renderGameOverScreen() {
         ctx.shadowOffsetY = 3;
         
         const nameGrad = ctx.createLinearGradient(180, msgY + 5, 180, msgY + 25);
-        nameGrad.addColorStop(0, '#FFD700');
+        nameGrad.addColorStop(0, '#FF6B00');
         nameGrad.addColorStop(0.5, '#FFA500');
-        nameGrad.addColorStop(1, '#FF6B00');
+        nameGrad.addColorStop(1, '#FFD700');
         
         ctx.font = 'bold 20px fantasy, papyrus';
         ctx.textAlign = 'center';
@@ -3654,24 +3721,24 @@ ctx.fillStyle = playerColor;  // ← Changed from '#FFFFFF'
     // ===========================================
     // WINNER MESSAGE (position adjusts if name is shown)
     // ===========================================
-    const winnerY = msgY + 32;  // ← Dynamic position
+    const winnerY = msgY + 37;  // ← Dynamic position
 
     if (redGoal > blueGoal) {
         winnerMessage = 'RED WON!';
-        winnerColor = '#FF0000';
+        winnerColor = '#FFD700';
         isHumanWinner = (humanColor === 'red');
     } else if (blueGoal > redGoal) {
         winnerMessage = 'BLUE WON!';
-        winnerColor = '#0000FF';
+        winnerColor = '#FFD700';
         isHumanWinner = (humanColor === 'blue');
     } else {
         if (redPoints > bluePoints) {
             winnerMessage = `RED WON ON POINTS! (${redPoints}-${bluePoints})`;
-            winnerColor = '#FF0000';
+            winnerColor = '#FFD700';
             isHumanWinner = (humanColor === 'red');
         } else if (bluePoints > redPoints) {
             winnerMessage = `BLUE WON ON POINTS! (${redPoints}-${bluePoints})`;
-            winnerColor = '#0000FF';
+            winnerColor = '#FFD700';
             isHumanWinner = (humanColor === 'blue');
         } else {
             winnerMessage = `COMPLETE DRAW! (${redPoints}-${bluePoints})`;
@@ -3679,7 +3746,7 @@ ctx.fillStyle = playerColor;  // ← Changed from '#FFFFFF'
             isHumanWinner = false;
         }
     }
-
+    
     ctx.save();
     ctx.shadowColor = 'rgba(0,0,0,0.5)';
     ctx.shadowBlur = 15;
@@ -3688,14 +3755,14 @@ ctx.fillStyle = playerColor;  // ← Changed from '#FFFFFF'
     ctx.font = 'bold 22px fantasy, papyrus';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillStyle = winnerColor;
+    ctx.fillStyle = '#FFD700';
 
     if (isHumanWinner) {
-        ctx.fillText('🎉 YOU WON! 🎉', 180, winnerY);
+        ctx.fillText('🎉 YOU WON! 🎉', 180, winnerY); // X+10
     } else if (!isHumanWinner && (redGoal !== blueGoal || redPoints !== bluePoints)) {
-        ctx.fillText('😞 YOU LOST! 😞', 180, winnerY);
+        ctx.fillText('😞 YOU LOST! 😞', 180, winnerY); // X+10
     } else {
-        ctx.fillText('🤝 IT\'S A DRAW! 🤝', 180, winnerY);
+        ctx.fillText('🤝 IT\'S A DRAW! 🤝', 180, winnerY); // X+10
     }
     ctx.shadowBlur = 0;
     ctx.shadowOffsetX = 0;
@@ -6695,7 +6762,7 @@ function logo() {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('Concentrate. Calculate. Celebrate.', 180, 414);  // Y+25
-ctx.fillText('Version 1.2.1', 180, 780);  // Y+25
+ctx.fillText('Version 1.3.2', 180, 780);  // Y+25
 
     ctx.restore();
     
@@ -9792,36 +9859,13 @@ r++;
         }
     }
     
-if (n > 28) {
-    setTimeout(() => {
-        if (!matchInProgress) {
-            showGameOver();
-        } else {
-            // ✅ WINNER ANNOUNCEMENT
-            const difficultyNames = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'];
-            const topColor = (side === 0) ? 'Red' : 'Blue';
-            const bottomColor = (side === 0) ? 'Blue' : 'Red';
-            const topDifficulty = difficultyNames[(topColor === 'Red') ? aiDifficulty : playerDifficulty];
-            const bottomDifficulty = difficultyNames[(bottomColor === 'Red') ? aiDifficulty : playerDifficulty];
-            
-            let winnerMessage = '';
-            if (redGoal > blueGoal) {
-                winnerMessage = `${bottomColor} ${topDifficulty} won the game! `;
-            } else if (blueGoal > redGoal) {
-                winnerMessage = `${topColor} ${bottomDifficulty} won the game! `;
-            } else {
-                winnerMessage = `It's a draw between ${bottomColor} ${topDifficulty} and ${topColor} ${bottomDifficulty}! `;
-            }
-            
-            speakText("This game is over. It's " + redGoal + " goal to " + blueGoal + " after " + (n-1) + " moves!" + winnerMessage);
-            
-            setTimeout(quitGame, 5000);
-            gameOverActive = false;
-        }
-        clearTimeout(timerCom);
+if (n > 28 && !matchInProgress) {
+            setTimeout (() =>{
+        showGameOver();
+  clearTimeout(timerCom);
         return;
-    }, 7000);
-}
+},5000);
+        }        
 sparkleBorderActive = false;
 } 
 
@@ -13273,7 +13317,7 @@ function launchAIMatch() {
     l = aiDifficulty;
     
     r = (side === 0) ? 2 : 1;
-    n++;
+    //n++;
     matchInProgress = true;
     gameOverActive = false;
     
@@ -13311,32 +13355,54 @@ function launchAIMatch() {
 
 function afterAutoMove() {    
     
-    if (n > 28) {
-       setTimeout(resetForNewGame, 10000);
-        gameOverActive = false;       
-        return;
+    if (n === 28) {
+    // ✅ WINNER ANNOUNCEMENT
+            const difficultyNames = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'];
+            const topColor = (side === 0) ? 'Red' : 'Blue';
+            const bottomColor = (side === 0) ? 'Blue' : 'Red';
+            const topDifficulty = difficultyNames[(topColor === 'Red') ? aiDifficulty : playerDifficulty];
+            const bottomDifficulty = difficultyNames[(bottomColor === 'Red') ? aiDifficulty : playerDifficulty];
+            
+            let winnerMessage = '';
+            if (redGoal > blueGoal) {
+                winnerMessage = `${bottomColor} ${topDifficulty} won the game! `;
+            } else if (blueGoal > redGoal) {
+                winnerMessage = `${topColor} ${bottomDifficulty} won the game! `;
+            } else {
+                winnerMessage = `It's a draw between ${bottomColor} ${topDifficulty} and ${topColor} ${bottomDifficulty}! `;
+            }
+            
+            speakText("This game is over. It's " + redGoal + " goal to " + blueGoal + " after " + (n-1) + " moves!" + winnerMessage);
+            
+            
+            setTimeout(function(){    
+setTimeout(quitGame, 5000);       
+            showLandingPage();
+            gameOverActive = false;
+            clearTimeout(timerCom);
+        return;      
+        }, 8000);
     }
     
     if (targetAnswer && targetAnswer.id == 1) {
         // Goal scored - longer pause with reset
         var resetTime = setTimeout(function(){
-            if (n < 29) {
-            if(g!==1 && (g===2||g===15)){  
+            if (n < 28 && (g!==1 && (g===2||g===15))){  
                 pass();
                 playSound(welcome);
                 ctx.clearRect(0, 0, cW, cH);
                 renderAnswer();
                 renderButtons();
-                renderStats();      
-}        
+                renderStats();           
             }
             }, 13000);
             
-            if (matchInProgress && !gameOverActive && n < 29) {
+            if (matchInProgress && !gameOverActive && n < 28) {
                 if (autoMoveTimer) clearTimeout(autoMoveTimer);
                 autoMoveTimer = setTimeout(autoMove, 18000);
             }      
-    } else {
+    } 
+    else {
         // ✅ No goal - statDraw display AND auto move timer
         const redName = ['GEN', 'ADV', 'INT', 'BEG'][aiDifficulty];
         const blueName = ['GEN', 'ADV', 'INT', 'BEG'][playerDifficulty];
@@ -13347,7 +13413,7 @@ function afterAutoMove() {
         renderButtons();
         renderStats();
                 
-        if (matchInProgress && !gameOverActive && n < 29) {
+        if (matchInProgress && !gameOverActive && n < 28) {
             if (autoMoveTimer) clearTimeout(autoMoveTimer);
             autoMoveTimer = setTimeout(autoMove, 12000);
         }
@@ -13363,10 +13429,6 @@ function autoMove() {
     if (!matchInProgress) return;
     if (gameOverActive) return;
     if (g !== 15) return;  // ✅ Only run in AvA mode
-    if (n > 28) {
-    setTimeout(resetForNewGame, 12000);
-        return;
-    }
     
     // Switch l based on turn
     
@@ -13518,7 +13580,7 @@ function resetForNewGame() {
     
     // Reset exemption logs
     unifiedExemptionLogs = new Set();
-    viewingUnifiedLogs = false;
+    viewingUnifiedLogs = false;    
 }
 
    
@@ -13566,8 +13628,8 @@ function showLandingPage() {
     ctx.font = 'bold 14px fantasy, papyrus';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText("Use soccer experience to block chances, ", 180, 206);  // X+20 (160+20=180)
-    ctx.fillText("create chances, score goals  ", 180, 226);
+    ctx.fillText("Use real football experience to block ", 180, 206);  // X+20 (160+20=180)
+    ctx.fillText("chances, create chances, score goals  ", 180, 226);
     ctx.fillText("and win Mathsoccer games.", 180, 246);
     
     // ===========================================
@@ -13603,9 +13665,9 @@ function showLandingPage() {
     
     ctx.fillStyle = 'black';
     ctx.font = 'bold 14px fantasy, papyrus';
-    ctx.fillText("Become a skilled forecaster. ", 180, 351);
+    ctx.fillText("Develop a factors and multiples instinct. ", 180, 351);
     ctx.fillText("Use Mathsoccer factors to see the future. ", 180, 371);   
-    ctx.fillText("Forecast future events perfectly. ", 180, 391);  // X+20    
+    ctx.fillText("AI does the math. You score the goals. ", 180, 391);  // X+20    
     
     // ===========================================
     // MESSAGE 3: How to Play (BOTTOM) — X+20, Y unchanged
@@ -14227,14 +14289,14 @@ loadAchievements();
             ctx.beginPath();
             ctx.arc(page.x + 14, page.y + 14, 45, 0, Math.PI * 2);
             ctx.fill();
-            
+            setTimeout(logo, 300);
             clearTimeout(window._landingPageTimeout);
             window._landingPageTimeout = setTimeout(function() {
                 ctx.clearRect(0, 0, cW, cH);
                 launchAIMatch();
                 n = 1;                
                 landingPageClickLock = false;
-            }, 200);
+            }, 3300);
             return;
         }
     }
@@ -14246,21 +14308,20 @@ loadAchievements();
 if (g === 15 && matchInProgress) {
     // Play Red button (X: 125, Y: 712)
     if (touchX >= 125 - 4 && touchX <= 125 + 42 && touchY >= 712 - 4 && touchY <= 712 + 42) {
-        // Reset everything
-        resetForNewGame();
+        
         // Set up HvA with Red
         ctx.fillStyle = 'rgba(0,0,0,0.6)';
             ctx.beginPath();
                      ctx.arc(139, 726, 45, 0, Math.PI * 2);
             ctx.fill();
-            
+     resetForNewGame();       
             var clickFx = setTimeout(rSet, 500);
            // Inside the Start Red / Start Blue button handlers
 function rSet() {
         g = 1;
         matchInProgress = false;
         side = 0;
-        k = 0;
+        k = 0;        
         loadLifetimeStats();
 loadAchievements();
         ctx.clearRect(0, 0, cW, cH);
@@ -14276,14 +14337,13 @@ loadAchievements();
     
     // Play Blue button (X: 207, Y: 712)
     if (touchX >= 207 - 4 && touchX <= 207 + 42 && touchY >= 712 - 4 && touchY <= 712 + 42) {
-        // Reset everything
-        resetForNewGame();
+        
         // Set up HvA with Blue
         ctx.fillStyle = 'rgba(0,0,0,0.6)';
             ctx.beginPath();
                      ctx.arc(221, 726, 45, 0, Math.PI * 2);
             ctx.fill();
-            
+      resetForNewGame();      
             var clickFx = setTimeout(rSet, 500);
            // Inside the Start Red / Start Blue button handlers
 function rSet() {
@@ -14291,6 +14351,7 @@ function rSet() {
         matchInProgress = false;
         side = 1;
         k = 1;
+        
         loadLifetimeStats();
 loadAchievements();
         ctx.clearRect(0, 0, cW, cH);
@@ -16035,8 +16096,26 @@ initcanvas();
 
 <!-- SEO CONTENT - Visible to search engines, hidden from humans -->
 <div style="position:absolute; top:0; left:-9999px; width:1px; height:1px; overflow:hidden; color:#000; background:#000;">
-  <h1>MathSoccer – Learn Strategy by Watching AI Think</h1>
+  <h1>MathSoccer – The AI Does the Math, You Score the Goals</h1>
   <p>MathSoccer is a free online strategy game where the AI handles all calculations for you. You strategically block and create chances to score goals. Built for ages 8 to adult.</p>
+  
+  <h2>Four Foundational Math Topics MathSoccer Covers</h2>
+<p>MathSoccer unconsciously teaches four core mathematical concepts that are the building blocks for all higher mathematics:</p>
+<ul>
+  <li><strong>Multiplication:</strong> Every time you move, the AI calculates: visited number = access factor × emerging factor. You learn multiplication patterns without memorizing tables.</li>
+  <li><strong>Division:</strong> When the visited number is smaller, the AI divides: visited number = access factor ÷ emerging factor. Division becomes intuitive through gameplay.</li>
+  <li><strong>Factors:</strong> The AI only frames numbers that are derived from current access factors. You learn to recognize factor relationships naturally.</li>
+  <li><strong>Inequalities:</strong> The AI compares numbers to determine if multiplication or division applies. You build number sense through constant comparison.</li>
+</ul>
+
+<h2>Unconscious Learning: How MathSoccer Makes Math Easy</h2>
+<p>MathSoccer uses a method called unconscious learning. You don't study math — you play soccer. The AI handles every calculation, showing you the math visually with every move. Over time, your brain absorbs the patterns:</p>
+<ul>
+  <li><strong>Pattern Recognition:</strong> You see which numbers connect and why.</li>
+  <li><strong>Number Sense:</strong> You develop an instinct for factors and multiples.</li>
+  <li><strong>Strategic Thinking:</strong> You plan moves based on mathematical relationships.</li>
+</ul>
+<p>When you later study algebra, calculus, or statistics, you already understand the foundation. Multiplication, division, factors, and inequalities are second nature. Math becomes easy because you've already learned it unconsciously through play.</p>
   
   <h2>The Core Concept</h2>
   <p>Players command colored tokens (W, X, Y, Z) on a 5x7 grid of numbered squares. The AI handles every single calculation for you. You don't do the math—you only do the thinking. You choose the path; the AI handles the numbers.</p>
