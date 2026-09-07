@@ -7423,11 +7423,17 @@ ctx.fillText('Concentrate. Calculate. Celebrate.', 180, 59);
 }
 
 if (matchInProgress) {
-ctx.font = 'bold 11px fantasy, papyrus';
-const redName = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'][aiDifficulty];
-    const blueName = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'][playerDifficulty];
+    ctx.font = 'bold 11px fantasy, papyrus';
+    
+    // ✅ Determine each color's difficulty
+    const redDifficulty = (side === 0) ? aiDifficulty : playerDifficulty;
+    const blueDifficulty = (side === 0) ? playerDifficulty : aiDifficulty;
+    
+    const difficultyNames = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'];
+    const redName = difficultyNames[redDifficulty];
+    const blueName = difficultyNames[blueDifficulty];
 
-ctx.fillText(`⚔️ ${redName} vs ${blueName} AI Match`, 180, 59);  // X+10
+    ctx.fillText(`⚔️ ${redName} vs ${blueName} AI Match`, 180, 59);
 }
 ctx.restore();
 
@@ -7893,79 +7899,73 @@ window._playerNameBox = {
     }   
     
     
+    // ===========================================
+//  LEVEL DISPLAY - AvA Mode (Two Difficulties)
+// ===========================================
+if (matchInProgress && g === 15) {
+    // ✅ Top is ALWAYS AI, Bottom is ALWAYS Player
+    const topColor = (side === 0) ? 'red' : 'blue';
+    const bottomColor = (side === 0) ? 'blue' : 'red';
+    
+    // ✅ Top = AI difficulty, Bottom = Player difficulty
+    const difficultyNames = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'];
+    const topName = difficultyNames[playerDifficulty];
+    const bottomName = difficultyNames[aiDifficulty];
     
     // ===========================================
-    //  LEVEL DISPLAY - AvA Mode (Two Difficulties)
+    // TOP DIFFICULTY (AI)
     // ===========================================
-    if (matchInProgress && g===15) {
-        // Determine which color is TOP and BOTTOM based on side
-        const topColor = (side === 0) ? 'red' : 'blue';
-        const bottomColor = (side === 0) ? 'blue' : 'red';
-        
-        const topDifficulty = (topColor === 'red') ? aiDifficulty : playerDifficulty;
-        const bottomDifficulty = (bottomColor === 'red') ? aiDifficulty : playerDifficulty;
-        
-        // Abbreviated names
-        const topName = (topDifficulty === 3) ? 'BEGINNER' : (topDifficulty === 2) ? 'INTERMEDIATE' : (topDifficulty === 1) ? 'ADVANCED' : 'GENIUS';
-        const bottomName = (bottomDifficulty === 3) ? 'BEGINNER' : (bottomDifficulty === 2) ? 'INTERMEDIATE' : (bottomDifficulty === 1) ? 'ADVANCED' : 'GENIUS';
-        
-        const topBorder = (topColor === 'red') ? '#FF0000' : '#0000FF';
-        const bottomBorder = (bottomColor === 'red') ? '#FF0000' : '#0000FF';
-        
-        // ===========================================
-        // TOP DIFFICULTY (Same position as HvA level)
-        // ===========================================
-        ctx.save();
-        ctx.shadowColor = 'rgba(0,0,0,0.4)';
-        ctx.shadowBlur = 10;
-        ctx.shadowOffsetX = 2;
-        ctx.shadowOffsetY = 3;
-        
-        const topGrad = ctx.createRadialGradient(169, 95, 2, 169, 90, 30);
-        topGrad.addColorStop(0, '#FFD700');
-        topGrad.addColorStop(0.5, '#FFA500');
-        topGrad.addColorStop(1, '#FF6B00');
-        
-        ctx.font = 'bold 14px fantasy, papyrus';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle = topGrad;
-        ctx.fillText('⚡ ' + topName + ' ⚡', 179, 135);
-        
-        ctx.shadowBlur = 0;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fillText('⚡ ' + topName + ' ⚡', 179, 133);
-        ctx.restore();
-        
-        // ===========================================
-        // BOTTOM DIFFICULTY (New position below board)
-        // ===========================================
-        ctx.save();
-        ctx.shadowColor = 'rgba(0,0,0,0.4)';
-        ctx.shadowBlur = 10;
-        ctx.shadowOffsetX = 2;
-        ctx.shadowOffsetY = 3;
-        
-        const botGrad = ctx.createRadialGradient(169, 650, 2, 169, 665, 30);
-        botGrad.addColorStop(0, '#FFD700');
-        botGrad.addColorStop(0.5, '#FFA500');
-        botGrad.addColorStop(1, '#FF6B00');
-        
-        ctx.font = 'bold 14px fantasy, papyrus';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle = botGrad;
-        ctx.fillText('⚡ ' + bottomName + ' ⚡', 179, 618);
-        
-        ctx.shadowBlur = 0;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fillText('⚡ ' + bottomName + ' ⚡', 179, 616);
-        ctx.restore();
-    }
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,0.4)';
+    ctx.shadowBlur = 10;
+    ctx.shadowOffsetX = 2;
+    ctx.shadowOffsetY = 3;
+    
+    const topGrad = ctx.createRadialGradient(169, 95, 2, 169, 90, 30);
+    topGrad.addColorStop(0, '#FFD700');
+    topGrad.addColorStop(0.5, '#FFA500');
+    topGrad.addColorStop(1, '#FF6B00');
+    
+    ctx.font = 'bold 14px fantasy, papyrus';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = topGrad;
+    ctx.fillText('⚡ ' + topName + ' ⚡', 179, 135);
+    
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillText('⚡ ' + topName + ' ⚡', 179, 133);
+    ctx.restore();
+    
+    // ===========================================
+    // BOTTOM DIFFICULTY (Player)
+    // ===========================================
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,0.4)';
+    ctx.shadowBlur = 10;
+    ctx.shadowOffsetX = 2;
+    ctx.shadowOffsetY = 3;
+    
+    const botGrad = ctx.createRadialGradient(169, 650, 2, 169, 665, 30);
+    botGrad.addColorStop(0, '#FFD700');
+    botGrad.addColorStop(0.5, '#FFA500');
+    botGrad.addColorStop(1, '#FF6B00');
+    
+    ctx.font = 'bold 14px fantasy, papyrus';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = botGrad;
+    ctx.fillText('⚡ ' + bottomName + ' ⚡', 179, 618);
+    
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillText('⚡ ' + bottomName + ' ⚡', 179, 616);
+    ctx.restore();
+}
     
     // ===========================================
     //  REST OF renderStats() - Stats boxes, calc, labels
@@ -13326,16 +13326,26 @@ function launchAIMatch() {
     
     aiDifficulty = Math.floor(Math.random() * 4);
     playerDifficulty = Math.floor(Math.random() * 4);
-    l = aiDifficulty;
+    
+    // ✅ REMOVED: l = aiDifficulty (moved to autoMove)
     
     r = (side === 0) ? 2 : 1;
-    //n++;
     matchInProgress = true;
     gameOverActive = false;
     
-    // ✅ Set AI names for display
-    const redName = ['GEN', 'ADV', 'INT', 'BEG'][aiDifficulty];
-    const blueName = ['GEN', 'ADV', 'INT', 'BEG'][playerDifficulty];
+    // ✅ Set colors and difficulties for display
+    const difficultyNames = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'];
+    
+    const topColor = (side === 0) ? 'Red' : 'Blue';
+    const bottomColor = (side === 0) ? 'Blue' : 'Red';
+    
+    // Top is ALWAYS AI, Bottom is ALWAYS Player
+    const topDifficulty = difficultyNames[aiDifficulty];
+    const bottomDifficulty = difficultyNames[playerDifficulty];
+    
+    // Display names
+    const redName = difficultyNames[(side === 0) ? aiDifficulty : playerDifficulty];
+    const blueName = difficultyNames[(side === 0) ? playerDifficulty : aiDifficulty];
     
     ctx.clearRect(0, 0, cW, cH);
     renderAnswer();
@@ -13348,16 +13358,10 @@ function launchAIMatch() {
     if (autoMoveTimer) clearTimeout(autoMoveTimer);
     autoMoveTimer = setTimeout(autoMove, 12000);
     
-    // ✅ ADDED: Intro speech for AvA match
-    const topColor = (side === 0) ? 'Red' : 'Blue';
-    const bottomColor = (side === 0) ? 'Blue' : 'Red';
-    const difficultyNames = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'];
-    const topDifficulty = difficultyNames[(topColor === 'Red') ? aiDifficulty : playerDifficulty];
-    const bottomDifficulty = difficultyNames[(bottomColor === 'Red') ? aiDifficulty : playerDifficulty];
-    
-   setTimeout(() => { 
-        speakText(`Let's watch a match between ${bottomColor} ${topDifficulty} and ${topColor} ${bottomDifficulty}. This match will end after 28 moves.  Each move requires touching a token and one framed number.`);
-     }, 1500);
+    // ✅ Intro speech for AvA match
+    setTimeout(() => {
+        speakText(`Let's watch a match between ${topColor} ${topDifficulty} and ${bottomColor} ${bottomDifficulty}. This match will end after 28 moves. Each move requires touching a token and one framed number.`);
+    }, 1500);
 }
 
 
@@ -13386,12 +13390,7 @@ function afterAutoMove() {
             }      
     } 
     else if (matchInProgress && !gameOverActive && n < 28) {
-        // ✅ No goal - statDraw display AND auto move timer
-        const redName = ['GEN', 'ADV', 'INT', 'BEG'][aiDifficulty];
-        const blueName = ['GEN', 'ADV', 'INT', 'BEG'][playerDifficulty];
-        
-          
-        ctx.clearRect(0, 0, cW, cH);
+            ctx.clearRect(0, 0, cW, cH);
         renderAnswer();
         renderButtons();
         renderStats();               
@@ -13402,20 +13401,21 @@ function afterAutoMove() {
     else if(n===28){
     setTimeout(function(){   
     // ✅ WINNER ANNOUNCEMENT
-            const difficultyNames = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'];
-            const topColor = (side === 0) ? 'Red' : 'Blue';
-            const bottomColor = (side === 0) ? 'Blue' : 'Red';
-            const topDifficulty = difficultyNames[(topColor === 'Red') ? aiDifficulty : playerDifficulty];
-            const bottomDifficulty = difficultyNames[(bottomColor === 'Red') ? aiDifficulty : playerDifficulty];
             
-            let winnerMessage = '';
-            if (redGoal > blueGoal) {
-                winnerMessage = `${bottomColor} ${topDifficulty} won the game! `;
-            } else if (blueGoal > redGoal) {
-                winnerMessage = `${topColor} ${bottomDifficulty} won the game! `;
-            } else {
-                winnerMessage = `It's a draw between ${bottomColor} ${topDifficulty} and ${topColor} ${bottomDifficulty}! `;
-            }
+// Determine which difficulty belongs to each color
+const redDifficulty = (side === 0) ? aiDifficulty : playerDifficulty;
+const blueDifficulty = (side === 0) ? playerDifficulty : aiDifficulty;
+
+const difficultyNames = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'];
+
+let winnerMessage = '';
+if (redGoal > blueGoal) {
+    winnerMessage = `Red ${difficultyNames[redDifficulty]} won the game! `;
+} else if (blueGoal > redGoal) {
+    winnerMessage = `Blue ${difficultyNames[blueDifficulty]} won the game! `;
+} else {
+    winnerMessage = `It's a draw between Red ${difficultyNames[redDifficulty]} and Blue ${difficultyNames[blueDifficulty]}! `;
+}
             
             speakText("This game is over. It's " + redGoal + " goal to " + blueGoal + " after " + (n-1) + " moves!" + winnerMessage);
             
@@ -13441,11 +13441,18 @@ function autoMove() {
     
     // Switch l based on turn
     
-    const isRedTurn = (r % 2 !== 0);
-    l = isRedTurn ? playerDifficulty : aiDifficulty;
-    
-    const redName = ['GEN', 'ADV', 'INT', 'BEG'][aiDifficulty];
-    const blueName = ['GEN', 'ADV', 'INT', 'BEG'][playerDifficulty];
+    // Determine difficulties for each color
+const redDifficulty = (side === 0) ? aiDifficulty : playerDifficulty;
+const blueDifficulty = (side === 0) ? playerDifficulty : aiDifficulty;
+
+// Current turn's difficulty
+const isRedTurn = (r % 2 !== 0);
+l = isRedTurn ? redDifficulty : blueDifficulty;
+
+// Display names
+const difficultyNames = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'];
+const redName = difficultyNames[redDifficulty];
+const blueName = difficultyNames[blueDifficulty];
            
     window._moveExecuted = false;
     
