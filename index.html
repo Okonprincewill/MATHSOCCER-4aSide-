@@ -7608,7 +7608,9 @@ drawAnswerTag(ansquare);
         drawToggles();
     }
 if(n > 1 || m > 1){
+if (n < 28) {
 drawMover();
+}
 drawScorer();
 }
     frameDirectLinks();
@@ -11471,7 +11473,7 @@ for (let i = 0; i < yellowSquares.length; i++) {
                 isOpponentBlockingOwnGoalLocal = true;
             }
             
-            if (hasOpponentClosest && canReachYellow && defFac && l < 2) {
+            if (hasOpponentClosest && canReachYellow && defFac && l < 3) {
                 const cannotBlock = !canReachBlockVul;
                 
                 if (cannotBlock) {
@@ -11599,7 +11601,7 @@ for (let i = 0; i < yellowSquares.length; i++) {
                     }
                     const isLinkedToCriticalButton2 = (linkedButton2 && isCriticalDefender(linkedButton2));
                     
-                    if (l < 2 && ((shouldExemptRule3 && canBlockerGoToWhite) || isLinkedToCriticalButton2)) {
+                    if (l < 1 && ((shouldExemptRule3 && canBlockerGoToWhite) || isLinkedToCriticalButton2)) {
                         exemptAnswers.add(ansList);
                         logExemptedNumber(ansList.id, "goal blocker is marking");
                     } else if (threatType === 'goal_blocker_only') {
@@ -11828,7 +11830,7 @@ if (positions[4] && positions[5] &&
                                     }
                                     const isLinkedToCriticalButtonWing = (linkedButtonWing && isCriticalDefender(linkedButtonWing));
                                     
-                                    if (l < 1 && ((!defFac2CanBlockWhite1 && ansList !== positions[4] && ansList !== positions[0] && !canBlockAttack(ansList, opponentButtonA, positions[4])) || isLinkedToCriticalButtonWing)) {
+                                    if (l < 2 && ((!defFac2CanBlockWhite1 && ansList !== positions[4] && ansList !== positions[0] && !canBlockAttack(ansList, opponentButtonA, positions[4])) || isLinkedToCriticalButtonWing)) {
                                         exemptAnswers.add(ansList);
                                         logExemptedNumber(ansList.id, "to prevent dribbling");
                                     }
@@ -11909,7 +11911,7 @@ if (positions[4] && positions[5] &&
                                     }
                                     const isLinkedToCriticalButtonWingB = (linkedButtonWingB && isCriticalDefender(linkedButtonWingB));
                                 
-                                    if (l < 1 && ((!defFac2CanBlockWhite0 && ansList !== positions[5] && ansList !== positions[1] && !canBlockAttack(ansList, opponentButtonB, positions[5])) || isLinkedToCriticalButtonWingB)) {
+                                    if (l < 2 && ((!defFac2CanBlockWhite0 && ansList !== positions[5] && ansList !== positions[1] && !canBlockAttack(ansList, opponentButtonB, positions[5])) || isLinkedToCriticalButtonWingB)) {
                                         exemptAnswers.add(ansList);
                                         logExemptedNumber(ansList.id, "to prevent dribbling");
                                     }
@@ -13372,17 +13374,49 @@ function launchAIMatch() {
 function afterAutoMove() {    
     
     if (targetAnswer && targetAnswer.id == 1) {
-        // Goal scored - longer pause with reset
-        var resetTime = setTimeout(function(){
-            if (n < 28 && (g!==1 && (g===2||g===15))){  
+            // Goal scored - longer pause with reset
+        
+    if(n===28){
+   playSound(inland); 
+   setTimeout(function(){
+    // ✅ WINNER ANNOUNCEMENT
+            
+// Determine which difficulty belongs to each color
+const redDifficulty = (side === 0) ? aiDifficulty : playerDifficulty;
+const blueDifficulty = (side === 0) ? playerDifficulty : aiDifficulty;
+
+const difficultyNames = ['GENIUS', 'ADVANCED', 'INTERMEDIATE', 'BEGINNER'];
+
+let winnerMessage = '';
+if (redGoal > blueGoal) {
+    winnerMessage = `Red ${difficultyNames[redDifficulty]} won the game! `;
+} else if (blueGoal > redGoal) {
+    winnerMessage = `Blue ${difficultyNames[blueDifficulty]} won the game! `;
+} else {
+    winnerMessage = `It's a draw between Red ${difficultyNames[redDifficulty]} and Blue ${difficultyNames[blueDifficulty]}! `;
+}
+            
+            speakText("This game is over. It's " + redGoal + " goal to " + blueGoal + " after " + (n-1) + " moves!" + winnerMessage);
+            
+    setTimeout(quitGame, 7000);       
+            matchInProgress = false;
+            gameOverActive = false;
+            clearTimeout(timerCom);
+        return;      
+        }, 13000);
+    }
+
+      else if (n < 28){  
+      setTimeout(function(){
                 pass();
                 playSound(welcome);
                 ctx.clearRect(0, 0, cW, cH);
                 renderAnswer();
                 renderButtons();
-                renderStats();           
+                renderStats();   
+    }, 13000);    
             }
-            }, 13000);
+            
             
             if (matchInProgress && !gameOverActive && n < 28) {
                 if (autoMoveTimer) clearTimeout(autoMoveTimer);
@@ -13399,6 +13433,7 @@ function afterAutoMove() {
             autoMoveTimer = setTimeout(autoMove, 12000);       
     }
     else if(n===28){
+    playSound(inland);
     setTimeout(function(){   
     // ✅ WINNER ANNOUNCEMENT
             
@@ -13419,13 +13454,13 @@ if (redGoal > blueGoal) {
             
             speakText("This game is over. It's " + redGoal + " goal to " + blueGoal + " after " + (n-1) + " moves!" + winnerMessage);
             
-    setTimeout(quitGame, 8000);       
+    setTimeout(quitGame, 7000);       
             matchInProgress = false;
             gameOverActive = false;
             clearTimeout(timerCom);
         return;      
         
-        }, 12000);
+        }, 13000);
     }
 }
 
