@@ -1751,9 +1751,7 @@ function isTablet() { return getDeviceType() === 'tablet'; }
 function isPhone() { return getDeviceType() === 'phone'; }
 function isUltrawide() { return getDeviceType() === 'ultrawide'; }
 
-// ============================================================
-//  DEVICE-SPECIFIC ADJUSTMENTS
-// ============================================================
+
 // ============================================================
 //  DEVICE-SPECIFIC TOUCH TOLERANCE — CORRECTED
 // ============================================================
@@ -10254,58 +10252,55 @@ for (let btn of buttons) {
     
     if (isMultiAttacker(btn)) {
         const fellows = getFellowMultiAttackers(btn);
-        if (fellows.length > 0) continue;
         
+        // ===========================================
+        // FELLOWS CHECK — exempt fellow on blocked yellow
+        // ===========================================
+        if (fellows.length > 0) {
+            
+            const leftWhite   = blockWhite[0];
+            const rightWhite  = blockWhite[1];
+            const leftYellow  = yellowSquares[0];
+            const rightYellow = yellowSquares[1];
+            
+            const oppOnLeftWhite = buttons.find(b =>
+                b.x === leftWhite.x + 3 && b.y === leftWhite.y + 3 && b.col === opponentColor
+            );
+            const oppOnRightWhite = buttons.find(b =>
+                b.x === rightWhite.x + 3 && b.y === rightWhite.y + 3 && b.col === opponentColor
+            );
+            
+            let blockedYellow = null;
+            if (oppOnLeftWhite && !oppOnRightWhite) {
+                blockedYellow = leftYellow;
+            } else if (oppOnRightWhite && !oppOnLeftWhite) {
+                blockedYellow = rightYellow;
+            }
+            
+            const fellowOnBlocked = blockedYellow
+                ? fellows.find(f =>
+                    f.x === blockedYellow.x + 3 &&
+                    f.y === blockedYellow.y + 3
+                  )
+                : null;
+            
+            // No fellow on blocked yellow → skip
+            if (!fellowOnBlocked) continue;
+            
+            // Fellow on blocked yellow → exempt it
+            exemptButtons.add(fellowOnBlocked);
+            logExemptedButton(fellowOnBlocked.id,
+                "fellow multi-attacker on blocked yellow " + blockedYellow.id);
+        }
+        
+        // ===========================================
+        // YELLOW TARGET CHECK
+        // ===========================================
         const yellowTarget = getAttackedYellow(btn);
         if (yellowTarget) {
             
-            // ===========================================
-            // #1 CHECK — Start of yellow focus
-            // ===========================================
-            if (yellowTarget === compAns) {
-                
-                const leftWhite   = attacked[0];
-                const rightWhite  = attacked[1];
-                const leftYellow  = attacked[4];
-                const rightYellow = attacked[5];
-                
-                const oppOnLeftWhite = buttons.find(b =>
-                    b.x === leftWhite.x + 3 && b.y === leftWhite.y + 3 && b.col === opponentColor
-                );
-                const oppOnRightWhite = buttons.find(b =>
-                    b.x === rightWhite.x + 3 && b.y === rightWhite.y + 3 && b.col === opponentColor
-                );
-                
-                let blockedYellow = null;
-                if (oppOnLeftWhite && !oppOnRightWhite) {
-                    blockedYellow = leftYellow;
-                } else if (oppOnRightWhite && !oppOnLeftWhite) {
-                    blockedYellow = rightYellow;
-                }
-                
-                const btnOnBlocked = blockedYellow &&
-                    btn.x === blockedYellow.x + 3 &&
-                    btn.y === blockedYellow.y + 3;
-                
-                if (btnOnBlocked) {
-                    const linkedToFree = categorizeButtonsByDirection(yellowTarget);
-                    const allDirs = ['right', 'left', 'up', 'down', 'up-left', 'down-left', 'up-right', 'down-right'];
-                    const ownLinked = [];
-                    
-                    for (let d of allDirs) {
-                        const first = linkedToFree && linkedToFree[d] && linkedToFree[d][0];
-                        if (first && first.col === ownColor && !ownLinked.includes(first)) {
-                            ownLinked.push(first);
-                        }
-                    }
-                    
-                    if (ownLinked.length < 2) continue;
-                }
-            }
+            if (yellowTarget !== compAns) continue;
             
-            // ===========================================
-            // REST OF YELLOW FOCUS
-            // ===========================================
             if (isCriticalDefender(btn) && l < 2) {
                 exemptButtons.add(btn);
                 logExemptedButton(btn.id, "critical defender");
@@ -10324,7 +10319,7 @@ for (let btn of buttons) {
             }
             
             const safeBackup = hasSafeBackupForYellow(btn, yellowTarget);
-         if (safeBackup && l < 1 && safeNumbers && safeNumbers.length > 0) {
+            if (safeBackup && l < 1 && safeNumbers && safeNumbers.length > 0) {
                 exemptButtons.add(btn);
                 logExemptedButton(btn.id, "single multi-attacker with safe backup attacking "+yellowTarget.id);
                 continue;
@@ -13683,7 +13678,7 @@ if (redGoal > blueGoal) {
     setTimeout(quitGame, 7000);                               gameOverActive = false;
             clearTimeout(timerCom);
         return;      
-        }, 13000);
+        }, 12000);
     }
 
       else if (n < 28){  
@@ -13738,7 +13733,7 @@ if (redGoal > blueGoal) {
             clearTimeout(timerCom);
         return;      
         
-        }, 13000);
+        }, 12000);
     }
 }
 
@@ -16591,22 +16586,94 @@ if ('serviceWorker' in navigator) {
     });
 }
 
+// Check 1: Running as installed PWA (standalone mode)
+if (window.matchMedia('(display-mode: standalone)').matches) {
+    isAppInstalled = true;
+}
 
+// Check 2: iOS Safari standalone
+if (window.navigator.standalone === true) {
+    isAppInstalled = true;
+}
+
+// Check 3: Android TWA / Chrome installed
+if (document.referrer.includes('android-app://')) {
+    isAppInstalled = true;
+}
+
+// Hide install button if already installed
+if (isAppInstalled) {
+    const btn = document.getElementById('installButton');
+    if (btn) btn.style.display = 'none';
+}
+
+async function installApp() {
+    // ✅ Already installed? Do nothing.
+    if (isAppInstalled) {
+        console.log('App already installed');
+        return;
+    }
+    
+    // ✅ No prompt available? Do nothing.
+    if (!deferredPrompt) {
+        console.log('No install prompt available');
+        return;
+    }
+    
+    // Trigger the prompt
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    
+    if (outcome === 'accepted') {
+        console.log('✅ User accepted install');
+        isAppInstalled = true;
+    } else {
+        console.log('❌ User dismissed install');
+    }
+    
+    deferredPrompt = null;
+    const btn = document.getElementById('installButton');
+    if (btn) btn.style.display = 'none';
+}
+
+document.getElementById('installButton')?.addEventListener('click', installApp);
 
 window.addEventListener('beforeinstallprompt', (event) => {
     event.preventDefault();
+    
+    // ✅ Don't show if already installed
+    if (isAppInstalled) {
+        return;
+    }
+    
     deferredPrompt = event;
     const btn = document.getElementById('installButton');
     if (btn) btn.style.display = 'block';
 });
 
 document.getElementById('installButton')?.addEventListener('click', async () => {
+    // ✅ Block if already installed
+    if (isAppInstalled) {
+        document.getElementById('installButton').style.display = 'none';
+        return;
+    }
+    
     if (!deferredPrompt) return;
+    
     deferredPrompt.prompt();
     const result = await deferredPrompt.userChoice;
     deferredPrompt = null;
     document.getElementById('installButton').style.display = 'none';
+    isAppInstalled = true;
 });
+
+window.addEventListener('appinstalled', function() {
+    isAppInstalled = true;
+    const btn = document.getElementById('installButton');
+    if (btn) btn.style.display = 'none';
+    console.log('✅ Mathsoccer installed successfully');
+});
+
 </script>
 </body>
   
