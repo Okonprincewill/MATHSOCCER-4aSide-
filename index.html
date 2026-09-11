@@ -6777,7 +6777,7 @@ function logo() {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('Concentrate. Calculate. Celebrate.', 180, 414);  // Y+25
-ctx.fillText('Version 1.3.2', 180, 780);  // Y+25
+ctx.fillText('Version 1.4.2', 180, 780);  // Y+25
 
     ctx.restore();
     
@@ -13904,9 +13904,9 @@ function showLandingPage() {
     ctx.font = 'bold 14px fantasy, papyrus';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText("Use real football experience to block ", 180, 206);  // X+20 (160+20=180)
-    ctx.fillText("chances, create chances, score goals  ", 180, 226);
-    ctx.fillText("and win Mathsoccer games.", 180, 246);
+    ctx.fillText("Unconscious learning through gameplay. ", 180, 206);  // X+20 (160+20=180)
+    ctx.fillText("No memorization. No drill. No ball. ", 180, 226);
+    ctx.fillText("AI does the math. You score the goals.", 180, 246);
     
     // ===========================================
     // MESSAGE 2: Win Conditions (MIDDLE) — X+20, Y unchanged
@@ -13941,9 +13941,9 @@ function showLandingPage() {
     
     ctx.fillStyle = 'black';
     ctx.font = 'bold 14px fantasy, papyrus';
-    ctx.fillText("Develop a factors and multiples instinct. ", 180, 351);
-    ctx.fillText("Use Mathsoccer factors to see the future. ", 180, 371);   
-    ctx.fillText("AI does the math. You score the goals. ", 180, 391);  // X+20    
+    ctx.fillText("The four pillars of all mathematics. ", 180, 351);
+    ctx.fillText("Every move features multiplication, ", 180, 371);   
+    ctx.fillText("division, factors and inequalities. ", 180, 391);  // X+20    
     
     // ===========================================
     // MESSAGE 3: How to Play (BOTTOM) — X+20, Y unchanged
@@ -13980,7 +13980,7 @@ function showLandingPage() {
     ctx.font = 'bold 14px fantasy, papyrus';
     ctx.fillText("How to play: Touch a token and", 180, 495);  // X+20
     ctx.fillText("a number framed in your color.", 180, 515);
-    ctx.fillText("Find a way to get to number 1.", 180, 535);
+    ctx.fillText("Find a way to get to the top number 1.", 180, 535);
     
     ctx.fillStyle = '#CFC';
     ctx.font = 'bold 12px fantasy, papyrus';
@@ -14583,68 +14583,91 @@ loadAchievements();
 // ===========================================
 if (g === 15 && matchInProgress) {
     // Play Red button (X: 125, Y: 712)
-           // ✅ Prevent multiple clicks
+    if (touchX >= 125 - 4 && touchX <= 125 + 42 && touchY >= 712 - 4 && touchY <= 712 + 42) {
+        
+        // ✅ Prevent multiple clicks
         if (avaToggleLock) return;
         avaToggleLock = true;
         
-    if (touchX >= 125 - 4 && touchX <= 125 + 42 && touchY >= 712 - 4 && touchY <= 712 + 42) {    
-        
-        // Set up HvA with Red
-        ctx.fillStyle = 'rgba(0,0,0,0.6)';
-            ctx.beginPath();
-                     ctx.arc(139, 726, 45, 0, Math.PI * 2);
-            ctx.fill();
-     resetForNewGame();       
-            var clickFx = setTimeout(rSet, 500);
-           // Inside the Start Red / Start Blue button handlers
-function rSet() {
-        g = 1;
-        matchInProgress = false;
-        side = 0;
-        k = 0;        
-        loadLifetimeStats();
-loadAchievements();
+        // ✅ Redraw AvA screen FRESH before overlay
         ctx.clearRect(0, 0, cW, cH);
         renderAnswer();
         renderButtons();
-        renderLevels('red', 'Beginner', 43, 687);
-        renderLevels('red', 'Intermediate', 125, 687);
-        renderLevels('red', 'Advanced', 207, 687);
-        renderLevels('red', 'Genius', 289, 687);
-        avaToggleLock = false;
+        renderStats();
+        showStartButtons();
+        
+        // ✅ NOW add overlay on the fresh screen
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.arc(139, 726, 45, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        
+        clearTimeout(window._avaPlayTimeout);
+        window._avaPlayTimeout = setTimeout(function() {
+            resetForNewGame();
+            g = 1;
+            matchInProgress = false;
+            side = 0;
+            k = 0;
+            loadLifetimeStats();
+            loadAchievements();
+            ctx.clearRect(0, 0, cW, cH);
+            renderAnswer();
+            renderButtons();
+            renderLevels('red', 'Beginner', 43, 687);
+            renderLevels('red', 'Intermediate', 125, 687);
+            renderLevels('red', 'Advanced', 207, 687);
+            renderLevels('red', 'Genius', 289, 687);
+            avaToggleLock = false;
+        }, 500);
+        
         return;
-    }
     }
     
     // Play Blue button (X: 207, Y: 712)
     if (touchX >= 207 - 4 && touchX <= 207 + 42 && touchY >= 712 - 4 && touchY <= 712 + 42) {
-                    
-        // Set up HvA with Blue
-        ctx.fillStyle = 'rgba(0,0,0,0.6)';
-            ctx.beginPath();
-                     ctx.arc(221, 726, 45, 0, Math.PI * 2);
-            ctx.fill();
-      resetForNewGame();      
-            var clickFx = setTimeout(rSet, 500);
-           // Inside the Start Red / Start Blue button handlers
-function rSet() {
-        g = 1;
-        matchInProgress = false;
-        side = 1;
-        k = 1;
         
-        loadLifetimeStats();
-loadAchievements();
+        // ✅ Prevent multiple clicks
+        if (avaToggleLock) return;
+        avaToggleLock = true;
+        
+        // ✅ Redraw AvA screen FRESH before overlay
         ctx.clearRect(0, 0, cW, cH);
         renderAnswer();
         renderButtons();
-        renderLevels('blue', 'Beginner', 43, 687);
-        renderLevels('blue', 'Intermediate', 125, 687);
-        renderLevels('blue', 'Advanced', 207, 687);
-        renderLevels('blue', 'Genius', 289, 687);
-        avaToggleLock = false;
+        renderStats();
+        showStartButtons();
+        
+        // ✅ NOW add overlay on the fresh screen
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.arc(221, 726, 45, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        
+        clearTimeout(window._avaPlayTimeout);
+        window._avaPlayTimeout = setTimeout(function() {
+            resetForNewGame();
+            g = 1;
+            matchInProgress = false;
+            side = 1;
+            k = 1;
+            loadLifetimeStats();
+            loadAchievements();
+            ctx.clearRect(0, 0, cW, cH);
+            renderAnswer();
+            renderButtons();
+            renderLevels('blue', 'Beginner', 43, 687);
+            renderLevels('blue', 'Intermediate', 125, 687);
+            renderLevels('blue', 'Advanced', 207, 687);
+            renderLevels('blue', 'Genius', 289, 687);
+            avaToggleLock = false;
+        }, 500);
+        
         return;
-        }
     }
 }
 
