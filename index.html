@@ -10419,7 +10419,9 @@ if (rightYellow && rightWhiteBlocker2 && leftWhiteBlocker2) {
     }         
 
     if (vulFac) {
-        // Get own yellow and white squares
+        
+        if (exDef === 1) {
+               // Get own yellow and white squares
 const ownYellowSquares = [positions[4], positions[5]];
 const ownWhiteSquares = [positions[0], positions[1]];
 const ownStrategicSquares = [...ownYellowSquares, ...ownWhiteSquares];
@@ -10476,9 +10478,7 @@ for (let targetSquare of ownStrategicSquares) {
         }
     }
 }
-    
-    
-        if (exDef === 1) {
+
             //#4 - DYNAMIC FOR BOTH TOP AND BOTTOM PLAYERS
 const goalChk = categorizeButtonsByDirection(positions[3]);
 
