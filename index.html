@@ -6777,7 +6777,7 @@ function logo() {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('Concentrate. Calculate. Celebrate.', 180, 414);  // Y+25
-ctx.fillText('Version 1.4.2', 180, 780);  // Y+25
+ctx.fillText('Version 1.4.5', 180, 780);  // Y+25
 
     ctx.restore();
     
@@ -10254,12 +10254,58 @@ for (let btn of buttons) {
     
     if (isMultiAttacker(btn)) {
         const fellows = getFellowMultiAttackers(btn);
-        if (fellows.length > 0) {
-            continue;
-        }
+        if (fellows.length > 0) continue;
         
         const yellowTarget = getAttackedYellow(btn);
         if (yellowTarget) {
+            
+            // ===========================================
+            // #1 CHECK — Start of yellow focus
+            // ===========================================
+            if (yellowTarget === compAns) {
+                
+                const leftWhite   = attacked[0];
+                const rightWhite  = attacked[1];
+                const leftYellow  = attacked[4];
+                const rightYellow = attacked[5];
+                
+                const oppOnLeftWhite = buttons.find(b =>
+                    b.x === leftWhite.x + 3 && b.y === leftWhite.y + 3 && b.col === opponentColor
+                );
+                const oppOnRightWhite = buttons.find(b =>
+                    b.x === rightWhite.x + 3 && b.y === rightWhite.y + 3 && b.col === opponentColor
+                );
+                
+                let blockedYellow = null;
+                if (oppOnLeftWhite && !oppOnRightWhite) {
+                    blockedYellow = leftYellow;
+                } else if (oppOnRightWhite && !oppOnLeftWhite) {
+                    blockedYellow = rightYellow;
+                }
+                
+                const btnOnBlocked = blockedYellow &&
+                    btn.x === blockedYellow.x + 3 &&
+                    btn.y === blockedYellow.y + 3;
+                
+                if (btnOnBlocked) {
+                    const linkedToFree = categorizeButtonsByDirection(yellowTarget);
+                    const allDirs = ['right', 'left', 'up', 'down', 'up-left', 'down-left', 'up-right', 'down-right'];
+                    const ownLinked = [];
+                    
+                    for (let d of allDirs) {
+                        const first = linkedToFree && linkedToFree[d] && linkedToFree[d][0];
+                        if (first && first.col === ownColor && !ownLinked.includes(first)) {
+                            ownLinked.push(first);
+                        }
+                    }
+                    
+                    if (ownLinked.length < 2) continue;
+                }
+            }
+            
+            // ===========================================
+            // REST OF YELLOW FOCUS
+            // ===========================================
             if (isCriticalDefender(btn) && l < 2) {
                 exemptButtons.add(btn);
                 logExemptedButton(btn.id, "critical defender");
@@ -10271,18 +10317,19 @@ for (let btn of buttons) {
                 if (buttonBehind && buttonBehind.col === ownColor) {
                     if (isLinkedToCompAns(buttonBehind) && l < 2) {
                         exemptButtons.add(btn);
-                        logExemptedButton(btn.id, "goal blocker stays (token behind "+buttonBehind.id+ " moves)");
+                        logExemptedButton(btn.id, "goal blocker stays (token behind " + buttonBehind.id + " moves)");
                         continue;
                     }
                 }
             }
             
             const safeBackup = hasSafeBackupForYellow(btn, yellowTarget);
-            if (safeBackup && l < 1 && safeNumbers && safeNumbers.length > 0) {
+         if (safeBackup && l < 1 && safeNumbers && safeNumbers.length > 0) {
                 exemptButtons.add(btn);
                 logExemptedButton(btn.id, "single multi-attacker with safe backup attacking "+yellowTarget.id);
                 continue;
-            } else {
+            } 
+            else {
                 continue;
             }
         }
@@ -10421,6 +10468,7 @@ if (rightYellow && rightWhiteBlocker2 && leftWhiteBlocker2) {
     if (vulFac) {
         
         if (exDef === 1) {
+        
                // Get own yellow and white squares
 const ownYellowSquares = [positions[4], positions[5]];
 const ownWhiteSquares = [positions[0], positions[1]];
