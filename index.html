@@ -10164,8 +10164,7 @@ function isMultiAttacker(button) {
 
 function getFellowMultiAttackers(button) {
     const fellows = [];
-    for (let otherBtn of buttons) {
-        if (otherBtn === button) continue;
+    for (let otherBtn of buttons) {       
         if (otherBtn.col !== ownColor) continue;
         if (isMultiAttacker(otherBtn)) {
             const b1White = whiteSquares.some(w => canReach(button, w));
@@ -10256,7 +10255,7 @@ for (let btn of buttons) {
         // ===========================================
         // FELLOWS CHECK — exempt fellow on blocked yellow
         // ===========================================
-        if (fellows.length > 0) {
+        if (fellows.length > 1) {
             
             const leftWhite   = blockWhite[0];
             const rightWhite  = blockWhite[1];
