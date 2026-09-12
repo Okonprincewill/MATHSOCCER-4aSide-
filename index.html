@@ -10286,7 +10286,7 @@ for (let btn of buttons) {
             
             // No fellow on blocked yellow → skip
             if (!fellowOnBlocked) continue;
-            if (l >= 2) return;
+            if (l >= 1) return;
             
             // Fellow on blocked yellow → exempt it
             exemptButtons.add(fellowOnBlocked);
@@ -10302,7 +10302,7 @@ for (let btn of buttons) {
             
             if (yellowTarget !== compAns) continue;
             
-            if (isCriticalDefender(btn) && l < 2) {
+            if (isCriticalDefender(btn) && l < 1) {
                 exemptButtons.add(btn);
                 logExemptedButton(btn.id, "critical defender");
                 continue;
@@ -10311,7 +10311,7 @@ for (let btn of buttons) {
             if (isGoalBlocker(btn)) {
                 const buttonBehind = getButtonBehindGoalBlocker();
                 if (buttonBehind && buttonBehind.col === ownColor) {
-                    if (isLinkedToCompAns(buttonBehind) && l < 2) {
+                    if (isLinkedToCompAns(buttonBehind) && l < 1) {
                         exemptButtons.add(btn);
                         logExemptedButton(btn.id, "goal blocker stays (token behind " + buttonBehind.id + " moves)");
                         continue;
@@ -10320,7 +10320,7 @@ for (let btn of buttons) {
             }
             
             const safeBackup = hasSafeBackupForYellow(btn, yellowTarget);
-            if (safeBackup && l < 2 && safeNumbers && safeNumbers.length > 0) {
+            if (safeBackup && l < 1 && safeNumbers && safeNumbers.length > 0) {
                 exemptButtons.add(btn);
                 logExemptedButton(btn.id, "single multi-attacker with safe backup attacking "+yellowTarget.id);
                 continue;
@@ -11314,7 +11314,7 @@ for (let whiteSquare of whiteSquares) {
         continue;
     }
     
-    if (!canBlockAttack(ansList, opponentButton, whiteSquare) && l < 3) {
+    if (!canBlockAttack(ansList, opponentButton, whiteSquare) && l < 2) {
         exemptAnswers.add(ansList);
         logExemptedNumber(ansList.id, "to protect "+whiteSquare.id);
     }
@@ -11743,7 +11743,7 @@ for (let i = 0; i < yellowSquares.length; i++) {
                 }
             }
             
-            if ( l < 2  && (!hasOwnButtonLinkedToBlockVul || isLinkedToCriticalButton)) {
+            if ( l < 3  && (!hasOwnButtonLinkedToBlockVul || isLinkedToCriticalButton)) {
                 exemptAnswers.add(ansList);
                 logExemptedNumber(ansList.id, "weaken attack and defence ");
             }
@@ -11759,7 +11759,7 @@ const opponentGoalCheck = answer[36];
                 isOpponentBlockingOwnGoalLocal = true;
             }
             
-            if (hasOpponentClosest && canReachYellow && defFac && l < 2) {
+            if (hasOpponentClosest && canReachYellow && defFac && l < 3) {
                 const cannotBlock = !canReachBlockVul;
                 
                 if (cannotBlock) {
@@ -11963,7 +11963,7 @@ else {
                                 }
                                 const isLinkedToCriticalButton4 = (linkedButton4 && isCriticalDefender(linkedButton4));
                                 
-                                if (l < 1 &&((hasOpponentLink && !canBlockAttack(ansList, whiteButton, whiteTarget)) || isLinkedToCriticalButton4)) {
+                                if (l < 2 &&((hasOpponentLink && !canBlockAttack(ansList, whiteButton, whiteTarget)) || isLinkedToCriticalButton4)) {
                                     exemptAnswers.add(ansList);
                                     logExemptedNumber(ansList.id, "to prevent rebound on "+whiteTarget.id);
                                 }
@@ -12012,7 +12012,7 @@ else {
                                             }
                                             const isLinkedToCriticalButton5 = (linkedButton5 && isCriticalDefender(linkedButton5));
                                             
-                                            if ((cannotBlockWhite2 && !canBlockAttack(ansList, yellowButton, yellow2) || isLinkedToCriticalButton5) && l < 2) {
+                                            if ((cannotBlockWhite2 && !canBlockAttack(ansList, yellowButton, yellow2) || isLinkedToCriticalButton5) && l < 1) {
                                                 exemptAnswers.add(ansList);
                                                 logExemptedNumber(ansList.id, "to prevent rebound on "+yellow2.id);
                                             }
@@ -12109,7 +12109,7 @@ if (positions[4] && positions[5] &&
                                     }
                                     const isLinkedToCriticalButtonWing = (linkedButtonWing && isCriticalDefender(linkedButtonWing));
                                     
-                                    if (l < 1 && ((!defFac2CanBlockWhite1 && ansList !== positions[4] && ansList !== positions[0] && !canBlockAttack(ansList, opponentButtonA, positions[4])) || isLinkedToCriticalButtonWing)) {
+                                    if (l < 2 && ((!defFac2CanBlockWhite1 && ansList !== positions[4] && ansList !== positions[0] && !canBlockAttack(ansList, opponentButtonA, positions[4])) || isLinkedToCriticalButtonWing)) {
                                         exemptAnswers.add(ansList);
                                         logExemptedNumber(ansList.id, "to prevent dribbling");
                                     }
@@ -12190,7 +12190,7 @@ if (positions[4] && positions[5] &&
                                     }
                                     const isLinkedToCriticalButtonWingB = (linkedButtonWingB && isCriticalDefender(linkedButtonWingB));
                                 
-                                    if (l < 1 && ((!defFac2CanBlockWhite0 && ansList !== positions[5] && ansList !== positions[1] && !canBlockAttack(ansList, opponentButtonB, positions[5])) || isLinkedToCriticalButtonWingB)) {
+                                    if (l < 2 && ((!defFac2CanBlockWhite0 && ansList !== positions[5] && ansList !== positions[1] && !canBlockAttack(ansList, opponentButtonB, positions[5])) || isLinkedToCriticalButtonWingB)) {
                                         exemptAnswers.add(ansList);
                                         logExemptedNumber(ansList.id, "to prevent dribbling");
                                     }
