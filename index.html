@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <title>MathSoccer - Just goals. No ball. No injury.</title>
+    <title>MathSoccer - Unconscious learning. No memorization. No drill.</title>
 
-<meta name="description" content="Football is injurious. Math is boring. MathSoccer kills two birds with one stone. AI does the math. You score the goals. Learning becomes automatic. Free to play.">
+<meta name="description" content="Every move features the four pillars of all mathematics.  Multiplication, division, factors and inequalities become second nature through gameplay. AI does the math. You score the goals. Free to play.">
 
 <meta name="robots" content="index, follow">
 
@@ -22,7 +22,7 @@
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "MathSoccer",
-  "description": "Football is injurious. Math is boring. MathSoccer kills two birds with one stone. AI does the math. You score the goals. Learning becomes automatic.",
+  "description": "Every move features the four pillars of all mathematics.  Multiplication, division, factors and inequalities become second nature through gameplay. AI does the math. You score the goals.",
   "url": "https://okonprincewill.github.io/MATHSOCCER-4aSide-/",
   "applicationCategory": "Game",
   "operatingSystem": "All",
@@ -110,27 +110,28 @@
         }
         #installButton {
     position: fixed;
-    bottom: 100px;
-    left: 50%;
-    transform: translateX(-50%);
+    /* position is set by JS — see below */
     z-index: 99999;
-    padding: 16px 32px;
-    font-size: 18px;
+    padding: 6px 12px;                /* shorter */
+    font-size: 12px;                  /* smaller */
     font-family: fantasy, papyrus, sans-serif;
     background: linear-gradient(145deg, #2E8B57, #1B5E20);
     color: #FFFFFF;
     border: 2px solid #FFD700;
-    border-radius: 16px;
+    border-radius: 10px;
     cursor: pointer;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.7);
     display: none;
-    animation: pulseGlow 2s infinite;  /* ← THIS MAKES IT PULSE */
+    animation: pulseGlow 2s infinite;
     transition: all 0.3s ease;
+    white-space: nowrap;
+    min-width: 90px;                  /* wider */
+    text-align: center;
 }
 
 #installButton:hover {
-    transform: translateX(-50%) scale(1.05);
-    box-shadow: 0 8px 40px rgba(0,0,0,0.8), 0 0 30px rgba(46, 139, 87, 0.5);
+    transform: scale(1.05);
+    box-shadow: 0 6px 28px rgba(0,0,0,0.8), 0 0 24px rgba(46, 139, 87, 0.5);
 }
 
 .icon-equals {
@@ -219,7 +220,7 @@ const BUTTON_GRID = {
 const NUMBERS_SIDE0 = [
     28, 54, 25, 27, 30,
     36, 35, 40, 81, 18,
-    14, 5, 56, 3, 20,
+    20, 5, 56, 3, 14,
     6, 8, 2, 9, 12,
     21, 4, 45, 7, 10,
     16, 64, 63, 72, 24,
@@ -1280,6 +1281,7 @@ function resizeCanvas() {
     
     window._scale = scale;
     redrawGameScreen();
+    positionInstallButton();
 }
 // ============================================================
 //  TOUCH SCALING — With Touch Detection + DPI
@@ -1392,6 +1394,32 @@ if (!touchEnabled || animationInProgress) {
         
         handleButtonClick(pos.x, pos.y);
     });
+}
+
+
+function positionInstallButton() {
+    const btn = document.getElementById('installButton');
+    if (!btn || btn.style.display === 'none') return;
+
+    const canvasRect = canvas.getBoundingClientRect();
+
+    // Canvas-space target: below About, left of AI Match
+    // Canvas coords → viewport coords
+    const scaleX = canvasRect.width  / 360;
+    const scaleY = canvasRect.height / 800;
+
+    // Target canvas region: x=100..160, y=630..660
+    // Center of that region:
+    const canvasCX = 130;      // center x in canvas space
+    const canvasCY = 645;      // center y in canvas space
+
+    const viewportX = canvasRect.left + canvasCX * scaleX;
+    const viewportY = canvasRect.top  + canvasCY * scaleY;
+
+    // Position by center
+    btn.style.left = viewportX + 'px';
+    btn.style.top  = viewportY + 'px';
+    btn.style.transform = 'translate(-50%, -50%)';
 }
 
 
@@ -6775,7 +6803,7 @@ function logo() {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('Concentrate. Calculate. Celebrate.', 180, 414);  // Y+25
-ctx.fillText('Version 1.4.5', 180, 780);  // Y+25
+ctx.fillText('Version 1.6.3', 180, 780);  // Y+25
 
     ctx.restore();
     
@@ -7613,9 +7641,10 @@ if (n < 28) {
 drawMover();
 }
 drawScorer();
-}
+
     frameDirectLinks();
     frameGoalMouths();
+    }
     
     if (g === 15 && matchInProgress) {
     // Sound Button
@@ -10166,6 +10195,7 @@ function getFellowMultiAttackers(button) {
     const fellows = [];
     for (let otherBtn of buttons) {       
         if (otherBtn.col !== ownColor) continue;
+        if (otherBtn === button) continue;
         if (isMultiAttacker(otherBtn)) {
             const b1White = whiteSquares.some(w => canReach(button, w));
             const b2White = whiteSquares.some(w => canReach(otherBtn, w));
@@ -10173,7 +10203,7 @@ function getFellowMultiAttackers(button) {
             const b2Yellow = yellowSquares.some(y => canReach(otherBtn, y));
             const b1Central = centralCells.some(c => canReach(button, c));
             const b2Central = centralCells.some(c => canReach(otherBtn, c));
-            if ((b1White && b2White) || (b1Yellow && b2Yellow) || (b1Central && b2Central)) {
+            if ((b1White && b2White) || (b1Yellow && b2Yellow) || (b1Central && b2Central)) {            
                 fellows.push(otherBtn);
             }
         }
@@ -10255,7 +10285,7 @@ for (let btn of buttons) {
         // ===========================================
         // FELLOWS CHECK — exempt fellow on blocked yellow
         // ===========================================
-        if (fellows.length > 1) {
+        if (fellows.length > 0) {
             
             const leftWhite   = blockWhite[0];
             const rightWhite  = blockWhite[1];
@@ -10333,7 +10363,7 @@ for (let btn of buttons) {
 
 
 // ✅ Only run strategic numbers exemption if there are safe numbers available
-if (advAns === 1 && l < 2 && safeNumbers && safeNumbers.length > 0) {
+if (advAns === 1 && l < 2) {
     const strategicNumbers = [attacked[0], attacked[1], attacked[2]];
 
     strategicNumbers.forEach((targetCell) => {
@@ -10352,7 +10382,7 @@ if (advAns === 1 && l < 2 && safeNumbers && safeNumbers.length > 0) {
             }
         });
         
-        if (buttonsThatCanReach.length !== 1) return;
+        if (buttonsThatCanReach.length < 1) return;
         
         const closestButton = buttonsThatCanReach[0];
         
@@ -10371,7 +10401,7 @@ if (advAns === 1 && l < 2 && safeNumbers && safeNumbers.length > 0) {
     //#2 Goal Mouth - USE dir
     const btnDirGoal = categorizeButtonsByDirection(positions[3]);
     if (btnDirGoal && btnDirGoal[dir] && btnDirGoal[dir][0] && btnDirGoal[dir][0].col === ownColor && btnDirGoal[dir][1] && btnDirGoal[dir][1].col === opponentColor) {
-        if (btnDirGoal[dir][0].x !== compAns.x + 3 && l<2) {
+        if (btnDirGoal[dir][0].x !== compAns.x + 3) {
             goalMouth = btnDirGoal[dir][0];
             exemptButtons.add(goalMouth);
             logExemptedButton(goalMouth.id, "blocking goal");
@@ -10522,41 +10552,129 @@ for (let targetSquare of ownStrategicSquares) {
     }
 }
 
-            //#4 - DYNAMIC FOR BOTH TOP AND BOTTOM PLAYERS
-const goalChk = categorizeButtonsByDirection(positions[3]);
+// ===========================================
+// GOAL BLOCKER EXEMPTION — Genius only (l < 1)
+// ===========================================
 
-if (goalChk && goalChk[dir] && goalChk[dir][0] && goalChk[dir][0].col === ownColor) {
-    const blockingButton = goalChk[dir][0];
-    const midBut = goalChk[dir][1];
-    
-    if (midBut && midBut.col === ownColor) {
-        // ✅ Dynamic position check based on dir
-        let midNum;
-        if (dir === "up") {
-            // Player at bottom, attacking up (goal is at top)
-            // blockingButton is below goal, midBut is further below
-            midNum = answer.find(cell => 
-                cell.x === positions[3].x &&
-                cell.x + 3 === blockingButton.x && cell.x + 3 === midBut.x &&
-                cell.y + 3 > blockingButton.y && cell.y + 3 < midBut.y &&
-                ((cell.id >= vulFac && cell.id % vulFac === 0 && cell.id / vulFac <= 9) ||
-                 (cell.id < vulFac && vulFac % cell.id === 0))
+
+    const goalChk = categorizeButtonsByDirection(positions[3]);
+
+    if (goalChk && goalChk[dir] && goalChk[dir][0] && goalChk[dir][0].col === ownColor) {
+        const blockingButton = goalChk[dir][0];
+        const midBut = goalChk[dir][1];
+
+        if (midBut && midBut.col === ownColor) {
+
+            // --- Find the cell the blocker sits on ---
+            const blockerCell = answer.find(cell =>
+                cell.x === blockingButton.x - 3 &&
+                cell.y === blockingButton.y - 3
             );
-        } else {
-            // dir === "down": Player at top, attacking down (goal is at bottom)
-            // blockingButton is above goal, midBut is further above
-            midNum = answer.find(cell => 
-                cell.x === positions[3].x &&
-                cell.x + 3 === blockingButton.x && cell.x + 3 === midBut.x &&
-                cell.y + 3 < blockingButton.y && cell.y + 3 > midBut.y &&
-                ((cell.id >= vulFac && cell.id % vulFac === 0 && cell.id / vulFac <= 9) ||
-                 (cell.id < vulFac && vulFac % cell.id === 0))
-            );
-        }
-        
-        if (midNum && midNum !== compAns && l < 1) {
-            exemptButtons.add(blockingButton);
-            logExemptedButton(blockingButton.id, "blocking goal center");
+
+            if (blockerCell) {
+
+                // --- REQUIRED: opponent must be linked to the blocker's cell ---
+                const blockerDir = categorizeButtonsByDirection(blockerCell);
+                let hasOpponentLink = false;
+
+                for (const direction of directionsToCheck) {
+                    if (blockerDir && blockerDir[direction] && blockerDir[direction][0] &&
+                        blockerDir[direction][0].col === opponentColor) {
+                        hasOpponentLink = true;
+                        break;
+                    }
+                }
+
+                if (hasOpponentLink) {
+
+                    // ===========================================
+                    // PART 1 — OLD RULE: mid number exists between blocker and mid button
+                    // ===========================================
+                    let midNum;
+                    if (dir === "down") {
+                        midNum = answer.find(cell =>
+                            cell.x === positions[3].x &&
+                            cell.x + 3 === blockingButton.x && cell.x + 3 === midBut.x &&
+                            cell.y + 3 > blockingButton.y && cell.y + 3 < midBut.y &&
+                            ((cell.id >= vulFac && cell.id % vulFac === 0 && cell.id / vulFac <= 9) ||
+                             (cell.id < vulFac && vulFac % cell.id === 0))
+                        );
+                    } else {
+                        midNum = answer.find(cell =>
+                            cell.x === positions[3].x &&
+                            cell.x + 3 === blockingButton.x && cell.x + 3 === midBut.x &&
+                            cell.y + 3 < blockingButton.y && cell.y + 3 > midBut.y &&
+                            ((cell.id >= vulFac && cell.id % vulFac === 0 && cell.id / vulFac <= 9) ||
+                             (cell.id < vulFac && vulFac % cell.id === 0))
+                        );
+                    }
+
+                    const oldRuleApplies = (midNum && midNum !== compAns);
+
+                    // ===========================================
+                    // PART 2 — NEW RULE
+                    // ===========================================
+                    let newRuleApplies = false;
+
+                    // --- Step 1: can vulFac reach the blocker's cell? ---
+                    const vulFacCanReachBlocker =
+                        (blockerCell.id >= vulFac && blockerCell.id % vulFac === 0 && blockerCell.id / vulFac <= 9) ||
+                        (blockerCell.id < vulFac && vulFac % blockerCell.id === 0);
+
+                    if (vulFacCanReachBlocker) {
+
+                        // --- Step 2: is there a cell between goal mouth and blocker? ---
+                        let betweenCell;
+                        if (dir === "down") {
+                            betweenCell = answer.find(cell =>
+                                cell.x === positions[3].x &&
+                                cell.occupancy === 'no' &&
+                                cell.y + 3 < blockingButton.y &&
+                                cell.y > positions[3].y
+                            );
+                        } else {
+                            betweenCell = answer.find(cell =>
+                                cell.x === positions[3].x &&
+                                cell.occupancy === 'no' &&
+                                cell.y + 3 > blockingButton.y &&
+                                cell.y < positions[3].y
+                            );
+                        }
+
+                        if (!betweenCell) {
+                            // No replacement square → blocker is the last line → exempt
+                            newRuleApplies = true;
+                        } else {
+                            // --- Step 3: defFac from the blocker's cell ---
+                            let defFacBlocker = null;
+                            if (blockerCell.id >= vulFac && blockerCell.id % vulFac === 0 && blockerCell.id / vulFac <= 9) {
+                                defFacBlocker = blockerCell.id / vulFac;
+                            } else if (blockerCell.id < vulFac && vulFac % blockerCell.id === 0) {
+                                defFacBlocker = vulFac / blockerCell.id;
+                            }
+
+                            // --- Step 4: can defFacBlocker reach the between cell? ---
+                            let canReachBetween = false;
+                            if (defFacBlocker) {
+                                canReachBetween =
+                                    (betweenCell.id >= defFacBlocker && betweenCell.id % defFacBlocker === 0 && betweenCell.id / defFacBlocker <= 9) ||
+                                    (betweenCell.id < defFacBlocker && defFacBlocker % betweenCell.id === 0);
+                            }
+
+                            if (!canReachBetween) {
+                                newRuleApplies = true;
+                            }
+                        }
+                    }
+
+                    // ===========================================
+                    // EXEMPT if either rule fires
+                    // ===========================================
+                    if (l < 1 && (oldRuleApplies || newRuleApplies)) {
+                        exemptButtons.add(blockingButton);
+                        logExemptedButton(blockingButton.id, "blocking goal center");                
+                }
+            }
         }
     }
 }
@@ -10662,26 +10780,51 @@ for (const direction of directionsToCheck) {
         if ((positions[0].id >= defFac && positions[0].id % defFac === 0 && positions[0].id / defFac < 10) || (positions[0].id < defFac && defFac % positions[0].id === 0)) {
             //#9a
             const yellowSquare5 = positions[5];
-            const blockVulForYellow5 = positions[1];
+const blockVulForYellow5 = positions[1];
 
-            if (yellowSquare5 && yellowSquare5.occupancy === 'yes') {
-                const yellowButton5 = buttons.find(btn => 
-                    btn.x === yellowSquare5.x + 3 && 
-                    btn.y === yellowSquare5.y + 3 && 
-                    btn.col === ownColor
-                );
-                
-                if (yellowButton5 && blockVulForYellow5 && blockVulForYellow5.occupancy === 'no') {
-                    const canBlock = (blockVulForYellow5.id >= defFac && blockVulForYellow5.id % defFac === 0 && blockVulForYellow5.id / defFac <= 9) ||
-                                     (blockVulForYellow5.id < defFac && defFac % blockVulForYellow5.id === 0);
-                    
-                    if (!canBlock && l<1) {
-                        exposeCollinearThreat(yellowSquare5);
-                        exemptButtons.add(yellowButton5);
-                        logExemptedButton(yellowButton5.id, "occupying "+positions[5].id);
-                    }
-                }
+if (yellowSquare5 && yellowSquare5.occupancy === 'yes') {
+    const yellowButton5 = buttons.find(btn =>
+        btn.x === yellowSquare5.x + 3 &&
+        btn.y === yellowSquare5.y + 3 &&
+        btn.col === ownColor
+    );
+
+    if (yellowButton5 && blockVulForYellow5 && blockVulForYellow5.occupancy === 'no') {
+
+        // --- REQUIRED: opponent must be linked to the yellow ---
+        const yellowDir = categorizeButtonsByDirection(yellowSquare5);
+        let hasOpponentLink = false;
+
+        for (const direction of directionsToCheck) {
+            if (yellowDir && yellowDir[direction] && yellowDir[direction][0] &&
+                yellowDir[direction][0].col === opponentColor) {
+                hasOpponentLink = true;
+                break;
             }
+        }
+
+        if (hasOpponentLink) {
+
+            // --- Case 1: opponent cannot block the white ---
+            const canBlock =
+                (blockVulForYellow5.id >= defFac && blockVulForYellow5.id % defFac === 0 && blockVulForYellow5.id / defFac <= 9) ||
+                (blockVulForYellow5.id < defFac && defFac % blockVulForYellow5.id === 0);
+
+            // --- Case 2: opponent sits behind our goal blocker ---
+            const goalDir = categorizeButtonsByDirection(positions[3]);
+            const oppBehindGoalBlocker =
+                goalDir && goalDir[dir] &&
+                goalDir[dir][0] && goalDir[dir][0].col === ownColor &&
+                goalDir[dir][1] && goalDir[dir][1].col === opponentColor;
+
+            if ((!canBlock || oppBehindGoalBlocker) && l < 1) {
+                exposeCollinearThreat(yellowSquare5);
+                exemptButtons.add(yellowButton5);
+                logExemptedButton(yellowButton5.id, "occupying " + positions[5].id);
+            }
+        }
+    }
+}
 
             //#10a
             if (positions[5].occupancy == "no" && positions[1].occupancy == "yes" && compAns.id !== positions[5].id) {
@@ -10768,26 +10911,51 @@ for (const direction of directionsToCheck) {
         if ((positions[1].id >= defFacLeft && positions[1].id % defFacLeft === 0 && positions[1].id / defFacLeft <= 9) || (positions[1].id < defFacLeft && defFacLeft % positions[1].id === 0)) { 
             //#9b
             const yellowSquare4 = positions[4];
-            const blockVulForYellow4 = positions[0];
- 
-            if (yellowSquare4 && yellowSquare4.occupancy === 'yes') {
-                const yellowButton4 = buttons.find(btn => 
-                    btn.x === yellowSquare4.x + 3 && 
-                    btn.y === yellowSquare4.y + 3 && 
-                    btn.col === ownColor
-                );
-                
-                if (yellowButton4 && blockVulForYellow4 && blockVulForYellow4.occupancy === 'no') {
-                    const canBlock = (blockVulForYellow4.id >= defFacLeft && blockVulForYellow4.id % defFac === 0 && blockVulForYellow4.id / defFacLeft <= 9) ||
-                                     (blockVulForYellow4.id < defFacLeft && defFacLeft % blockVulForYellow4.id === 0);
-                    
-                    if (!canBlock && l<1) {
-                        exposeCollinearThreat(yellowButton4);
-                        exemptButtons.add(yellowButton4);
-                        logExemptedButton(occuBlock.id, "occupying "+positions[4].id);
-                    }
-                }
+const blockVulForYellow4 = positions[0];
+
+if (yellowSquare4 && yellowSquare4.occupancy === 'yes') {
+    const yellowButton4 = buttons.find(btn =>
+        btn.x === yellowSquare4.x + 3 &&
+        btn.y === yellowSquare4.y + 3 &&
+        btn.col === ownColor
+    );
+
+    if (yellowButton4 && blockVulForYellow4 && blockVulForYellow4.occupancy === 'no') {
+
+        // --- REQUIRED: opponent must be linked to the yellow ---
+        const yellowDir = categorizeButtonsByDirection(yellowSquare4);
+        let hasOpponentLink = false;
+
+        for (const direction of directionsToCheck) {
+            if (yellowDir && yellowDir[direction] && yellowDir[direction][0] &&
+                yellowDir[direction][0].col === opponentColor) {
+                hasOpponentLink = true;
+                break;
             }
+        }
+
+        if (hasOpponentLink) {
+
+            // --- Case 1: opponent cannot block the white ---
+            const canBlock =
+                (blockVulForYellow4.id >= defFacLeft && blockVulForYellow4.id % defFacLeft === 0 && blockVulForYellow4.id / defFacLeft <= 9) ||
+                (blockVulForYellow4.id < defFacLeft && defFacLeft % blockVulForYellow4.id === 0);
+
+            // --- Case 2: opponent sits behind our goal blocker ---
+            const goalDir = categorizeButtonsByDirection(positions[3]);
+            const oppBehindGoalBlocker =
+                goalDir && goalDir[dir] &&
+                goalDir[dir][0] && goalDir[dir][0].col === ownColor &&
+                goalDir[dir][1] && goalDir[dir][1].col === opponentColor;
+
+            if ((!canBlock || oppBehindGoalBlocker) && l < 1) {
+                exposeCollinearThreat(yellowSquare4);
+                exemptButtons.add(yellowButton4);
+                logExemptedButton(yellowButton4.id, "occupying " + positions[4].id);
+            }
+        }
+    }
+}
 
             //#10b
             if (positions[4].occupancy == "no" && positions[0].occupancy == "yes" && compAns.id !== positions[4].id) {
@@ -11383,13 +11551,13 @@ function isCriticalDefender(button) {
     
     const whiteBlockerPositions = [positions[0], positions[1]];
 for (let white of whiteBlockerPositions) {
-    if (!white) continue;
+    if (!white || white.occupancy === 'no') continue;
     const blocker = buttons.find(b => 
         b.x === white.x + 3 && b.y === white.y + 3 && b.col === ownColor
     );
     const yellowIndex = (white === whiteBlockerPositions[0]) ? 4 : 5;
     const yellow = positions[yellowIndex];
-    if (yellow) {
+    if (yellow && yellow.occupancy !=='no') {
         const oppOnYellow = buttons.find(b => 
             b.x === yellow.x + 3 && b.y === yellow.y + 3 && b.col === opponentColor
         );
@@ -11398,11 +11566,11 @@ for (let white of whiteBlockerPositions) {
 }
     
     for (let yellow of attackedYellow) {
-        if (!yellow) continue;
+        if (!yellow || yellow.occupancy === 'no') continue;
         if (button.x === yellow.x + 3 && button.y === yellow.y + 3) {
             const whiteIndex = (yellow === attackedYellow[0]) ? 0 : 1;
             const white = positions[whiteIndex];
-            if (white) {
+            if (white && white.occupancy !== 'no') {
                 const oppOnWhite = buttons.find(b => 
                     b.x === white.x + 3 && b.y === white.y + 3 && b.col === opponentColor
                 );
@@ -11415,7 +11583,7 @@ for (let white of whiteBlockerPositions) {
 }
 
 function isOpponentBlockingOwnGoal(opponentButton) {
-    const opponentGoalCell = answer[36];
+    const opponentGoalCell = attacked[3];
     const goalDirUp = categorizeButtonsByDirection(opponentGoalCell);
     const firstUpButton = goalDirUp && goalDirUp[dir] && goalDirUp[dir][0];
     return (firstUpButton && firstUpButton.col === opponentColor && firstUpButton === opponentButton);
@@ -11444,8 +11612,8 @@ if (!firstOwnButton || firstOwnButton.col !== ownColor) return;
 // PART A: ORIGINAL VULNERABILITY CHECK (Front Door)
 // ===========================================
 const vulnerableCellsA = answer.filter(cell => 
-    cell.x === goalMouth.x && 
-    ((dir === "up") ?
+    cell.x === goalMouth.x && ansList.id !== cell.id &&
+    ((dir === "down") ?
         (cell.y > goalMouth.y && cell.y + 3 < firstOwnButton.y) :
         (cell.y < goalMouth.y && cell.y + 3 > firstOwnButton.y)) &&
     cell.occupancy === 'no'
@@ -11484,8 +11652,8 @@ for (let cell of vulnerableCellsA) {
     
     // Condition 4: Find blocking cell
     const blockingCell = answer.find(block => 
-        block.x === goalMouth.x && 
-        ((dir === "up") ?
+        block.x === goalMouth.x && ansList.id !== block.id &&
+        ((dir === "down") ?
             (block.y < cell.y && block.y > goalMouth.y) :
             (block.y > cell.y && block.y < goalMouth.y)) &&
         block.occupancy === 'no'
@@ -11506,7 +11674,8 @@ for (let cell of vulnerableCellsA) {
     let isBlockerLinkedToCritical = false;
     for (let d of allDirections) {
         if (blockingCellDir && blockingCellDir[d] && blockingCellDir[d][0] && 
-            blockingCellDir[d][0].col === ownColor) {
+            blockingCellDir[d][0].col === ownColor &&
+                    blockingCellDir[d][0] !== firstOwnButton) {
             hasOwnButtonLinkedToBlocker = true;
             if (isCriticalDefender(blockingCellDir[d][0])) {
                 isBlockerLinkedToCritical = true;
@@ -11541,7 +11710,7 @@ for (let cell of vulnerableCellsA) {
     if (!canBlock) {               
         if (l < 1 && (!canBlockAttack(ansList, opponentButton, cell) || isLinkedToCritical)) {
             exemptAnswers.add(ansList);
-            logExemptedNumber(ansList.id, "cannot reach blocking cell for own goal");
+            logExemptedNumber(ansList.id, "cannot reach blocking cell");
         }
     }
 }
@@ -11559,7 +11728,7 @@ const secondButton = goalMouthDirection && goalMouthDirection[dir] && goalMouthD
 if (secondButton && secondButton.col === opponentColor) {
     
     // Check if ansList is BETWEEN the own goal blocker (first) and the opponent button (second)
-    const isAnsListBetween = (dir === "up") ?
+    const isAnsListBetween = (dir === "down") ?
         (ansList.y + 3 > firstOwnButton.y && ansList.y + 3 < secondButton.y) :
         (ansList.y + 3 < firstOwnButton.y && ansList.y + 3 > secondButton.y);
     
@@ -11569,11 +11738,10 @@ if (secondButton && secondButton.col === opponentColor) {
         // Find vulnerable cells BETWEEN the own goal and the own goal blocker
         const ownGoal = positions[3];
         const vulnerableCellsB = answer.filter(cell => 
-            cell.x === ownGoal.x && 
-            cell.occupancy === 'no' &&
-            ((dir === "up") ?
-                (cell.y > ownGoal.y && cell.y + 3 < firstOwnButton.y) :
-                (cell.y < ownGoal.y && cell.y + 3 > firstOwnButton.y))
+            cell.x === ownGoal.x && ansList.id !== cell.id &&
+            ((dir === "down") ?
+                (cell.y > ownGoal.y && cell.y + 3 < ansList.y) :
+                (cell.y < ownGoal.y && cell.y + 3 > ansList.y))
         );
         
         for (let cell of vulnerableCellsB) {
@@ -11597,31 +11765,19 @@ if (secondButton && secondButton.col === opponentColor) {
             }
             if (!hasOpponentLink) continue;
             
-            // ✅ CHECK B3: isLinkedToCritical - Check if ansList is linked to critical defender
-            const ansDir = categorizeButtonsByDirection(ansList);
-            let linkedButton = null;
-            for (let d of allDirections) {
-                if (ansDir && ansDir[d] && ansDir[d][0] && ansDir[d][0].col === ownColor) {
-                    linkedButton = ansDir[d][0];
-                    break;
-                }
-            }
-            const isLinkedToCritical = linkedButton && isCriticalDefender(linkedButton);
-            
-            // ✅ CHECK B4: Find blocking cell (between own goal and vulnerable cell)
+                        // ✅ CHECK B4: Find blocking cell (between own goal and vulnerable cell)
             const blockingCell = answer.find(block => 
-                block.x === ownGoal.x && 
-                ((dir === "up") ?
+                block.x === ownGoal.x && ansList.id !== block.id && 
+                ((dir === "down") ?
                     (block.y > ownGoal.y && block.y + 3 < cell.y) :
-                    (block.y < ownGoal.y && block.y + 3 > cell.y)) &&
-                block.occupancy === 'no'
+                    (block.y < ownGoal.y && block.y + 3 > cell.y)) 
             );
             
             // ✅ CHECK B5: No blocking cell → EXEMPT
             if (!blockingCell) {
-                if(l < 1 && (!canBlockAttack(ansList, opponentButton, cell) || isLinkedToCritical)) {
+                if(l < 1 && (!canBlockAttack(ansList, opponentButton, cell))) {
                     exemptAnswers.add(ansList);
-                    logExemptedNumber(ansList.id, "no blocking cell for own goal");
+                    logExemptedNumber(ansList.id, "no blocking cell");
                 }
                 continue;
             }
@@ -11643,11 +11799,11 @@ if (secondButton && secondButton.col === opponentColor) {
             }
             
             // ✅ CHECK B7: No own button linked OR blocker is linked to critical → EXEMPT
-            if (!hasOwnButtonLinkedToBlocker || isBlockerLinkedToCritical) {
-                if(l < 1 && (!canBlockAttack(ansList, opponentButton, cell) || isLinkedToCritical)) {
+            if(l < 1 && (!hasOwnButtonLinkedToBlocker || isBlockerLinkedToCritical)) {
+                
                     exemptAnswers.add(ansList);
                     logExemptedNumber(ansList.id, "blocking cell has no own token linked or is critical");
-                }
+                
                 continue;
             }
             
@@ -11665,11 +11821,10 @@ if (secondButton && secondButton.col === opponentColor) {
                              (blockingCell.id < defFacGL && defFacGL % blockingCell.id === 0);
             
             // ✅ CHECK B10: Cannot block → EXEMPT
-            if (!canBlock) {               
-                if (l < 1 && (!canBlockAttack(ansList, opponentButton, cell) || isLinkedToCritical)) {
+            if (l < 1 && !canBlock) {               
                     exemptAnswers.add(ansList);
-                    logExemptedNumber(ansList.id, "cannot reach blocking cell for own goal");
-                }
+                    logExemptedNumber(ansList.id, "cannot reach blocking cell");
+                
             }
         }
     }
@@ -11742,14 +11897,14 @@ for (let i = 0; i < yellowSquares.length; i++) {
                 }
             }
             
-            if ( l < 3  && (!hasOwnButtonLinkedToBlockVul || isLinkedToCriticalButton)) {
+            if ( l < 3 && hasOpponentClosest && canReachYellow  && (!hasOwnButtonLinkedToBlockVul || isLinkedToCriticalButton)) {
                 exemptAnswers.add(ansList);
-                logExemptedNumber(ansList.id, "weaken attack and defence ");
+                logExemptedNumber(ansList.id, "no own token to block");
             }
             
             // --- OPPONENT'S OWN GOAL DEFENSE CHECK ---
       
-const opponentGoalCheck = answer[36];      
+const opponentGoalCheck = attacked[3];      
             const goalDirUpCheck = categorizeButtonsByDirection(opponentGoalCheck);
             const firstUpButtonCheck = goalDirUpCheck && goalDirUpCheck[dir] && goalDirUpCheck[dir][0];
 
@@ -11784,20 +11939,18 @@ const opponentGoalCheck = answer[36];
                 const opponentAttacker = goalDir[dir][1];
                 
                 function getOpponentGoalBlocker() {
-                                   const oppGoalMouth = attacked[3];
-                                      const oppGoalDir = categorizeButtonsByDirection(oppGoalMouth);
-                    return oppGoalDir && oppGoalDir[dir] && oppGoalDir[dir][0];
-                }
+    const oppGoalMouth = attacked[3];
+    const oppGoalDir = categorizeButtonsByDirection(oppGoalMouth);
+    const firstButton = oppGoalDir && oppGoalDir[dir] && oppGoalDir[dir][0];
+    // ✅ Only return if it's actually an opponent button
+    if (firstButton && firstButton.col === opponentColor) {
+        return firstButton;
+    }
+    return null;
+}
 
-                function getOpponentGoalBlockerSecond() {
-                                  const oppGoalMouth = attacked[3];
-                                     const oppGoalDir = categorizeButtonsByDirection(oppGoalMouth);
-                    return oppGoalDir && oppGoalDir[dir] && oppGoalDir[dir][1];
-                }
-                
                 const oppGoalBlocker = getOpponentGoalBlocker();
-                const oppGoalBlockerSecond = getOpponentGoalBlockerSecond();
-                
+                               
                 let shouldExemptRule3 = false;
                 let targetedYellow = null;
                 let linkedOpponent = null;
@@ -11809,53 +11962,63 @@ const opponentGoalCheck = answer[36];
                 }
                 
                 for (let yellow of yellowSquares) {
-                    if (!yellow || yellow.occupancy !== 'no') continue;
-                    const canReachYellowRule3 = (yellow.id >= vulFac && yellow.id % vulFac === 0 && yellow.id / vulFac <= 9) ||
-                                                (yellow.id < vulFac && vulFac % yellow.id === 0);
-                    if (canReachYellowRule3) {
-                        const yellowDirRule3 = categorizeButtonsByDirection(yellow);
-                        for (let dir of allDirections) {
-                            if (yellowDirRule3 && yellowDirRule3[dir] && yellowDirRule3[dir][0] === opponentAttacker) {
-                                let hasOtherOpponent = false;
-                                let otherOpponentButton = null;
-                                
-                                for (let dir2 of allDirections) {
-                                    const otherButton = yellowDirRule3 && yellowDirRule3[dir2] && yellowDirRule3[dir2][0];
-                                    if (otherButton && otherButton !== opponentAttacker && otherButton.col === opponentColor) {
-                                        hasOtherOpponent = true;
-                                        otherOpponentButton = otherButton;
-                                        break;
-                                    }
-                                }
-                                
-                                const isAttackerGoalBlocker = (oppGoalBlocker === opponentAttacker);
-                                
-                                if (isAttackerGoalBlocker) {
-                                    if (hasOtherOpponent) {
-                                        threatType = 'both';
-                                        shouldExemptRule3 = true;
-                                        linkedOpponent = otherOpponentButton;
-                                    } else {
-                                        threatType = 'goal_blocker_only';
-                                        shouldExemptRule3 = false;
-                                    }
-                                } else {
-                                    threatType = 'non_goal_blocker';
-                                    shouldExemptRule3 = true;
-                                    if (hasOtherOpponent) {
-                                        linkedOpponent = otherOpponentButton;
-                                    }
-                                }
-                                
-                                if (linkedOpponent || !hasOtherOpponent) {
-                                    targetedYellow = yellow;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    if (targetedYellow) break;
-                }
+    if (!yellow || yellow.occupancy !== 'no') continue;
+
+    const canReachYellowRule3 = (yellow.id >= vulFac && yellow.id % vulFac === 0 && yellow.id / vulFac <= 9) ||
+                                (yellow.id < vulFac && vulFac % yellow.id === 0);
+    if (!canReachYellowRule3) continue;
+
+    const yellowDirRule3 = categorizeButtonsByDirection(yellow);
+
+    for (let dir of allDirections) {
+        if (!yellowDirRule3 || !yellowDirRule3[dir] || !yellowDirRule3[dir][0]) continue;
+        if (yellowDirRule3[dir][0] !== opponentAttacker) continue;
+
+        // ===========================================
+        // Does any OTHER opponent button also reach this yellow?
+        // ===========================================
+        let hasOtherOpponent = false;
+        let otherOpponentButton = null;
+
+        for (let dir2 of allDirections) {
+            const otherButton = yellowDirRule3 && yellowDirRule3[dir2] && yellowDirRule3[dir2][0];
+            if (otherButton && otherButton !== opponentAttacker && otherButton.col === opponentColor) {
+                hasOtherOpponent = true;
+                otherOpponentButton = otherButton;
+                break;
+            }
+        }
+
+        const isAttackerGoalBlocker = (oppGoalBlocker === opponentAttacker);
+
+        // ===========================================
+        // (a) goal blocker WITH backup  → threat
+        // (b) non-goal-blocker WITHOUT backup → threat
+        // (c) goal blocker WITHOUT backup → NOT a threat
+        // ===========================================
+        const isThreat =
+            (isAttackerGoalBlocker && hasOtherOpponent) ||
+            (!isAttackerGoalBlocker && !hasOtherOpponent);
+
+        if (!isThreat) continue;   // move on to the next direction
+
+        // --- classify the threat (kept for downstream use) ---
+        if (isAttackerGoalBlocker) {
+            threatType = 'both';
+            shouldExemptRule3 = true;
+            linkedOpponent = otherOpponentButton;
+        } else {
+            threatType = 'non_goal_blocker';
+            shouldExemptRule3 = true;
+            linkedOpponent = null;   // no backup in this case
+        }
+
+        targetedYellow = yellow;
+        break;
+    }
+
+    if (targetedYellow) break;
+}
                 
                 if (!defFac || defFac < 1 || defFac > 81) {
                     continue;
@@ -11879,7 +12042,7 @@ const opponentGoalCheck = answer[36];
                     }
                     const isLinkedToCriticalButton2 = (linkedButton2 && isCriticalDefender(linkedButton2));
                     
-                    if (l < 1 && ((shouldExemptRule3 && canBlockerGoToWhite) || isLinkedToCriticalButton2)) {
+                    if (l < 1 && (shouldExemptRule3 || canBlockerGoToWhite || isLinkedToCriticalButton2)) {
                         exemptAnswers.add(ansList);
                         logExemptedNumber(ansList.id, "goal blocker is marking");
                     } 
@@ -11962,7 +12125,7 @@ else {
                                 }
                                 const isLinkedToCriticalButton4 = (linkedButton4 && isCriticalDefender(linkedButton4));
                                 
-                                if (l < 2 &&((hasOpponentLink && !canBlockAttack(ansList, whiteButton, whiteTarget)) || isLinkedToCriticalButton4)) {
+                                if (l < 1 &&((hasOpponentLink && !canBlockAttack(ansList, whiteButton, whiteTarget)) || isLinkedToCriticalButton4)) {
                                     exemptAnswers.add(ansList);
                                     logExemptedNumber(ansList.id, "to prevent rebound on "+whiteTarget.id);
                                 }
@@ -12912,6 +13075,51 @@ function creativeMoveplus() {
 }
 
 
+function safeUp(){
+console.log("Move check:","safe upward");
+def=1;
+advAns=0;
+// let foundButton = null;
+let eligSafeProg = strictMove();   
+
+  if (!eligSafeProg || eligSafeProg.length === 0) return false;
+    
+    // Shuffle candidates for variety
+    const shuffled = shuffleArray([...eligSafeProg]);
+  for (let candidate of shuffled) {
+
+    // Branch 1 — original, AI simulating Blue's up-move (side===0)
+    if (side==0 && r%2==0 && (candidate.col!='white' || (candidate.col=='white' && candidate.side=='red'))) {
+        compAns = candidate;
+        const foundButton = up();
+        if (foundButton) { compBut = foundButton; makeMove(); return true; }
+    }
+
+    // Branch 2 — original, AI simulating Red's up-move (side===1)
+    if (side==1 && r%2!=0 && (candidate.col!='white' || (candidate.col=='white' && candidate.side=='blue'))) {
+        compAns = candidate;
+        const foundButton = up();
+        if (foundButton) { compBut = foundButton; makeMove(); return true; }
+    }
+
+    // Branch 3 — the OTHER direction for side===0
+    if (side==0 && r%2!=0 && (candidate.col!='white' || (candidate.col=='white' && candidate.side=='blue'))) {
+        compAns = candidate;
+        const foundButton = down();
+        if (foundButton) { compBut = foundButton; makeMove(); return true; }
+    }
+
+    // Branch 4 — the OTHER direction for side===1
+    if (side==1 && r%2==0 && (candidate.col!='white' || (candidate.col=='white' && candidate.side=='red'))) {
+        compAns = candidate;
+        const foundButton = down();
+        if (foundButton) { compBut = foundButton; makeMove(); return true; }
+    }
+}
+    return false;
+}
+
+
 function anysafeMove() {
     console.log("Move check:","anysafeMove");
     def = 1;
@@ -12975,6 +13183,74 @@ function anysafeMoveplus() {
             return true;
         }
     }
+    return false;
+}
+
+function safeDown() {
+    console.log("Move check:", "safe downward");
+    def = 0;
+    advAns = 0;
+
+    let eligSafeProg = strictMove();
+    if (!eligSafeProg || eligSafeProg.length === 0) return false;
+
+    const shuffled = shuffleArray([...eligSafeProg]);
+
+    for (let candidate of shuffled) {
+
+        // Branch 1 — side===0, Blue's turn → Blue attacks down
+        if ((side==0 && r%2==0 && (candidate.col!='white' || (candidate.col=='white' && candidate.side=='red')))) {
+            compAns = candidate;
+            const foundButton = down();
+            if (foundButton) {
+                compBut = foundButton;
+                console.log("Choice button:", compBut.id);
+                console.log("Choice number:", compAns.id);
+                makeMove();
+                return true;
+            }
+        }
+
+        // Branch 2 — side===0, Red's turn → Red attacks down
+        if ((side==0 && r%2!=0 && (candidate.col!='white' || (candidate.col=='white' && candidate.side=='blue')))) {
+            compAns = candidate;
+            const foundButton = down();
+            if (foundButton) {
+                compBut = foundButton;
+                console.log("Choice button:", compBut.id);
+                console.log("Choice number:", compAns.id);
+                makeMove();
+                return true;
+            }
+        }
+
+        // Branch 3 — side===1, Red's turn → Red attacks down
+        if ((side==1 && r%2!=0 && (candidate.col!='white' || (candidate.col=='white' && candidate.side=='blue')))) {
+            compAns = candidate;
+            const foundButton = down();
+            if (foundButton) {
+                compBut = foundButton;
+                console.log("Choice button:", compBut.id);
+                console.log("Choice number:", compAns.id);
+                makeMove();
+                return true;
+            }
+        }
+
+        // Branch 4 — side===1, Blue's turn → Blue attacks down
+        if ((side==1 && r%2==0 && (candidate.col!='white' || (candidate.col=='white' && candidate.side=='red')))) {
+            compAns = candidate;
+            const foundButton = down();
+            if (foundButton) {
+                compBut = foundButton;
+                console.log("Choice button:", compBut.id);
+                console.log("Choice number:", compAns.id);
+                makeMove();
+                return true;
+            }
+        }
+    }
+
     return false;
 }
 
@@ -13777,10 +14053,12 @@ l = isRedTurn ? redDifficulty : blueDifficulty;
     if (l < 1) {
         if (creativeMoveplus()) { afterAutoMove(); return; }
         if (creativeMove()) { afterAutoMove(); return; }
+        if (safeUp()) { afterAutoMove(); return; }  
     }
-    
+  
     if (l < 2) {        
         if (anysafeMoveplus()) { afterAutoMove(); return; }
+        if (safeDown()) { afterAutoMove(); return; }  
     }
     
     if (l < 3) {
@@ -13948,7 +14226,7 @@ function showLandingPage() {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText("Unconscious learning through gameplay. ", 180, 206);  // X+20 (160+20=180)
-    ctx.fillText("No memorization. No drill. No ball. ", 180, 226);
+    ctx.fillText("No memorization. No drill. ", 180, 226);
     ctx.fillText("AI does the math. You score the goals.", 180, 246);
     
     // ===========================================
@@ -16251,8 +16529,10 @@ const moveFunctions = [
     midChance,
     creativeMoveplus,
     creativeMove,
+    safeUp,
     anysafeMoveplus,
     anysafeMove,
+    safeDown,
     anyWhichMove,
     anyWhereMove,
     anyHowMove
@@ -16303,11 +16583,13 @@ function compMove() {
     if (l < 1) {
         if (creativeMoveplus()) { saveOpponentLogsToHistory(); return; }
         if (creativeMove()) { saveOpponentLogsToHistory(); return; }
+         if (safeUp()) { saveOpponentLogsToHistory(); return; }
     }
-    
+   
     // Advanced level
     if (l < 2) {        
         if (anysafeMoveplus()) { saveOpponentLogsToHistory(); return; }
+        if (safeDown()) { saveOpponentLogsToHistory(); return; }
     }
     
     // Intermediate level
@@ -16640,15 +16922,13 @@ document.getElementById('installButton')?.addEventListener('click', installApp);
 
 window.addEventListener('beforeinstallprompt', (event) => {
     event.preventDefault();
-    
-    // ✅ Don't show if already installed
-    if (isAppInstalled) {
-        return;
-    }
-    
+    if (isAppInstalled) return;
     deferredPrompt = event;
     const btn = document.getElementById('installButton');
-    if (btn) btn.style.display = 'block';
+    if (btn) {
+        btn.style.display = 'block';
+        positionInstallButton();   // ← position after showing
+    }
 });
 
 document.getElementById('installButton')?.addEventListener('click', async () => {
