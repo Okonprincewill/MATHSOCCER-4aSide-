@@ -110,8 +110,8 @@
         }
         #installButton {
     position: fixed;
-    left: 15%;                    /* shifted left of centre */
-    top: 92%;                     /* below About row, above Play row */
+    left: 14%;                    /* shifted left of centre */
+    top: 93%;                     /* below About row, above Play row */
     transform: translate(-50%, -50%);
     z-index: 99999;
     padding: 6px 10px;            /* shorter */
@@ -1244,6 +1244,42 @@ let previousWindowSize = { w: 0, h: 0 };
 
 const DESIGN_W = 360;
 const DESIGN_H = 800;
+// ===========================================
+// SCREEN WAKE LOCK
+// ===========================================
+let wakeLock = null;
+
+async function requestWakeLock() {
+    try {
+        if ('wakeLock' in navigator) {
+            wakeLock = await navigator.wakeLock.request('screen');
+            console.log('✅ Wake lock acquired');
+
+            // Re-acquire if released (e.g. tab hidden then visible again)
+            wakeLock.addEventListener('release', () => {
+                console.log('Wake lock released');
+                wakeLock = null;
+            });
+        } else {
+            console.log('Wake Lock API not supported');
+        }
+    } catch (err) {
+        console.log('Wake lock failed:', err.message);
+    }
+}
+
+async function releaseWakeLock() {
+    if (wakeLock) {
+        try {
+            await wakeLock.release();
+            wakeLock = null;
+            console.log('Wake lock manually released');
+        } catch (err) {
+            console.log('Release failed:', err.message);
+        }
+    }
+}
+
 
 // ============================================================
 //  RESIZE CANVAS — No overflow, minimal black bars
@@ -4138,6 +4174,8 @@ function startFireworks() {
 let gameOverSoundPlayed = false;
 
 function showGameOver() {
+// In showGameOver(), after gameOverActive = true;
+releaseWakeLock();
     if (soundEnabled && !gameOverSoundPlayed) {
         playSound(inland);
         gameOverSoundPlayed = true;
@@ -5333,7 +5371,8 @@ function saveOpponentLogsToHistory() {
 // ===========================================
 function quitGame() {
     console.log("Quitting game...");
-    
+  // In quitGame(), near the top
+releaseWakeLock();  
     // Cancel animations and timers
     if (timerCom) clearTimeout(timerCom);
     if (animationFrameId) cancelAnimationFrame(animationFrameId);
@@ -13850,6 +13889,8 @@ function showStartButtons() {
 // ============================================================
 
 function launchAIMatch() {
+// In launchAIMatch(), after matchInProgress = true;
+requestWakeLock();
     side = Math.floor(Math.random() * 2);
     g = 15;
     
@@ -16924,6 +16965,13 @@ window.addEventListener('appinstalled', function() {
     const btn = document.getElementById('installButton');
     if (btn) btn.style.display = 'none';
     console.log('✅ Mathsoccer installed successfully');
+});
+
+// Re-acquire when page becomes visible again
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && matchInProgress) {
+        requestWakeLock();
+    }
 });
 
 </script>
