@@ -110,10 +110,12 @@
         }
         #installButton {
     position: fixed;
-    /* position is set by JS — see below */
+    left: 22%;                    /* shifted left of centre */
+    top: 79%;                     /* below About row, above Play row */
+    transform: translate(-50%, -50%);
     z-index: 99999;
-    padding: 6px 12px;                /* shorter */
-    font-size: 12px;                  /* smaller */
+    padding: 6px 10px;            /* shorter */
+    font-size: 12px;              /* smaller */
     font-family: fantasy, papyrus, sans-serif;
     background: linear-gradient(145deg, #2E8B57, #1B5E20);
     color: #FFFFFF;
@@ -125,26 +127,24 @@
     animation: pulseGlow 2s infinite;
     transition: all 0.3s ease;
     white-space: nowrap;
-    min-width: 90px;                  /* wider */
-    text-align: center;
 }
 
 #installButton:hover {
-    transform: scale(1.05);
+    transform: translate(-50%, -50%) scale(1.05);
     box-shadow: 0 6px 28px rgba(0,0,0,0.8), 0 0 24px rgba(46, 139, 87, 0.5);
 }
 
 .icon-equals {
     display: inline-block;
-    width: 24px;
-    height: 24px;
-    line-height: 24px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
     text-align: center;
     border: 2px solid #FFD700;
     border-radius: 50%;
     font-weight: bold;
-    font-size: 14px;
-    margin-right: 6px;
+    font-size: 11px;
+    margin-right: 4px;
     color: #FFD700;
     vertical-align: middle;
 }
@@ -1281,7 +1281,6 @@ function resizeCanvas() {
     
     window._scale = scale;
     redrawGameScreen();
-    positionInstallButton();
 }
 // ============================================================
 //  TOUCH SCALING — With Touch Detection + DPI
@@ -1394,32 +1393,6 @@ if (!touchEnabled || animationInProgress) {
         
         handleButtonClick(pos.x, pos.y);
     });
-}
-
-
-function positionInstallButton() {
-    const btn = document.getElementById('installButton');
-    if (!btn || btn.style.display === 'none') return;
-
-    const canvasRect = canvas.getBoundingClientRect();
-
-    // Canvas-space target: below About, left of AI Match
-    // Canvas coords → viewport coords
-    const scaleX = canvasRect.width  / 360;
-    const scaleY = canvasRect.height / 800;
-
-    // Target canvas region: x=100..160, y=630..660
-    // Center of that region:
-    const canvasCX = 130;      // center x in canvas space
-    const canvasCY = 645;      // center y in canvas space
-
-    const viewportX = canvasRect.left + canvasCX * scaleX;
-    const viewportY = canvasRect.top  + canvasCY * scaleY;
-
-    // Position by center
-    btn.style.left = viewportX + 'px';
-    btn.style.top  = viewportY + 'px';
-    btn.style.transform = 'translate(-50%, -50%)';
 }
 
 
@@ -16820,7 +16793,7 @@ initcanvas();
     </div>
     
     <button id="installButton" style="display:none;">
-  <span class="icon-equals">=</span> Install Mathsoccer
+  <span class="icon-equals">=</span> Install <span class="icon-equals">=</span>
 </button>
 
 <script>
@@ -16927,8 +16900,7 @@ window.addEventListener('beforeinstallprompt', (event) => {
     const btn = document.getElementById('installButton');
     if (btn) {
         btn.style.display = 'block';
-        positionInstallButton();   // ← position after showing
-    }
+            }
 });
 
 document.getElementById('installButton')?.addEventListener('click', async () => {
