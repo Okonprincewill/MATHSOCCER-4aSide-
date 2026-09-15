@@ -13897,6 +13897,10 @@ requestWakeLock();
     side = Math.floor(Math.random() * 2);
     g = 15;
     
+    setTimeout(() => {
+        speakText(`Click the calculation panel to change the teams playing if you want to.`);
+    }, 300);
+    
     aiDifficulty = Math.floor(Math.random() * 4);
     playerDifficulty = Math.floor(Math.random() * 4);
     
@@ -13933,7 +13937,7 @@ requestWakeLock();
     
     // ✅ Intro speech for AvA match
     setTimeout(() => {
-        speakText(`Let's watch a match between ${topColor} ${topDifficulty} and ${bottomColor} ${bottomDifficulty}. This match will end after 28 moves. Each move requires touching a token and one framed number.`);
+        speakText(`Meanwhile, let's watch a match between ${topColor} ${topDifficulty} and ${bottomColor} ${bottomDifficulty}. This match will end after 28 moves. Each move requires touching a token and one framed number.`);
     }, 1500);
 }
 
@@ -15007,6 +15011,39 @@ if (g === 15 && matchInProgress) {
         
         return;
     }
+}
+
+
+// ===========================================
+// CALC AREA TAP — reset and relaunch AV A pairing
+// ===========================================
+if (g === 15 &&
+    touchX >= calc.x && touchX <= calc.x + calc.w &&
+    touchY >= calc.y && touchY <= calc.y + calc.h) {
+
+    // ✅ Prevent multiple clicks
+    if (landingPageClickLock) return;
+    landingPageClickLock = true;
+
+    // Black overlay — drawn once, won't darken
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(calc.x, calc.y, calc.w, calc.h, 5);
+    ctx.fill();
+
+    clearTimeout(window._landingPageTimeout);
+    window._landingPageTimeout = setTimeout(function() {
+        ctx.clearRect(0, 0, cW, cH);
+
+        resetForNewGame();   // clears current settings
+        g = 15;              // return to AvA screen
+        launchAIMatch();     // launches a new pairing
+
+        n = 1;
+        landingPageClickLock = false;
+    }, 300);
+
+    return;
 }
 
 
