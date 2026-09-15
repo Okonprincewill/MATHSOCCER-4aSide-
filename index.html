@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <title>MathSoccer - Unconscious learning. No memorization. No drill.</title>
+    <title>MathSoccer - AI does the math. You score the goals.</title>
 
 <meta name="description" content="Every move features the four pillars of all mathematics.  Multiplication, division, factors and inequalities become second nature through gameplay. AI does the math. You score the goals. Free to play.">
 
@@ -10565,127 +10565,130 @@ for (let targetSquare of ownStrategicSquares) {
 }
 
 // ===========================================
+// HELPERS (local to this block)
+// ===========================================
+const hasOpponentLink = (cell) => {
+    const dirs = categorizeButtonsByDirection(cell);
+    return directionsToCheck.some(d =>
+        dirs?.[d]?.[0]?.col === opponentColor
+    );
+};
+
+const factorCanReach = (id, factor) =>
+    (id >= factor && id % factor === 0 && id / factor <= 9) ||
+    (id < factor && factor % id === 0);
+
+const factorOf = (id) => {
+    if (id >= vulFac && id % vulFac === 0 && id / vulFac <= 9) return id / vulFac;
+    if (id < vulFac && vulFac % id === 0) return vulFac / id;
+    return null;
+};
+
+// ===========================================
 // GOAL BLOCKER EXEMPTION — Genius only (l < 1)
 // ===========================================
-
-
+if (l < 1) {
     const goalChk = categorizeButtonsByDirection(positions[3]);
+    const blockingButton = goalChk?.[dir]?.[0];
+    const midBut = goalChk?.[dir]?.[1];
 
-    if (goalChk && goalChk[dir] && goalChk[dir][0] && goalChk[dir][0].col === ownColor) {
-        const blockingButton = goalChk[dir][0];
-        const midBut = goalChk[dir][1];
+    if (blockingButton?.col === ownColor && midBut?.col === ownColor) {
 
-        if (midBut && midBut.col === ownColor) {
+        const blockerCell = answer.find(cell =>
+            cell.x === blockingButton.x - 3 &&
+            cell.y === blockingButton.y - 3
+        );
 
-            // --- Find the cell the blocker sits on ---
-            const blockerCell = answer.find(cell =>
-                cell.x === blockingButton.x - 3 &&
-                cell.y === blockingButton.y - 3
+        if (blockerCell && hasOpponentLink(blockerCell)) {
+
+            const isDown = dir === "down";
+
+            // ===========================================
+            // PART 1 — OLD RULE
+            // ===========================================
+            const midNum = answer.find(cell =>
+                cell.x === positions[3].x &&
+                cell.x + 3 === blockingButton.x && cell.x + 3 === midBut.x &&
+                (isDown
+                    ? cell.y + 3 > blockingButton.y && cell.y + 3 < midBut.y
+                    : cell.y + 3 < blockingButton.y && cell.y + 3 > midBut.y) &&
+                factorCanReach(cell.id, vulFac)
             );
 
-            if (blockerCell) {
+            const oldRuleApplies =
+                midNum && midNum !== compAns && hasOpponentLink(midNum);
 
-                // --- REQUIRED: opponent must be linked to the blocker's cell ---
-                const blockerDir = categorizeButtonsByDirection(blockerCell);
-                let hasOpponentLink = false;
+            // ===========================================
+            // PART 2 — NEW RULE
+            // ===========================================
+            let newRuleApplies = false;
 
-                for (const direction of directionsToCheck) {
-                    if (blockerDir && blockerDir[direction] && blockerDir[direction][0] &&
-                        blockerDir[direction][0].col === opponentColor) {
-                        hasOpponentLink = true;
+            if (factorCanReach(blockerCell.id, vulFac)) {
+                const betweenCell = answer.find(cell =>
+                    cell.x === positions[3].x &&
+                    cell.occupancy === 'no' &&
+                    (isDown
+                        ? cell.y + 3 < blockingButton.y && cell.y > positions[3].y
+                        : cell.y + 3 > blockingButton.y && cell.y < positions[3].y)
+                );
+
+                if (!betweenCell) {
+                    newRuleApplies = true;
+                } else if (hasOpponentLink(betweenCell)) {
+                    const defFac = factorOf(blockerCell.id);
+                    const canReachBetween = defFac && factorCanReach(betweenCell.id, defFac);
+
+                    if (!canReachBetween) {
+                        newRuleApplies = true;
+                    } else {
+                        // own button linked to betweenCell?
+                        const betweenDir = categorizeButtonsByDirection(betweenCell);
+                        const ownLinked = directionsToCheck.some(d =>
+                            betweenDir?.[d]?.[0]?.col === ownColor
+                        );
+                        if (!ownLinked) newRuleApplies = true;
+                    }
+                }
+            }
+
+            // ===========================================
+            // PART 3 — THIRD CONDITION: exempt midBut
+            // mirrored: yellow5/white1, yellow4/white0
+            // ===========================================
+            let thirdRuleApplies = false;
+            let thirdRuleYellow = null;
+
+            if (isLinkedToCompAns(midBut)) {
+                const mirrors = [
+                    { yellow: positions[5], white: positions[1] },
+                    { yellow: positions[4], white: positions[0] },
+                ];
+
+                for (const { yellow, white } of mirrors) {
+                    if (!factorCanReach(yellow.id, vulFac)) continue;
+                    if (!hasOpponentLink(yellow)) continue;
+
+                    const defFac = factorOf(yellow.id);
+                    if (!defFac) continue;
+
+                    if (!factorCanReach(white.id, defFac)) {
+                        thirdRuleApplies = true;
+                        thirdRuleYellow = yellow;
                         break;
                     }
                 }
+            }
 
-                if (hasOpponentLink) {
-
-                    // ===========================================
-                    // PART 1 — OLD RULE: mid number exists between blocker and mid button
-                    // ===========================================
-                    let midNum;
-                    if (dir === "down") {
-                        midNum = answer.find(cell =>
-                            cell.x === positions[3].x &&
-                            cell.x + 3 === blockingButton.x && cell.x + 3 === midBut.x &&
-                            cell.y + 3 > blockingButton.y && cell.y + 3 < midBut.y &&
-                            ((cell.id >= vulFac && cell.id % vulFac === 0 && cell.id / vulFac <= 9) ||
-                             (cell.id < vulFac && vulFac % cell.id === 0))
-                        );
-                    } else {
-                        midNum = answer.find(cell =>
-                            cell.x === positions[3].x &&
-                            cell.x + 3 === blockingButton.x && cell.x + 3 === midBut.x &&
-                            cell.y + 3 < blockingButton.y && cell.y + 3 > midBut.y &&
-                            ((cell.id >= vulFac && cell.id % vulFac === 0 && cell.id / vulFac <= 9) ||
-                             (cell.id < vulFac && vulFac % cell.id === 0))
-                        );
-                    }
-
-                    const oldRuleApplies = (midNum && midNum !== compAns);
-
-                    // ===========================================
-                    // PART 2 — NEW RULE
-                    // ===========================================
-                    let newRuleApplies = false;
-
-                    // --- Step 1: can vulFac reach the blocker's cell? ---
-                    const vulFacCanReachBlocker =
-                        (blockerCell.id >= vulFac && blockerCell.id % vulFac === 0 && blockerCell.id / vulFac <= 9) ||
-                        (blockerCell.id < vulFac && vulFac % blockerCell.id === 0);
-
-                    if (vulFacCanReachBlocker) {
-
-                        // --- Step 2: is there a cell between goal mouth and blocker? ---
-                        let betweenCell;
-                        if (dir === "down") {
-                            betweenCell = answer.find(cell =>
-                                cell.x === positions[3].x &&
-                                cell.occupancy === 'no' &&
-                                cell.y + 3 < blockingButton.y &&
-                                cell.y > positions[3].y
-                            );
-                        } else {
-                            betweenCell = answer.find(cell =>
-                                cell.x === positions[3].x &&
-                                cell.occupancy === 'no' &&
-                                cell.y + 3 > blockingButton.y &&
-                                cell.y < positions[3].y
-                            );
-                        }
-
-                        if (!betweenCell) {
-                            // No replacement square → blocker is the last line → exempt
-                            newRuleApplies = true;
-                        } else {
-                            // --- Step 3: defFac from the blocker's cell ---
-                            let defFacBlocker = null;
-                            if (blockerCell.id >= vulFac && blockerCell.id % vulFac === 0 && blockerCell.id / vulFac <= 9) {
-                                defFacBlocker = blockerCell.id / vulFac;
-                            } else if (blockerCell.id < vulFac && vulFac % blockerCell.id === 0) {
-                                defFacBlocker = vulFac / blockerCell.id;
-                            }
-
-                            // --- Step 4: can defFacBlocker reach the between cell? ---
-                            let canReachBetween = false;
-                            if (defFacBlocker) {
-                                canReachBetween =
-                                    (betweenCell.id >= defFacBlocker && betweenCell.id % defFacBlocker === 0 && betweenCell.id / defFacBlocker <= 9) ||
-                                    (betweenCell.id < defFacBlocker && defFacBlocker % betweenCell.id === 0);
-                            }
-
-                            if (!canReachBetween) {
-                                newRuleApplies = true;
-                            }
-                        }
-                    }
-
-                    // ===========================================
-                    // EXEMPT if either rule fires
-                    // ===========================================
-                    if (l < 1 && (oldRuleApplies || newRuleApplies)) {
-                        exemptButtons.add(blockingButton);
-                        logExemptedButton(blockingButton.id, "blocking goal center");                
-                }
+            // ===========================================
+            // EXEMPT
+            // ===========================================
+            if (oldRuleApplies || newRuleApplies) {
+                exemptButtons.add(blockingButton);
+                logExemptedButton(blockingButton.id, "blocking goal center");
+            }
+            if (thirdRuleApplies) {
+                exemptButtons.add(midBut);
+                logExemptedButton(midBut.id, "mid button support for " + thirdRuleYellow.id);
             }
         }
     }
