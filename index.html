@@ -15024,6 +15024,8 @@ if (g === 15 &&
     // ✅ Prevent multiple clicks
     if (landingPageClickLock) return;
     landingPageClickLock = true;
+    
+    cancelAllSpeech();
 
     // Black overlay — drawn once, won't darken
     ctx.fillStyle = 'rgba(0,0,0,0.6)';
