@@ -15020,6 +15020,7 @@ if (g === 15 && matchInProgress) {
 if (g === 15 &&
     touchX >= calc.x && touchX <= calc.x + calc.w &&
     touchY >= calc.y && touchY <= calc.y + calc.h) {
+    if(n>27) return;
 
     // ✅ Prevent multiple clicks
     if (landingPageClickLock) return;
