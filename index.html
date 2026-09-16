@@ -5400,6 +5400,7 @@ releaseWakeLock();
  k=0;
  g=0;
  q=0;
+ s=0;
     side = 0;
     
     // Reset scores
@@ -13890,15 +13891,18 @@ function showStartButtons() {
 // ============================================================
 //  MODIFIED LAUNCH AI VS AI MATCH - Sets matchInProgress before rendering
 // ============================================================
+let s=0;   
 
 function launchAIMatch() {
 // In launchAIMatch(), after matchInProgress = true;
 requestWakeLock();
     side = Math.floor(Math.random() * 2);
     g = 15;
-    
+     
     setTimeout(() => {
-        speakText(`Click the calculation panel to change the teams playing if you want to.`);
+    if(s<1){
+        speakText(`Click the calculation panel to change the teams playing if you want to.`);        
+        }
     }, 300);
     
     aiDifficulty = Math.floor(Math.random() * 4);
@@ -13936,8 +13940,15 @@ requestWakeLock();
     autoMoveTimer = setTimeout(autoMove, 12000);
     
     // ✅ Intro speech for AvA match
+   
+ setTimeout(() => {
+ if(s<1){
+        speakText(`Meanwhile, `);        
+        }
+    }, 1500);
+    
     setTimeout(() => {
-        speakText(`Meanwhile, let's watch a match between ${topColor} ${topDifficulty} and ${bottomColor} ${bottomDifficulty}. This match will end after 28 moves. Each move requires touching a token and one framed number.`);
+        speakText(`let's watch a match between ${topColor} ${topDifficulty} and ${bottomColor} ${bottomDifficulty}. This match will end after 28 moves. Each move requires touching a token and one framed number.`);
     }, 1500);
 }
 
@@ -15045,7 +15056,7 @@ if (g === 15 &&
         n = 1;
         landingPageClickLock = false;
     }, 300);
-
+s++;
     return;
 }
 
