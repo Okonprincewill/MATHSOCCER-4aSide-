@@ -10299,7 +10299,7 @@ for (let btn of buttons) {
         // ===========================================
         // FELLOWS CHECK — exempt fellow on blocked yellow
         // ===========================================
-        if (fellows.length > 0) {
+        if (fellows.length > 1) {
             
             const leftWhite   = blockWhite[0];
             const rightWhite  = blockWhite[1];
@@ -10402,7 +10402,7 @@ if (advAns === 1 && l < 2) {
         
         // ✅ Only exempt if NOT a fellow multi-attacker
         const fellows = getFellowMultiAttackers(closestButton);
-        if (fellows.length === 0) {
+        if (fellows.length === 1) {
             exemptButtons.add(closestButton);
             logExemptedButton(closestButton.id, `maintaining attack on number ${targetCell.id}`);
         }
