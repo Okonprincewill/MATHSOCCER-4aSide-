@@ -3353,32 +3353,31 @@ function drawLogoO(centerX, centerY, radius) {
     const showPhotoInO = (g !== 0 && g !== 1 && g !== 15 && playerPhotoData);
 
     if (showPhotoInO) {
-        // Draw photo inside the "O"
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, radius - 2, 0, 2 * Math.PI);
-        ctx.clip();
-        ctx.drawImage(playerPhotoData, centerX - radius + 2, centerY - radius + 2, (radius - 2) * 2, (radius - 2) * 2);
-        ctx.restore();
-        
-        // Gold border
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, radius - 2, 0, 2 * Math.PI);
-        ctx.strokeStyle = '#FFD700';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-        ctx.restore();
-    } else {
-        // Draw equal sign (original)
-        ctx.save();
-        ctx.fillStyle = '#032';
-        ctx.font = 'bold 22px fantasy, papyrus';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('=', centerX, centerY);
-        ctx.restore();
-    }
+    const zoom = 1.2;
+    const size = (radius - 2) * 2 * zoom;
+    
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius - 2, 0, 2 * Math.PI);
+    ctx.clip();
+    ctx.drawImage(
+        playerPhotoData,
+        centerX - size / 2,
+        centerY - size / 2,
+        size,
+        size
+    );
+    ctx.restore();
+    
+    // Gold border
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius - 2, 0, 2 * Math.PI);
+    ctx.strokeStyle = '#FFD700';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.restore();
+}
 
     // Store "O" position for touch detection
     window._logoOBox = { 
