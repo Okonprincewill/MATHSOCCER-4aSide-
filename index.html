@@ -8526,6 +8526,7 @@ function processSpeechQueue() {
 }
 
 function cancelAllSpeech() {
+if(n>26) return;
     if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
     }
