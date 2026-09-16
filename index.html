@@ -5388,6 +5388,7 @@ releaseWakeLock();
     gameOverActive = false;
     clearOpponentLogs();
         opponentLogsPage = 0;
+        lastMoveData = null;    
     
     // Reset game state flags
     g = 0;
@@ -5453,6 +5454,15 @@ releaseWakeLock();
     selectedButtonLinks = [];
     scorer = [];
     
+    va = "";
+                        vb = "";
+                        vc = "";
+                        vd = "";
+                        ve = "";
+                        vf = "";
+                        vg = "";
+                        vh = "";
+    
     // ===========================================
     // RESET BOARD USING pass() FUNCTION
     // ===========================================
@@ -5506,7 +5516,8 @@ function resetGame() {
     animationInProgress = false;
     touchEnabled = true;
     gameOverActive = false;
-        gameOverSoundPlayed = false;    
+        gameOverSoundPlayed = false;    lastMoveData = null;    
+        
     // ===========================================
     // RESET ALL GAME STATE VARIABLES TO ZERO
     // ===========================================
@@ -5556,6 +5567,14 @@ function resetGame() {
     selectedButton = null;
     selectedButtonLinks = [];
     scorer = [];
+    va = "";
+                        vb = "";
+                        vc = "";
+                        vd = "";
+                        ve = "";
+                        vf = "";
+                        vg = "";
+                        vh = "";
     
     // ===========================================
     // RESET BOARD USING pass() FUNCTION
