@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<link rel="manifest" href="manifest.json">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="MathSoccer">
@@ -17,7 +16,8 @@
 <meta name="robots" content="index, follow">
 
 <link rel="canonical"
-      href="./">
+      href="https://okonprincewill.github.io/MATHSOCCER-4aSide-/">
+<link rel="manifest" href="/MATHSOCCER-4aSide-/manifest.json">
 <meta name="google-site-verification" content="7oP64Ho-7Sc-Dihm7Fj-2VIVRq9zWkz-Qvl41s-B1FI" />    
 <script type="application/ld+json">
 {
@@ -1230,6 +1230,78 @@ let buttonTagsVisible = false;
 let answerTagsVisible = false;
 // At the top with your other variables
 let isAppInstalled = false;
+
+// Check 1: Running as installed PWA (standalone mode)
+if (window.matchMedia('(display-mode: standalone)').matches) {
+    isAppInstalled = true;
+}
+
+// Check 2: iOS Safari standalone
+if (window.navigator.standalone === true) {
+    isAppInstalled = true;
+}
+
+// Check 3: Android TWA / Chrome installed
+if (document.referrer.includes('android-app://')) {
+    isAppInstalled = true;
+}
+
+// Hide install button if already installed
+if (isAppInstalled) {
+    const btn = document.getElementById('installButton');
+    if (btn) btn.style.display = 'none';
+}
+
+document.getElementById('installButton')?.addEventListener('click', installApp);
+
+let deferredPrompt = null;
+let isAppInstalled = false;
+if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+  isAppInstalled = true;
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  if (isAppInstalled) return;
+  deferredPrompt = e;
+  document.getElementById('installButton').style.display = 'block';
+});
+
+async function installApp() {
+    // ✅ Already installed? Do nothing.
+    if (isAppInstalled) {
+        console.log('App already installed');
+        return;
+    }
+    
+    // ✅ No prompt available? Do nothing.
+    if (!deferredPrompt) {
+        console.log('No install prompt available');
+        return;
+    }
+    
+    // Trigger the prompt
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    
+    if (outcome === 'accepted') {
+        console.log('✅ User accepted install');
+        isAppInstalled = true;
+    } else {
+        console.log('❌ User dismissed install');
+    }
+    
+    deferredPrompt = null;
+    const btn = document.getElementById('installButton');
+    if (btn) btn.style.display = 'none';
+}
+
+window.addEventListener('appinstalled', function() {
+    isAppInstalled = true;
+    const btn = document.getElementById('installButton');
+    if (btn) btn.style.display = 'none';
+    console.log('✅ Mathsoccer installed successfully');
+});
 
 // ✅ Lock orientation on phones
 
@@ -17299,7 +17371,7 @@ initcanvas();
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/MATHSOCCER-4aSide-/sw.js', { scope: '/MATHSOCCER-4aSide-/' })
+    navigator.serviceWorker.register('/MATHSOCCER-4aSide-/pwabuilder-sw.js', { scope: '/MATHSOCCER-4aSide-/' })
     
         .then(function(registration) {
             console.log('✅ Mathsoccer SW registered!');
@@ -17329,91 +17401,6 @@ if ('serviceWorker' in navigator) {
         });
     });
 }
-
-// Check 1: Running as installed PWA (standalone mode)
-if (window.matchMedia('(display-mode: standalone)').matches) {
-    isAppInstalled = true;
-}
-
-// Check 2: iOS Safari standalone
-if (window.navigator.standalone === true) {
-    isAppInstalled = true;
-}
-
-// Check 3: Android TWA / Chrome installed
-if (document.referrer.includes('android-app://')) {
-    isAppInstalled = true;
-}
-
-// Hide install button if already installed
-if (isAppInstalled) {
-    const btn = document.getElementById('installButton');
-    if (btn) btn.style.display = 'none';
-}
-
-async function installApp() {
-    // ✅ Already installed? Do nothing.
-    if (isAppInstalled) {
-        console.log('App already installed');
-        return;
-    }
-    
-    // ✅ No prompt available? Do nothing.
-    if (!deferredPrompt) {
-        console.log('No install prompt available');
-        return;
-    }
-    
-    // Trigger the prompt
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    
-    if (outcome === 'accepted') {
-        console.log('✅ User accepted install');
-        isAppInstalled = true;
-    } else {
-        console.log('❌ User dismissed install');
-    }
-    
-    deferredPrompt = null;
-    const btn = document.getElementById('installButton');
-    if (btn) btn.style.display = 'none';
-}
-
-document.getElementById('installButton')?.addEventListener('click', installApp);
-
-window.addEventListener('beforeinstallprompt', (event) => {
-    event.preventDefault();
-    if (isAppInstalled) return;
-    deferredPrompt = event;
-    const btn = document.getElementById('installButton');
-    if (btn) {
-        btn.style.display = 'block';
-            }
-});
-
-document.getElementById('installButton')?.addEventListener('click', async () => {
-    // ✅ Block if already installed
-    if (isAppInstalled) {
-        document.getElementById('installButton').style.display = 'none';
-        return;
-    }
-    
-    if (!deferredPrompt) return;
-    
-    deferredPrompt.prompt();
-    const result = await deferredPrompt.userChoice;
-    deferredPrompt = null;
-    document.getElementById('installButton').style.display = 'none';
-    isAppInstalled = true;
-});
-
-window.addEventListener('appinstalled', function() {
-    isAppInstalled = true;
-    const btn = document.getElementById('installButton');
-    if (btn) btn.style.display = 'none';
-    console.log('✅ Mathsoccer installed successfully');
-});
 
 // Re-acquire wake lock when page becomes visible again
 document.addEventListener('visibilitychange', () => {
