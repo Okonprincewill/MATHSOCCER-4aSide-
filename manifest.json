@@ -1,7 +1,7 @@
 {
-  "name": "MathSoccer - AI does the math. You score the goals.",
+  "name": "MathSoccer – Learn Strategy by Watching AI Think",
   "short_name": "Mathsoccer",
-  "description": "Every Mathsoccer move features the four pillars of all mathematics.  Multiplication, division, factors and inequalities become second nature through gameplay. AI does the math. You score the goals. Free to play.",
+  "description": "Train your predictive intuition. Outsmart the AI in this chess-like football strategy game where the AI handles the math. Learn by watching the machine think. Free to play.",
   "start_url": "/MATHSOCCER-4aSide-/",
   "scope": "/MATHSOCCER-4aSide-/",
   "display": "standalone",
@@ -13,13 +13,13 @@
   "lang": "en-US",
   "icons": [
     {
-      "src": "icon-512×512.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icon-192×192.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
