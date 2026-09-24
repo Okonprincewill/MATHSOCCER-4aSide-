@@ -1254,8 +1254,6 @@ if (isAppInstalled) {
 
 document.getElementById('installButton')?.addEventListener('click', installApp);
 
-let deferredPrompt = null;
-let isAppInstalled = false;
 if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
   isAppInstalled = true;
 }
