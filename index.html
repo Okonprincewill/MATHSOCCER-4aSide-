@@ -1231,32 +1231,6 @@ let answerTagsVisible = false;
 // At the top with your other variables
 let isAppInstalled = false;
 
-// On page load, check if already installed
-window.addEventListener('load', function() {
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-        isAppInstalled = true;
-        document.getElementById('installButton').style.display = 'none';
-    }
-});
-
-// Listen for installation completion
-window.addEventListener('appinstalled', function() {
-    isAppInstalled = true;
-    document.getElementById('installButton').style.display = 'none';
-});
-
-// Modified install button handler
-document.getElementById('installButton')?.addEventListener('click', async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const result = await deferredPrompt.userChoice;
-    deferredPrompt = null;
-    document.getElementById('installButton').style.display = 'none';
-    isAppInstalled = true;
-});
-
-
-
 // ✅ Lock orientation on phones
 
 if (getScreenType() === 'phone') {
@@ -3059,81 +3033,6 @@ function shareGameResult() {
     drawShareOverlay();
 }
 
-function handleShareTouch(touchX, touchY) {
-    if (!shareOverlayActive) return false;
-    
-    // Twitter
-    if (touchX >= 50 && touchX <= 150 && touchY >= 180 && touchY <= 215) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(50, 180, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
-        window.open(window._shareUrls.twitter, '_blank', 'width=600,height=400');
-        shareOverlayActive = false;
-        renderGameOverScreen();
-        return true;
-    }
-    
-    // WhatsApp
-    if (touchX >= 190 && touchX <= 290 && touchY >= 180 && touchY <= 215) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(190, 180, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
-        window.open(window._shareUrls.whatsapp, '_blank', 'width=600,height=400');
-        shareOverlayActive = false;
-        renderGameOverScreen();
-        return true;
-    }
-    
-    // Facebook
-    if (touchX >= 50 && touchX <= 150 && touchY >= 230 && touchY <= 265) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(50, 230, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
-        window.open(window._shareUrls.facebook, '_blank', 'width=600,height=400');
-        shareOverlayActive = false;
-        renderGameOverScreen();
-        return true;
-    }
-    
-    // Telegram
-    if (touchX >= 190 && touchX <= 290 && touchY >= 230 && touchY <= 265) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(190, 230, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
-        window.open(window._shareUrls.telegram, '_blank', 'width=600,height=400');
-        shareOverlayActive = false;
-        renderGameOverScreen();
-        return true;
-    }
-    
-    // Cancel
-    if (touchX >= 120 && touchX <= 200 && touchY >= 280 && touchY <= 310) {
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.beginPath();
-    ctx.roundRect(120, 280, 70, 30, 4);
-    ctx.fill();
-    ctx.restore();
-        shareOverlayActive = false;
-        renderGameOverScreen();
-        return true;
-    }
-    
-    return false;
-}
-
 // ===========================================
 // ACHIEVEMENT SYSTEM - MASTERFUL 3D
 // ===========================================
@@ -3514,7 +3413,8 @@ ctx.restore();
 // ===========================================
 
 function renderGameOverScreen() {
-    g = 9;
+    if (g !== 12) g = 9; // preserve share state
+
     const currentTime = Date.now();
 
     // === 1. CLEAR CANVAS ===
@@ -7067,7 +6967,7 @@ function logo() {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('Concentrate. Calculate. Celebrate.', 180, 414);  // Y+25
-ctx.fillText('Version 1.7.5', 180, 780);  // Y+25
+ctx.fillText('Version 1.8.0', 180, 780);  // Y+25
 
     ctx.restore();
     
@@ -9194,7 +9094,10 @@ function showCalculationAnimation(calculationText, teamColor) {
             renderStats();
             if (!matchInProgress) {
     statDraw(va, vb, vc, vd, ve, vf, vg, vh);
-}
+    }
+    if (selectedButton) {
+                highlightButtonAndNumbers(selectedButton, selectedButtonLinks);
+            }
                         return;
         }
         
@@ -9245,6 +9148,9 @@ function showCalculationAnimation(calculationText, teamColor) {
             if (!matchInProgress) {
     statDraw(va, vb, vc, vd, ve, vf, vg, vh);
 }            
+if (selectedButton) {
+                highlightButtonAndNumbers(selectedButton, selectedButtonLinks);
+            }
         } else {
             calcAnimationActive = false;
             calcAnimationFrameId = null;
@@ -10225,7 +10131,7 @@ generateNextTurnDisplay();
 statDraw(va,vb,vc,vd,ve,vf,vg,vh );  
 }
 }
-}, 12000);
+}, 8000);
 }
 
 speakText(`factor is equal to ${problemFactor}`);
@@ -14864,14 +14770,6 @@ function drawLandingButton3D(text, x, y, bgColor, textColor) {
 function handleButtonClick(touchX, touchY) {
 console.log('Touch:', touchX, touchY); // Debug
 
-// In handleButtonClick(), before other handlers:
-if (window._shareActive) {
-    if (handleShareTouch(touchX, touchY)) {
-        return;
-    }
-}
-
-
     const nameBox = window._playerNameBox;
     if (g===2 && nameBox && touchX >= nameBox.x && touchX <= nameBox.x + nameBox.w &&
         touchY >= nameBox.y && touchY <= nameBox.y + nameBox.h) {
@@ -15149,7 +15047,81 @@ if (g === 1) {
         return;
     }
 }
+
     
+  if(g === 12 && shareOverlayActive){  
+    // Twitter
+    if (touchX >= 50 && touchX <= 150 && touchY >= 180 && touchY <= 215) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(50, 180, 100, 30, 4);
+    ctx.fill();
+    ctx.restore();
+        window.open(window._shareUrls.twitter, '_blank', 'width=600,height=400');
+        shareOverlayActive = false;
+        renderGameOverScreen();
+        return;
+    }
+    
+    // WhatsApp
+    if (touchX >= 190 && touchX <= 290 && touchY >= 180 && touchY <= 215) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(190, 180, 100, 30, 4);
+    ctx.fill();
+    ctx.restore();
+        window.open(window._shareUrls.whatsapp, '_blank', 'width=600,height=400');
+        shareOverlayActive = false;
+        renderGameOverScreen();
+        return;
+    }
+    
+    // Facebook
+    if (touchX >= 50 && touchX <= 150 && touchY >= 230 && touchY <= 265) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(50, 230, 100, 30, 4);
+    ctx.fill();
+    ctx.restore();
+        window.open(window._shareUrls.facebook, '_blank', 'width=600,height=400');
+        shareOverlayActive = false;
+        renderGameOverScreen();
+        return;
+    }
+    
+    // Telegram
+    if (touchX >= 190 && touchX <= 290 && touchY >= 230 && touchY <= 265) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(190, 230, 100, 30, 4);
+    ctx.fill();
+    ctx.restore();
+        window.open(window._shareUrls.telegram, '_blank', 'width=600,height=400');
+        shareOverlayActive = false;
+        renderGameOverScreen();
+        return;
+    }
+    
+    // Cancel
+    if (touchX >= 120 && touchX <= 200 && touchY >= 280 && touchY <= 310) {
+    g=9;
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(120, 280, 100, 30, 4);
+    ctx.fill();
+    ctx.restore();
+        shareOverlayActive = false;
+        renderGameOverScreen();
+        return;
+        }
+    }
+    
+        
  // looping over landingPage array 
              
 landingPage.forEach((page) => {
@@ -16538,11 +16510,6 @@ if (g === 7) {
 }
 }
 
-
-// In renderGameOverScreen(), when History button is clicked (via touch handler)
-// This is handled in handleButtonClick() when gameOverActive is true
-
-// ===========================================
 // ===========================================
 // GAME OVER TOUCH HANDLERS (in handleButtonClick)
 // ===========================================
