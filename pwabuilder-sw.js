@@ -1,135 +1,174 @@
 // ============================================================
-// MATHSOCCER SERVICE WORKER - CORRECTED - iPhone Compliant
+// MATHSOCCER SERVICE WORKER
 // GitHub: Okonprincewill/MATHSOCCER-4aSide-
-// Base64 sounds are inside index.html - no need to list them
 // ============================================================
 
-const CACHE_NAME = 'mathsoccer-v15-iphone';
+const CACHE_NAME = 'mathsoccer-v6';
 const APP_ROOT = '/MATHSOCCER-4aSide-/';
 
-// For GitHub Pages - use APP_ROOT
-// For local / root domain - change to './'
+// ✅ FILES TO CACHE - NO APP_ROOT ALONE!
 const FILES_TO_CACHE = [
-  APP_ROOT,
-  APP_ROOT + 'index.html',
-  APP_ROOT + 'manifest.json',
-  APP_ROOT + 'icon-72x72.png',
-  APP_ROOT + 'icon-96x96.png',
-  APP_ROOT + 'icon-128x128.png',
-  APP_ROOT + 'icon-144x144.png',
-  APP_ROOT + 'icon-152x152.png',
-  APP_ROOT + 'icon-192x192.png',
-  APP_ROOT + 'icon-384x384.png',
-  APP_ROOT + 'icon-512x512.png',
-  APP_ROOT + 'icon-512.png'
+    APP_ROOT + 'index.html',
+    APP_ROOT + 'manifest.json',
+    APP_ROOT + 'pwabuilder-sw.js',
+    APP_ROOT + 'icon-512.png',
+    APP_ROOT + 'icon-192.png',
+    APP_ROOT + 'screenshot1.png',
+    APP_ROOT + 'screenshot2.png',
+    APP_ROOT + 'screenshot3.png',
+    APP_ROOT + 'screenshot4.png'
+];
+
+// Audio files - optional
+const AUDIO_FILES = [
+    APP_ROOT + 'explode.mp3',
+    APP_ROOT + 'kick.mp3',
+    APP_ROOT + 'ball.mp3',
+    APP_ROOT + 'Mathsoccer_touch.mp3',
+    APP_ROOT + 'cheer_goal.mp3',
+    APP_ROOT + 'crowd_louds.mp3',
+    APP_ROOT + 'Mathsoccer_cool.mp3',
+    APP_ROOT + 'maths.mp3',
+    APP_ROOT + 'disappointed.mp3'
 ];
 
 // ============================================================
-// INSTALL - iPhone safe with individual caching
+// INSTALL
 // ============================================================
+
 self.addEventListener('install', event => {
-  console.log('📦 Installing MathSoccer v15...');
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(async cache => {
-      console.log('📦 Caching core files...');
-      // Cache each file individually so 1 missing icon doesn't break install on iPhone
-      for (const file of FILES_TO_CACHE) {
-        try {
-          await cache.add(file);
-          console.log(`  ✅ ${file.split('/').pop()}`);
-        } catch (e) {
-          console.log(`  ⚠ ${file.split('/').pop()} - not cached (${e.message})`);
-        }
-      }
-      console.log('✅ Install complete - base64 sounds are inside index.html');
-      return self.skipWaiting();
-    })
-  );
-});
-
-// ============================================================
-// ACTIVATE - Clean old caches
-// ============================================================
-self.addEventListener('activate', event => {
-  console.log('🚀 Activating v15...');
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames
-          .filter(name => name.startsWith('mathsoccer-') && name !== CACHE_NAME)
-          .map(name => {
-            console.log(`🗑 Deleting old cache: ${name}`);
-            return caches.delete(name);
-          })
-      );
-    }).then(() => {
-      console.log('✅ Activated!');
-      return self.clients.claim();
-    })
-  );
-});
-
-// ============================================================
-// MESSAGE - Skip waiting
-// ============================================================
-self.addEventListener('message', event => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
-});
-
-// ============================================================
-// FETCH - iPhone compliant strategy
-// ============================================================
-self.addEventListener('fetch', event => {
-  const request = event.request;
-  
-  // Only handle GET - critical for iPhone
-  if (request.method !== 'GET') return;
-
-  // HTML navigation - network first, fallback to cache (always works offline)
-  if (request.mode === 'navigate') {
-    event.respondWith(
-      fetch(request)
-        .then(response => {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
-          return response;
-        })
-        .catch(async () => {
-          // Offline - return cached index.html (which contains base64 sounds)
-          const cached = await caches.match(APP_ROOT + 'index.html') || await caches.match(APP_ROOT);
-          if (cached) return cached;
-          return new Response('<h1>MathSoccer Offline - Go online once to cache</h1>', {
-            headers: { 'Content-Type': 'text/html' },
-            status: 503
-          });
-        })
+    console.log('📦 Installing Mathsoccer SW...');
+    
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then(async cache => {
+                // 1. Cache core files (MUST succeed)
+                console.log('📦 Caching core files...');
+                await cache.addAll(FILES_TO_CACHE);
+                console.log('✅ Core files cached!');
+                
+                // 2. Cache audio files (try each one)
+                console.log('📦 Caching audio files...');
+                let audioCached = 0;
+                let audioFailed = 0;
+                
+                for (const audio of AUDIO_FILES) {
+                    try {
+                        await cache.add(audio);
+                        audioCached++;
+                        console.log(`  ✅ ${audio.split('/').pop()}`);
+                    } catch (e) {
+                        audioFailed++;
+                        console.log(`  ⚠️ ${audio.split('/').pop()} (not cached)`);
+                    }
+                }
+                
+                console.log(`📊 Audio: ${audioCached} cached, ${audioFailed} failed`);
+                console.log('✅ Mathsoccer SW installed!');
+                
+                return self.skipWaiting();
+            })
+            .catch(error => {
+                console.error('❌ Installation failed:', error);
+                throw error;
+            })
     );
-    return;
-  }
-
-  // All other assets - cache first, then network
-  event.respondWith(
-    caches.match(request).then(cached => {
-      if (cached) return cached;
-      
-      return fetch(request).then(response => {
-        // Cache successful responses
-        if (response && response.status === 200 && response.type === 'basic') {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
-        }
-        return response;
-      });
-    }).catch(() => {
-      // Fallback for images - prevents broken image icons on iPhone
-      if (request.url.match(/\.(png|jpg|jpeg|gif|svg|ico|webp)$/)) {
-        return caches.match(APP_ROOT + 'icon-512.png');
-      }
-      return new Response('Offline', { status: 503 });
-    })
-  );
 });
 
-console.log('⚽ MathSoccer SW v15 loaded - base64 sounds inside index.html');
+// ============================================================
+// ACTIVATE
+// ============================================================
+
+self.addEventListener('activate', event => {
+    console.log('🚀 Activating Mathsoccer SW...');
+    
+    event.waitUntil(
+        caches.keys()
+            .then(cacheNames => {
+                return Promise.all(
+                    cacheNames
+                        .filter(name => name.startsWith('mathsoccer-') && name !== CACHE_NAME)
+                        .map(name => {
+                            console.log(`🗑️ Deleting: ${name}`);
+                            return caches.delete(name);
+                        })
+                );
+            })
+            .then(() => {
+                console.log('✅ SW activated!');
+                return self.clients.claim();
+            })
+    );
+});
+
+// ============================================================
+// SKIP WAITING MESSAGE
+// ============================================================
+
+self.addEventListener('message', event => {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+        self.skipWaiting();
+    }
+});
+
+// ============================================================
+// FETCH
+// ============================================================
+
+self.addEventListener('fetch', event => {
+    const request = event.request;
+    
+    if (request.method !== 'GET') return;
+    
+    // HTML navigation - network first, fallback to cache
+    if (request.mode === 'navigate') {
+        event.respondWith(
+            fetch(request)
+                .then(response => {
+                    const copy = response.clone();
+                    caches.open(CACHE_NAME).then(cache => {
+                        cache.put(request, copy);
+                    });
+                    return response;
+                })
+                .catch(async () => {
+                    const cached = await caches.match(APP_ROOT + 'index.html');
+                    if (cached) return cached;
+                    return new Response('Mathsoccer offline', { status: 503 });
+                })
+        );
+        return;
+    }
+    
+    // Assets - cache first
+    event.respondWith(
+        caches.match(request)
+            .then(cached => {
+                if (cached) return cached;
+                return fetch(request).then(response => {
+                    if (response && response.status === 200) {
+                        const copy = response.clone();
+                        caches.open(CACHE_NAME).then(cache => {
+                            cache.put(request, copy);
+                        });
+                    }
+                    return response;
+                });
+            })
+            .catch(() => {
+                // Fallback for images
+                if (request.url.match(/\.(png|jpg|jpeg|gif|svg|ico)$/)) {
+                    return caches.match(APP_ROOT + 'icon-512.png');
+                }
+                // Fallback for audio (silence)
+                if (request.url.endsWith('.mp3')) {
+                    return new Response(new ArrayBuffer(0), {
+                        headers: { 'Content-Type': 'audio/mpeg' }
+                    });
+                }
+                return new Response('Offline', { status: 503 });
+            })
+    );
+});
+
+console.log('⚽ Mathsoccer SW loaded!');
